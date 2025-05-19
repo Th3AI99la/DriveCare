@@ -26,4 +26,4 @@ DriveCare é um sistema web para controle de manutenção veicular, desenvolvido
 
 1. Clone este repositório:
    ```bash
-   git clone https://github.com/seu-usuario/drivecare.git
+   git clone https://github.com/Th3AI99la/DriveCare
