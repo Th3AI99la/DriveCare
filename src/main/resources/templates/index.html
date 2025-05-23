@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World</title>
+</head>
+<body>
+    <h1>Hello, World!</h1>
+    <p>Testando o site</p>
+    <p>Hora Atual: <span id="current-time"></span></p>
+
+    <script>
+        // Fetch the current time from the server
+        fetch('/api/time')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('current-time').textContent = data.time;
+            })
+            .catch(error => console.error('Error fetching time:', error));
+    </script>
+    
+</body>
+</html>
