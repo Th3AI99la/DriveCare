@@ -1,0 +1,29 @@
+# Pasta de build do Maven
+/target/
+
+# Wrapper do Maven
+.mvn/wrapper/maven-wrapper.jar
+
+# IDEs
+/.idea/
+/.vscode/
+*.iml
+
+# Arquivos do macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Arquivos compilados
+*.class
+
+# Sistema Windows
+Thumbs.db
+ehthumbs.db
+
+# Arquivos do Spring Boot Devtools
+spring-boot-devtools.properties
+
+# Arquivo de configuração local (se quiser ignorar)
+/application.properties
