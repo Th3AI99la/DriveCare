@@ -145,7 +145,7 @@
               <div class="card-header bg-dark border-secondary">Status dos Veículos</div>
               <div class="card-body">
                 <canvas id="lineChart"></canvas>
-                <div th:unless="${not #lists.isEmpty(dadosStatusVeiculos)}" class="text-center text-muted">
+                <div th:unless="${statusVeiculosData != null and not #lists.isEmpty(statusVeiculosData.valores)}" class="text-center text-muted">
                   Nenhum dado disponível
                 </div>
               </div>
@@ -153,14 +153,13 @@
           </div>
 
           <!-- Gráfico de Donut: Tipos de Manutenção -->
-          <div class="col-md-4">
-            <div class="card bg-dark-light">
-              <div class="card-header bg-dark border-secondary">Tipos de Manutenção</div>
-              <div class="card-body">
-                <canvas id="donutChart"></canvas>
-                <div th:unless="${not #lists.isEmpty(tiposManutencao)}" class="text-center text-muted">
-                  Nenhum dado disponível
-                </div>
+        <div class="col-md-4">
+          <div class="card bg-dark-light">
+            <div class="card-header bg-dark border-secondary">Tipos de Manutenção</div>
+            <div class="card-body">
+              <canvas id="donutChart"></canvas>
+              <div th:unless="${tiposManutencaoData != null and not #lists.isEmpty(tiposManutencaoData)}" class="text-center text-muted">
+                Nenhum dado disponível
               </div>
             </div>
           </div>
@@ -181,7 +180,7 @@
               </thead>
               <tbody>
                 <tr th:each="manutencao : ${manutencoesRecentes}">
-                  <td th:text="${manutencao.veiculo.modelo}">Modelo</td>
+                  <td th:text="${manutencao.veiculo?.modelo}">Modelo</td>
                   <td th:text="${manutencao.tipo}">Tipo</td>
                   <td th:text="${manutencao.dataFormatada}">-</td>
                   <td th:text="${manutencao.proximaDataFormatada}">-</td>
@@ -238,18 +237,22 @@
 
                 <!-- Status da manutenção -->
                   <td class="text-end">
-                    <span th:if="${manutencao.diasCalculados != null and manutencao.diasCalculados.longValue() >= 0}"
-                          th:classappend="manutencao.diasCalculados.longValue() <= 2 ? 'bg-warning text-dark' : 'bg-info'"
-                          th:text="manutencao.diasCalculados.longValue() == 0 ? 'Hoje' : (manutencao.diasCalculados.longValue() == 1 ? 'Em 1 dia' : ('Em ' + manutencao.diasCalculados.longValue() + ' dias'))"
-                          class="badge">-</span>
+                      <th:block th:if="${manutencao.diasCalculados != null}">
+                          <th:block th:with="dias = ${manutencao.diasCalculados.longValue()}">
+                              <span th:if="${dias >= 0}"
+                                    th:with="isWarning = ${dias <= 2}" 
+                                    th:classappend="${isWarning ? 'bg-warning text-dark' : 'bg-info'}"
+                                    th:text="${dias == 0 ? 'Hoje' : (dias == 1 ? 'Em 1 dia' : ('Em ' + dias + ' dias'))}"
+                                    class="badge">-</span>
 
-                      <span th:if="${manutencao.diasCalculados != null and manutencao.diasCalculados.longValue() < 0}"
-                            class="badge bg-danger"
-                            th:text="'Atrasada há ' + (manutencao.diasCalculados.longValue() * -1) + ' dias'">-</span>
-
+                              <span th:if="${dias < 0}"
+                                    class="badge bg-danger"
+                                    th:text="'Atrasada há ' + (dias * -1) + ' dias'">-</span>
+                          </th:block>
+                      </th:block>
                       <span th:if="${manutencao.diasCalculados == null}"
-                            class="badge bg-secondary">N/D</span>                        
-                    </td>
+                            class="badge bg-secondary">N/D</span>
+                  </td>
                 </tr>
                 
                 <tr th:if="${#lists.isEmpty(proximasManutencoes)}" class="animate-row">
@@ -279,42 +282,13 @@
           </nav>
         </div>
 
-        <!-- VEÍCULOS CADASTRADOS -->
-        <div class="my-4">
-          <h4>Veículos Cadastrados</h4>
-          <div class="table-responsive">
-            <table class="table table-dark table-hover">
-              <thead>
-                <tr>
-                  <th>Veículo</th>
-                  <th>Placa</th>
-                  <th>Próxima Manutenção</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr th:each="veiculo : ${veiculos}">
-                  <td th:text="${veiculo.modelo}">Fusca</td>
-                  <td th:text="${veiculo.placa}">ABC-1234</td>
-                  <td th:text="${#dates.format(veiculo.proximaManutencao, 'dd/MM/yyyy')}">00/00/0000</td>
-                  <td>
-                    <span class="badge bg-success" th:if="${veiculo.status == 'OK'}">Em Dia</span>
-                    <span class="badge bg-warning text-dark" th:if="${veiculo.status == 'PENDING'}">Pendente</span>
-                    <span class="badge bg-danger" th:if="${veiculo.status == 'LATE'}">Atrasada</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
         <!-- GRÁFICO DE BARRAS: SAÚDE DOS VEÍCULOS -->
         <div class="my-4">
           <div class="card bg-dark-light">
             <div class="card-header bg-dark border-secondary">Saúde dos Veículos</div>
             <div class="card-body">
               <canvas id="barChart"></canvas>
-              <div th:unless="${not #lists.isEmpty(dadosSaudeVeiculos)}" class="text-center text-muted">
+              <div th:unless="${saudeVeiculosData != null and not #lists.isEmpty(saudeVeiculosData)}" class="text-center text-muted">
                 Nenhum dado disponível
               </div>
             </div>
