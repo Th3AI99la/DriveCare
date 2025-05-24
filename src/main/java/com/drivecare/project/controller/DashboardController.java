@@ -17,7 +17,6 @@ public class DashboardController {
         this.dashboardService = dashboardService;
     }
 
-
     @GetMapping("/")
     public String dashboard(Model model) {
         model.addAttribute("totalVeiculos", dashboardService.getTotalVehicles());
@@ -31,10 +30,16 @@ public class DashboardController {
 
         // Adicionar os dados dos gráficos diretamente
         Map<String, Object> dadosGrafico = dashboardService.getChartData();
-        model.addAttribute("dadosStatusVeiculos", dadosGrafico.get("dadosStatusVeiculos"));
-        model.addAttribute("tiposManutencao", dadosGrafico.get("tiposManutencao"));
-        model.addAttribute("dadosSaudeVeiculos", dadosGrafico.get("dadosSaudeVeiculos"));
 
+        model.addAttribute("statusVeiculosData", dadosGrafico.get("dadosStatusVeiculos"));
+        model.addAttribute("tiposManutencaoLabels",
+                ((Map<String, Object>) dadosGrafico.get("tiposManutencao")).get("rotulos"));
+        model.addAttribute("tiposManutencaoData",
+                ((Map<String, Object>) dadosGrafico.get("tiposManutencao")).get("valores"));
+        model.addAttribute("saudeVeiculosLabels",
+                ((Map<String, Object>) dadosGrafico.get("dadosSaudeVeiculos")).get("rotulos"));
+        model.addAttribute("saudeVeiculosData",
+                ((Map<String, Object>) dadosGrafico.get("dadosSaudeVeiculos")).get("valores"));
         return "index";
     }
 }

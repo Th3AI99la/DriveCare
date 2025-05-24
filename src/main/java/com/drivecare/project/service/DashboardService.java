@@ -66,40 +66,45 @@ public class DashboardService {
 
     public Map<String, Object> getChartData() {
     Map<String, Object> dadosGrafico = new HashMap<>();
-    try {
-        // Dados para gráfico de status dos veículos
-        Map<String, Object> statusVeiculos = new HashMap<>();
-        statusVeiculos.put("valores", List.of(
-            getOkMaintenances(),
-            getPendingMaintenances(),
-            getCriticalAlerts()
-        ));
-        dadosGrafico.put("dadosStatusVeiculos", statusVeiculos);
+    
+    // Dados de status dos veículos (agora com labels)
+    Map<String, Object> statusVeiculos = new HashMap<>();
+    statusVeiculos.put("rotulos", List.of("Em Dia", "Pendentes", "Atrasados"));
+    statusVeiculos.put("valores", List.of(
+        getOkMaintenances(),
+        getPendingMaintenances(),
+        getCriticalAlerts()
+    ));
+    dadosGrafico.put("dadosStatusVeiculos", statusVeiculos);
 
-        
-        List<Object[]> tiposManutencao = repositorioManutencoes.countByMaintenanceType();
-        if (tiposManutencao != null && !tiposManutencao.isEmpty()) {
-            Map<String, Object> dadosTiposManutencao = new HashMap<>();
-            List<String> rotulos = new ArrayList<>();
-            List<Long> valores = new ArrayList<>();
-            for (Object[] item : tiposManutencao) {
-                rotulos.add((String) item[0]);
-                valores.add((Long) item[1]);
-            }
-            dadosTiposManutencao.put("rotulos", rotulos);
-            dadosTiposManutencao.put("valores", valores);
-            dadosGrafico.put("tiposManutencao", dadosTiposManutencao);
+    // Tipos de manutenção (mantém igual)
+    List<Object[]> tiposManutencao = repositorioManutencoes.countByMaintenanceType();
+    if (tiposManutencao != null && !tiposManutencao.isEmpty()) {
+        Map<String, Object> dadosTiposManutencao = new HashMap<>();
+        List<String> rotulos = new ArrayList<>();
+        List<Long> valores = new ArrayList<>();
+        for (Object[] item : tiposManutencao) {
+            rotulos.add((String) item[0]);
+            valores.add((Long) item[1]);
         }
-
-        // Dados de saúde (exemplo)
-        Map<String, Object> saudeVeiculos = new HashMap<>();
-        saudeVeiculos.put("rotulos", List.of("Bom", "Regular", "Ruim"));
-        saudeVeiculos.put("valores", List.of(70, 20, 10));
-        dadosGrafico.put("dadosSaudeVeiculos", saudeVeiculos);
-    } catch (Exception e) {
-        // Logar o erro
-        e.printStackTrace();
+        dadosTiposManutencao.put("rotulos", rotulos);
+        dadosTiposManutencao.put("valores", valores);
+        dadosGrafico.put("tiposManutencao", dadosTiposManutencao);
     }
+
+    // Dados de saúde (agora calculados dinamicamente)
+    Map<String, Object> saudeVeiculos = new HashMap<>();
+    saudeVeiculos.put("rotulos", List.of("Bom", "Regular", "Ruim"));
+    
+    // Exemplo de cálculo dinâmico (substitua por sua lógica real)
+    long totalVeiculos = getTotalVehicles();
+    long bons = (long) (totalVeiculos * 0.7); // 70%
+    long regulares = (long) (totalVeiculos * 0.2); // 20%
+    long ruins = totalVeiculos - bons - regulares; // 10%
+    
+    saudeVeiculos.put("valores", List.of(bons, regulares, ruins));
+    dadosGrafico.put("dadosSaudeVeiculos", saudeVeiculos);
+
     return dadosGrafico;
 }
 }

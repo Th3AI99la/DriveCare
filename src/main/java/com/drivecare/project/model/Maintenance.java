@@ -85,6 +85,8 @@ public class Maintenance {
         return data != null ? data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "-";
     }
 
+    
+
     public String getProximaDataFormatada() {
         return proximaData != null ? proximaData.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "-";
     }
@@ -97,6 +99,7 @@ public class Maintenance {
         this.proximaData = proximaData;
     }
 
+    
     public Vehicle getVeiculo() {
         return veiculo;
     }
