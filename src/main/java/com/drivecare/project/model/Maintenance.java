@@ -1,6 +1,7 @@
 package com.drivecare.project.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -78,6 +79,14 @@ public class Maintenance {
 
     public void setDate(LocalDate data) {
         this.data = data;
+    }
+
+    public String getDataFormatada() {
+        return data != null ? data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "-";
+    }
+
+    public String getProximaDataFormatada() {
+        return proximaData != null ? proximaData.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "-";
     }
 
     public LocalDate getNextDate() {

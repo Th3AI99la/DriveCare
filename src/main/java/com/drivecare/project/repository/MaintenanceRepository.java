@@ -24,7 +24,9 @@ public interface MaintenanceRepository extends JpaRepository<Maintenance, Long> 
     @Query("SELECT SUM(m.custo) FROM Maintenance m WHERE YEAR(m.data) = YEAR(CURRENT_DATE) AND MONTH(m.data) = MONTH(CURRENT_DATE)")
     Double sumMonthlyExpenses();
 
-    
+
     @Query("SELECT m FROM Maintenance m WHERE m.proximaData >= CURRENT_DATE AND m.proximaData <= :endDate")
     List<Maintenance> findUpcomingMaintenances(@Param("endDate") LocalDate endDate);
+
+    
 }

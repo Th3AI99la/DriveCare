@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DriveCare - Painel</title>
+  <title>DriveCare - Dashboard</title>
 
   <!-- Bootstrap CSS e Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -183,8 +183,8 @@
                 <tr th:each="manutencao : ${manutencoesRecentes}">
                   <td th:text="${manutencao.veiculo.modelo}">Modelo</td>
                   <td th:text="${manutencao.tipo}">Tipo</td>
-                  <td th:text="${#dates.format(manutencao.data, 'dd/MM/yyyy')}">00/00/0000</td>
-                  <td th:text="${#dates.format(manutencao.proximaData, 'dd/MM/yyyy')}">00/00/0000</td>
+                  <td th:text="${manutencao.dataFormatada}">-</td>
+                  <td th:text="${manutencao.proximaDataFormatada}">-</td>
                 </tr>
               </tbody>
             </table>
@@ -214,9 +214,9 @@
                   <td>
                     <div class="d-flex align-items-center">
                       <i class="bi me-2" 
-                         th:classappend="${manutencao.tipo == 'Troca de óleo'} ? 'bi-droplet-fill text-primary' : 
-                                         ${manutencao.tipo == 'Revisão'} ? 'bi-tools text-warning' : 
-                                         'bi-exclamation-triangle-fill text-danger'"></i>
+                        th:classappend="${manutencao.tipo == 'Troca de óleo'} ? 'bi-droplet-fill text-primary' : 
+                                        (${manutencao.tipo == 'Revisão'} ? 'bi-tools text-warning' : 'bi-exclamation-triangle-fill text-danger')">
+                      </i>
                       <div>
                         <div th:text="${manutencao.veiculo.modelo}">-</div>
                         <small class="text-muted" th:text="${manutencao.tipo}">-</small>
@@ -389,27 +389,23 @@
       });
 
       // Função para atualizar os gráficos com dados do backend
-      function updateCharts(data) {
-        // Atualizar gráfico de status
-        if (data.dadosStatusVeiculos) {
-          lineChart.data.datasets[0].data = data.dadosStatusVeiculos.valores;
-          lineChart.update();
+    function updateCharts(data) {
+        // Verificar se os dados existem antes de atualizar os gráficos
+        if (data.dadosStatusVeiculos?.valores) {
+            lineChart.data.datasets[0].data = data.dadosStatusVeiculos.valores;
+            lineChart.update();
         }
-        
-        // Atualizar gráfico de tipos de manutenção
-        if (data.tiposManutencao) {
-          donutChart.data.labels = data.tiposManutencao.rotulos;
-          donutChart.data.datasets[0].data = data.tiposManutencao.valores;
-          donutChart.update();
+        if (data.tiposManutencao?.rotulos && data.tiposManutencao?.valores) {
+            donutChart.data.labels = data.tiposManutencao.rotulos;
+            donutChart.data.datasets[0].data = data.tiposManutencao.valores;
+            donutChart.update();
         }
-        
-        // Atualizar gráfico de saúde dos veículos
-        if (data.dadosSaudeVeiculos) {
-          barChart.data.labels = data.dadosSaudeVeiculos.rotulos;
-          barChart.data.datasets[0].data = data.dadosSaudeVeiculos.valores;
-          barChart.update();
+        if (data.dadosSaudeVeiculos?.rotulos && data.dadosSaudeVeiculos?.valores) {
+            barChart.data.labels = data.dadosSaudeVeiculos.rotulos;
+            barChart.data.datasets[0].data = data.dadosSaudeVeiculos.valores;
+            barChart.update();
         }
-      }
+    }
 
       // Função para opções comuns dos gráficos
       function getChartOptions(titulo) {

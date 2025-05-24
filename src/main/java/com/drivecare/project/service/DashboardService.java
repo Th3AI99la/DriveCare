@@ -1,6 +1,7 @@
 package com.drivecare.project.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,28 +65,41 @@ public class DashboardService {
     }
 
     public Map<String, Object> getChartData() {
-        Map<String, Object> dadosGrafico = new HashMap<>();
-
+    Map<String, Object> dadosGrafico = new HashMap<>();
+    try {
         // Dados para gráfico de status dos veículos
-        Map<String, Long> statusCounts = new HashMap<>();
-        statusCounts.put("OK", getOkMaintenances());
-        statusCounts.put("PENDING", getPendingMaintenances());
-        statusCounts.put("LATE", getCriticalAlerts());
-
         Map<String, Object> statusVeiculos = new HashMap<>();
-        statusVeiculos.put("valores", List.of(getOkMaintenances(), getPendingMaintenances(), getCriticalAlerts()));
-
+        statusVeiculos.put("valores", List.of(
+            getOkMaintenances(),
+            getPendingMaintenances(),
+            getCriticalAlerts()
+        ));
         dadosGrafico.put("dadosStatusVeiculos", statusVeiculos);
 
-        dadosGrafico.put("tiposManutencao", repositorioManutencoes.countByMaintenanceType());
+        
+        List<Object[]> tiposManutencao = repositorioManutencoes.countByMaintenanceType();
+        if (tiposManutencao != null && !tiposManutencao.isEmpty()) {
+            Map<String, Object> dadosTiposManutencao = new HashMap<>();
+            List<String> rotulos = new ArrayList<>();
+            List<Long> valores = new ArrayList<>();
+            for (Object[] item : tiposManutencao) {
+                rotulos.add((String) item[0]);
+                valores.add((Long) item[1]);
+            }
+            dadosTiposManutencao.put("rotulos", rotulos);
+            dadosTiposManutencao.put("valores", valores);
+            dadosGrafico.put("tiposManutencao", dadosTiposManutencao);
+        }
 
-        // Dados para gráfico de saúde (exemplo - ajuste conforme sua lógica)
+        // Dados de saúde (exemplo)
         Map<String, Object> saudeVeiculos = new HashMap<>();
         saudeVeiculos.put("rotulos", List.of("Bom", "Regular", "Ruim"));
-        // Estes são valores de exemplo, você precisará de uma lógica para calculá-los
         saudeVeiculos.put("valores", List.of(70, 20, 10));
         dadosGrafico.put("dadosSaudeVeiculos", saudeVeiculos);
-
-        return dadosGrafico;
+    } catch (Exception e) {
+        // Logar o erro
+        e.printStackTrace();
     }
+    return dadosGrafico;
+}
 }
