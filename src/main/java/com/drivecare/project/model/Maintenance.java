@@ -25,7 +25,7 @@ public class Maintenance {
     @Column(name = "next_date")
     private LocalDate proximaData;
 
-    @ManyToOne
+    @ManyToOne // Relacionamento com a entidade Vehicle
     @JoinColumn(name = "veiculo_id")
     private Vehicle veiculo;
 

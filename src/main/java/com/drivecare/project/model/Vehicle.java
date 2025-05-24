@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
+
 @Entity
 public class Vehicle {
 
@@ -18,11 +19,11 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String marca; // Marca do veículo
-    private String modelo; // Modelo do veículo
-    private Integer ano; // Ano do veículo
-    private String placa; // Placa do veículo
-    private Double quilometragem; // Quilometragem do veículo
+    private String marca; 
+    private String modelo; 
+    private Integer ano; 
+    private String placa;
+    private Double quilometragem;
     private String status; // OK, PENDENTE, ATRASADO
 
     @Column(name = "next_maintenance")
@@ -66,11 +67,11 @@ public class Vehicle {
         this.modelo = modelo;
     }
 
-    public Integer getYear() {
+    public Integer getAno() {
         return ano;
     }
 
-    public void setYear(Integer ano) {
+    public void setAno(Integer ano) {
         this.ano = ano;
     }
 

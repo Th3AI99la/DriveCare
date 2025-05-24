@@ -16,8 +16,9 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     @Query("SELECT COUNT(v) FROM Vehicle v WHERE v.status = :status")
     Long countByStatus(String status);
     
-    @Query("SELECT v FROM Vehicle v WHERE v.proximaManutencao BETWEEN CURRENT_DATE AND CURRENT_DATE + 7")
+    @Query("SELECT v FROM Vehicle v WHERE v.proximaManutencao BETWEEN CURRENT_DATE AND FUNCTION('DATE_ADD', CURRENT_DATE, 7, 'DAY')")
     List<Vehicle> findVehiclesWithUpcomingMaintenance();
     
-    Vehicle findByPlate(String placa);
+    
+    Vehicle findByPlaca(String placa);
 }
