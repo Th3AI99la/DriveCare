@@ -18,12 +18,12 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String brand;
-    private String model;
-    private Integer year;
-    private String plate;
-    private Double mileage;
-    private String status; // OK, PENDING, LATE
+    private String brand; // Marca do veículo
+    private String model; // Modelo do veículo
+    private Integer year; // Ano do veículo
+    private String plate; // Placa do veículo
+    private Double mileage; // Quilometragem do veículo
+    private String status; // OK, PENDENTE, ATRASADO
 
     @Column(name = "next_maintenance")
     private LocalDate nextMaintenance;

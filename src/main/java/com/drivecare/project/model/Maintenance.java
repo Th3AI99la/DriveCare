@@ -34,9 +34,9 @@ public class Maintenance {
     }
 
     public Maintenance(String type, LocalDate date, Vehicle vehicle) {
-        this.type = type;
-        this.date = date;
-        this.vehicle = vehicle;
+        this.type = type; // Preventiva, Corretiva, Revisão
+        this.date = date; // Data da manutenção
+        this.vehicle = vehicle; // Veículo associado à manutenção
     }
 
     // Getters e Setters

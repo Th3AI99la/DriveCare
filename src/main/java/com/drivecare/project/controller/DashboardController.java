@@ -17,15 +17,15 @@ public class DashboardController {
 
     @GetMapping("/")
     public String dashboard(Model model) {
-        model.addAttribute("totalVehicles", dashboardService.getTotalVehicles());
-        model.addAttribute("okMaintenances", dashboardService.getOkMaintenances());
-        model.addAttribute("pendingMaintenances", dashboardService.getPendingMaintenances());
-        model.addAttribute("criticalAlerts", dashboardService.getCriticalAlerts());
-        model.addAttribute("monthlyExpenses", dashboardService.getMonthlyExpenses());
-        model.addAttribute("recentMaintenances", dashboardService.getRecentMaintenances());
-        model.addAttribute("vehicles", dashboardService.getAllVehicles());
-        model.addAttribute("proximasManutencoes", dashboardService.getUpcomingMaintenances());
-        model.addAttribute("chartData", dashboardService.getChartData());
+        model.addAttribute("totalVehicles", dashboardService.getTotalVehicles()); // Total de veículos
+        model.addAttribute("okMaintenances", dashboardService.getOkMaintenances()); // Manutenções OK
+        model.addAttribute("pendingMaintenances", dashboardService.getPendingMaintenances()); // Manutenções pendentes
+        model.addAttribute("criticalAlerts", dashboardService.getCriticalAlerts()); // Alertas críticos
+        model.addAttribute("monthlyExpenses", dashboardService.getMonthlyExpenses()); // Despesas mensais
+        model.addAttribute("recentMaintenances", dashboardService.getRecentMaintenances()); // Manutenções recentes
+        model.addAttribute("vehicles", dashboardService.getAllVehicles()); // Lista de veículos
+        model.addAttribute("proximasManutencoes", dashboardService.getUpcomingMaintenances()); // Próximas manutenções
+        model.addAttribute("chartData", dashboardService.getChartData()); // Dados do gráfico
 
         return "index";
     }
