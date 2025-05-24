@@ -11,7 +11,7 @@ import com.drivecare.project.model.Maintenance;
 @Repository
 public interface MaintenanceRepository extends JpaRepository<Maintenance, Long> {
 
-    List<Maintenance> findByVehicleId(Long idVeiculo);
+    List<Maintenance> findByVeiculoId(Long idVeiculo);
 
     @Query("SELECT m FROM Maintenance m ORDER BY m.data DESC LIMIT 5")
     List<Maintenance> findRecentMaintenances();

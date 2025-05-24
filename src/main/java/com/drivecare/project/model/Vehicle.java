@@ -28,7 +28,7 @@ public class Vehicle {
     @Column(name = "next_maintenance")
     private LocalDate proximaManutencao;
 
-    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "veiculo", cascade = CascadeType.ALL)
     private List<Maintenance> manutencoes;
 
     // Construtores
@@ -50,19 +50,19 @@ public class Vehicle {
         this.id = id;
     }
 
-    public String getBrand() {
+    public String getMarca() {
         return marca;
     }
 
-    public void setBrand(String marca) {
+    public void setMarca(String marca) {
         this.marca = marca;
     }
 
-    public String getModel() {
+    public String getModelo() {
         return modelo;
     }
 
-    public void setModel(String modelo) {
+    public void setModelo(String modelo) {
         this.modelo = modelo;
     }
 
@@ -74,19 +74,19 @@ public class Vehicle {
         this.ano = ano;
     }
 
-    public String getPlate() {
+    public String getPlaca() {
         return placa;
     }
 
-    public void setPlate(String placa) {
+    public void setPlaca(String placa) {
         this.placa = placa;
     }
 
-    public Double getMileage() {
+    public Double getQuilometragem() {
         return quilometragem;
     }
 
-    public void setMileage(Double quilometragem) {
+    public void setQuilometragem(Double quilometragem) {
         this.quilometragem = quilometragem;
     }
 
@@ -106,11 +106,11 @@ public class Vehicle {
         this.proximaManutencao = proximaManutencao;
     }
 
-    public List<Maintenance> getMaintenances() {
+    public List<Maintenance> getManutencoes() {
         return manutencoes;
     }
 
-    public void setMaintenances(List<Maintenance> manutencoes) {
+    public void setManutencoes(List<Maintenance> manutencoes) {
         this.manutencoes = manutencoes;
     }
 }

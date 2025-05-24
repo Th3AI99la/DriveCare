@@ -60,13 +60,13 @@ public class DashboardService {
         Map<String, Object> dadosGrafico = new HashMap<>();
 
         // Dados para gráfico de status dos veículos
-        dadosGrafico.put("totalVehicles", getTotalVehicles()); // Total de veículos
-        dadosGrafico.put("okVehicles", getOkMaintenances()); // Veículos com manutenção OK
-        dadosGrafico.put("pendingVehicles", getPendingMaintenances()); // Veículos com manutenção pendente
-        dadosGrafico.put("lateVehicles", getCriticalAlerts()); // Veículos com manutenção atrasada
+        dadosGrafico.put("totalVeiculos", getTotalVehicles());
+        dadosGrafico.put("veiculosOk", getOkMaintenances()); 
+        dadosGrafico.put("veiculosPendentes", getPendingMaintenances());
+        dadosGrafico.put("veiculosAtrasados", getCriticalAlerts());
 
         // Dados para gráfico de tipos de manutenção
-        dadosGrafico.put("maintenanceTypes", repositorioManutencoes.countByMaintenanceType()); // Contagem de tipos de manutenção
+        dadosGrafico.put("tiposManutencao", repositorioManutencoes.countByMaintenanceType()); // Contagem de tipos de manutenção
 
         return dadosGrafico;
     }

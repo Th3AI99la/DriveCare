@@ -26,7 +26,7 @@ public class Maintenance {
     private LocalDate proximaData;
 
     @ManyToOne
-    @JoinColumn(name = "vehicle_id")
+    @JoinColumn(name = "veiculo_id") 
     private Vehicle veiculo;
 
     // Construtores
@@ -88,11 +88,12 @@ public class Maintenance {
         this.proximaData = proximaData;
     }
 
-    public Vehicle getVehicle() {
+    public Vehicle getVeiculo() {
         return veiculo;
     }
 
-    public void setVehicle(Vehicle veiculo) {
+    public void setVeiculo(Vehicle veiculo) {
         this.veiculo = veiculo;
     }
+
 }
