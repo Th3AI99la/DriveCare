@@ -2,6 +2,7 @@ package com.drivecare.project.model;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit; // Importar ChronoUnit
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,11 +54,9 @@ public class Maintenance {
         return tipo;
     }
 
-    public LocalDate getData() {
-        return data;
-    }
+    // Removido getTipo() duplicado // Comentário meu: Verifique se realmente havia um getTipo() duplicado e foi removido.
 
-    public String getDescription() {
+    public String getDescription() { // Mantido como getDescription para consistência com o que pode já estar em uso
         return descricao;
     }
 
@@ -65,7 +64,7 @@ public class Maintenance {
         this.descricao = descricao;
     }
 
-    public Double getCost() {
+    public Double getCost() { // Mantido como getCost
         return custo;
     }
 
@@ -73,7 +72,7 @@ public class Maintenance {
         this.custo = custo;
     }
 
-    public LocalDate getDate() {
+    public LocalDate getDate() { // Mantido como getDate
         return data;
     }
 
@@ -85,12 +84,6 @@ public class Maintenance {
         return data != null ? data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "-";
     }
 
-    
-
-    public String getProximaDataFormatada() {
-        return proximaData != null ? proximaData.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "-";
-    }
-
     public LocalDate getNextDate() {
         return proximaData;
     }
@@ -99,7 +92,10 @@ public class Maintenance {
         this.proximaData = proximaData;
     }
 
-    
+    public String getProximaDataFormatada() {
+        return proximaData != null ? proximaData.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "-";
+    }
+
     public Vehicle getVeiculo() {
         return veiculo;
     }
@@ -108,4 +104,28 @@ public class Maintenance {
         this.veiculo = veiculo;
     }
 
+    public String getStatusCalculado() {
+        if (this.proximaData == null) {
+            return "INDETERMINADO"; // Ou um status padrão, ex: 'PENDENTE' se fizer mais sentido
+        }
+
+        LocalDate hoje = LocalDate.now();
+        long diasParaProximaManutencao = ChronoUnit.DAYS.between(hoje, this.proximaData);
+
+        if (diasParaProximaManutencao < 0) {
+            return "ATRASADO"; // Já passou da data
+        } else if (diasParaProximaManutencao <= 7) { // Exemplo: "Próximo" se for em até 7 dias
+            return "PROXIMO";
+        } else {
+            return "EM_DIA";
+        }
+    }
+
+    public Long getDiasCalculados() { // MUDANÇA: de long para Long (wrapper)
+        if (this.proximaData == null) {
+            return null; // MUDANÇA: Retorna null se não há data
+        }
+        LocalDate hoje = LocalDate.now();
+        return ChronoUnit.DAYS.between(hoje, this.proximaData);
+    }
 }

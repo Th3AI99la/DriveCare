@@ -214,8 +214,7 @@
                   <td>
                     <div class="d-flex align-items-center">
                       <i class="bi me-2" 
-                        th:classappend="${manutencao.tipo == 'Troca de óleo'} ? 'bi-droplet-fill text-primary' : 
-                                        (${manutencao.tipo == 'Revisão'} ? 'bi-tools text-warning' : 'bi-exclamation-triangle-fill text-danger')">
+                        th:classappend="${manutencao.tipo == 'Troca de óleo'} ? 'bi-droplet-fill text-primary' : (${manutencao.tipo == 'Revisão'} ? 'bi-tools text-warning' : 'bi-exclamation-triangle-fill text-danger')">
                       </i>
                       <div>
                         <div th:text="${manutencao.veiculo.modelo}">-</div>
@@ -226,31 +225,31 @@
                   
                   <td th:text="${manutencao.veiculo.placa}">-</td>
                   
-                  <td th:text="${#dates.format(manutencao.proximaData, 'dd/MM/yyyy')}">-</td>
-                  
+                  <td th:text="${manutencao.proximaDataFormatada}">-</td>
+                
+                <!-- Barra de progresso para o status da manutenção -->
                   <td>
                     <div class="progress" style="height: 6px; width: 100px;">
-                      <div th:classappend="${manutencao.status == 'EM_DIA'} ? 'bg-success' : 
-                                         ${manutencao.status == 'PROXIMO'} ? 'bg-warning' : 
-                                         'bg-danger'"
-                           th:styleappend="${manutencao.status == 'EM_DIA'} ? 'width: 30%' : 
-                                         ${manutencao.status == 'PROXIMO'} ? 'width: 70%' : 
-                                         'width: 100%'"
+                      <div th:classappend="manutencao.statusCalculado == 'EM_DIA' ? 'bg-success' : (manutencao.statusCalculado == 'PROXIMO' ? 'bg-warning' : 'bg-danger')"  
+                           th:styleappend="manutencao.statusCalculado == 'EM_DIA' ? 'width: 30%' : (manutencao.statusCalculado == 'PROXIMO' ? 'width: 70%' : 'width: 100%')"
                            class="progress-bar"></div>
                     </div>
                   </td>
-                  
+
+                <!-- Status da manutenção -->
                   <td class="text-end">
-                    <span th:if="${manutencao.dias >= 0}" 
-                          th:classappend="${manutencao.dias <= 2} ? 'bg-warning text-dark' : 'bg-info'"
-                          th:text="${manutencao.dias == 0} ? 'Hoje' : 
-                                  ${manutencao.dias == 1} ? 'Em 1 dia' : 
-                                  'Em ' + ${manutencao.dias} + ' dias'"
-                          class="badge">-</span>
-                    <span th:if="${manutencao.dias < 0}" 
-                          class="badge bg-danger"
-                          th:text="${'Atrasada há ' + (manutencao.dias * -1) + ' dias'}">-</span>
-                  </td>
+                      <span th:if="${manutencao.diasCalculados != null and manutencao.diasCalculados.longValue() >= 0}"
+                            th:classappend="manutencao.diasCalculados.longValue() <= 2 ? 'bg-warning text-dark' : 'bg-info'"
+                            th:text="manutencao.diasCalculados.longValue() == 0 ? 'Hoje' : (manutencao.diasCalculados.longValue() == 1 ? 'Em 1 dia' : ('Em ' + manutencao.diasCalculados.longValue() + ' dias'))"
+                            class="badge">-</span>
+
+                      <span th:if="${manutencao.diasCalculados != null and manutencao.diasCalculados.longValue() < 0}"
+                            class="badge bg-danger"
+                            th:text="'Atrasada há ' + (manutencao.diasCalculados.longValue() * -1) + ' dias'">-</span>
+
+                      <span th:if="${manutencao.diasCalculados == null}"
+                            class="badge bg-secondary">N/D</span>                        
+                    </td>
                 </tr>
                 
                 <tr th:if="${#lists.isEmpty(proximasManutencoes)}" class="animate-row">
@@ -332,127 +331,144 @@
     </div>
   </div>
 
-  <!-- Bootstrap Bundle JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Script para inicializar os gráficos -->
-<script th:inline="javascript">
-/*<![CDATA[*/
-    document.addEventListener('DOMContentLoaded', function() {
-        // Passando dados do Thymeleaf para JavaScript
-        const statusData = /*[[${statusVeiculosData.valores}]]*/ [];
-        const tiposLabels = /*[[${tiposManutencaoLabels}]]*/ [];
-        const tiposData = /*[[${tiposManutencaoData}]]*/ [];
-        const saudeLabels = /*[[${saudeVeiculosLabels}]]*/ [];
-        const saudeData = /*[[${saudeVeiculosData}]]*/ [];
+  <script th:inline="javascript">
+  /*<![CDATA[*/
 
-        // Gráfico de Status dos Veículos (agora com dados reais)
-        new Chart(document.getElementById('lineChart'), {
-            type: 'line',
-            data: {
-                labels: ['Em Dia', 'Pendentes', 'Atrasados'],
-                datasets: [{
-                    label: 'Status dos Veículos',
-                    data: statusData,
-                    borderColor: '#4CAF50',
-                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                    tension: 0.3,
-                    fill: true
-                }]
-            },
-            options: getChartOptions('Status dos Veículos')
-        });
-
-        // Gráfico de Donut - Tipos de Manutenção
-        new Chart(document.getElementById('donutChart'), {
-            type: 'doughnut',
-            data: {
-                labels: tiposLabels,
-                datasets: [{
-                    data: tiposData,
-                    backgroundColor: ['#4CAF50', '#FF5722', '#2196F3', '#FFC107', '#9C27B0']
-                }]
-            },
-            options: {
-                ...getChartOptions('Tipos de Manutenção'),
-                cutout: '70%'
-            }
-        });
-
-        // Gráfico de Barras - Saúde dos Veículos
-        new Chart(document.getElementById('barChart'), {
-            type: 'bar',
-            data: {
-                labels: saudeLabels,
-                datasets: [{
-                    label: 'Saúde (%)',
-                    data: saudeData,
-                    backgroundColor: 'rgba(54, 162, 235, 0.7)'
-                }]
-            },
-            options: getChartOptions('Saúde dos Veículos')
-        });
-    });
-/*]]>*/
-</script>
-
-      // Função para atualizar os gráficos com dados do backend
-    function updateCharts(data) {
-        // Verificar se os dados existem antes de atualizar os gráficos
-        if (data.dadosStatusVeiculos?.valores) {
-            lineChart.data.datasets[0].data = data.dadosStatusVeiculos.valores;
-            lineChart.update();
-        }
-        if (data.tiposManutencao?.rotulos && data.tiposManutencao?.valores) {
-            donutChart.data.labels = data.tiposManutencao.rotulos;
-            donutChart.data.datasets[0].data = data.tiposManutencao.valores;
-            donutChart.update();
-        }
-        if (data.dadosSaudeVeiculos?.rotulos && data.dadosSaudeVeiculos?.valores) {
-            barChart.data.labels = data.dadosSaudeVeiculos.rotulos;
-            barChart.data.datasets[0].data = data.dadosSaudeVeiculos.valores;
-            barChart.update();
-        }
-    }
-
-      // Função para opções comuns dos gráficos
-      function getChartOptions(titulo) {
-        return {
-          responsive: true,
-          plugins: {
-            legend: {
-              labels: {
-                color: '#e0e0e0'
-              }
-            },
-            title: {
-              display: true,
-              color: '#e0e0e0',
-              text: titulo
+    // Função para opções comuns dos gráficos
+    // Definida aqui para estar disponível quando os gráficos são criados
+    function getChartOptions(titulo) {
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: {
+              color: '#e0e0e0'
             }
           },
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: {
-                color: 'rgba(255, 255, 255, 0.1)'
-              },
-              ticks: {
-                color: '#e0e0e0'
-              }
-            },
-            x: {
-              grid: {
-                color: 'rgba(255, 255, 255, 0.1)'
-              },
-              ticks: {
-                color: '#e0e0e0'
-              }
+          title: {
+            display: true,
+            text: titulo,
+            color: '#e0e0e0',
+            font: {
+                size: 16
             }
           }
-        };
-      }
-    });
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            },
+            ticks: {
+              color: '#e0e0e0'
+            }
+          },
+          x: {
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            },
+            ticks: {
+              color: '#e0e0e0'
+            }
+          }
+        }
+      };
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Passando dados do Thymeleaf para JavaScript (com null-safety sugerido)
+        const statusValores = /*[[${statusVeiculosData?.valores}]]*/ null;
+        const tiposLabels = /*[[${tiposManutencaoLabels}]]*/ null;
+        const tiposValores = /*[[${tiposManutencaoData}]]*/ null; // Renomeado de tiposData para tiposValores para clareza
+        const saudeLabels = /*[[${saudeVeiculosLabels}]]*/ null;
+        const saudeValores = /*[[${saudeVeiculosData}]]*/ null; // Renomeado de saudeData para saudeValores para clareza
+
+        // Variáveis para guardar as instâncias dos gráficos
+        let lineChartInstance, donutChartInstance, barChartInstance;
+
+        // Gráfico de Status dos Veículos
+        const lineChartCanvas = document.getElementById('lineChart');
+        if (lineChartCanvas && statusValores) {
+            lineChartInstance = new Chart(lineChartCanvas, {
+                type: 'line',
+                data: {
+                    labels: /*[[${statusVeiculosData?.rotulos}]]*/ ['Em Dia', 'Pendentes', 'Atrasados'], // Usando rótulos do backend se disponíveis
+                    datasets: [{
+                        label: 'Status dos Veículos',
+                        data: statusValores,
+                        borderColor: '#4CAF50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: getChartOptions('Status dos Veículos')
+            });
+        }
+
+        // Gráfico de Donut - Tipos de Manutenção
+        const donutChartCanvas = document.getElementById('donutChart');
+        if (donutChartCanvas && tiposLabels && tiposValores) {
+            donutChartInstance = new Chart(donutChartCanvas, {
+                type: 'doughnut',
+                data: {
+                    labels: tiposLabels,
+                    datasets: [{
+                        data: tiposValores,
+                        backgroundColor: ['#4CAF50', '#FF5722', '#2196F3', '#FFC107', '#9C27B0']
+                    }]
+                },
+                options: {
+                    ...getChartOptions('Tipos de Manutenção'),
+                    cutout: '70%'
+                }
+            });
+        }
+
+        // Gráfico de Barras - Saúde dos Veículos
+        const barChartCanvas = document.getElementById('barChart');
+        if (barChartCanvas && saudeLabels && saudeValores) {
+            barChartInstance = new Chart(barChartCanvas, {
+                type: 'bar',
+                data: {
+                    labels: saudeLabels,
+                    datasets: [{
+                        label: 'Saúde dos Veículos', // Título mais descritivo
+                        data: saudeValores,
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)'
+                    }]
+                },
+                options: getChartOptions('Saúde dos Veículos')
+            });
+        }
+
+        // Função para atualizar os gráficos com dados do backend
+        // Exposta globalmente como window.updateDashboardCharts para poder ser chamada de outros lugares se necessário
+        window.updateDashboardCharts = function(data) {
+            if (lineChartInstance && data.dadosStatusVeiculos?.valores) {
+                lineChartInstance.data.datasets[0].data = data.dadosStatusVeiculos.valores;
+                // Se os labels do gráfico de linha também puderem mudar:
+                // if(data.dadosStatusVeiculos?.rotulos) { lineChartInstance.data.labels = data.dadosStatusVeiculos.rotulos; }
+                lineChartInstance.update();
+            }
+            if (donutChartInstance && data.tiposManutencao?.rotulos && data.tiposManutencao?.valores) {
+                donutChartInstance.data.labels = data.tiposManutencao.rotulos;
+                donutChartInstance.data.datasets[0].data = data.tiposManutencao.valores;
+                donutChartInstance.update();
+            }
+            if (barChartInstance && data.dadosSaudeVeiculos?.rotulos && data.dadosSaudeVeiculos?.valores) {
+                barChartInstance.data.labels = data.dadosSaudeVeiculos.rotulos;
+                barChartInstance.data.datasets[0].data = data.dadosSaudeVeiculos.valores;
+                barChartInstance.update();
+            }
+        }
+    }); 
+
+  /*]]>*/
   </script>
 </body>
 </html>
