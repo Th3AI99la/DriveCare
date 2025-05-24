@@ -26,7 +26,7 @@ public class Maintenance {
     private LocalDate proximaData;
 
     @ManyToOne
-    @JoinColumn(name = "veiculo_id") 
+    @JoinColumn(name = "veiculo_id")
     private Vehicle veiculo;
 
     // Construtores
@@ -48,12 +48,12 @@ public class Maintenance {
         this.id = id;
     }
 
-    public String getType() {
+    public String getTipo() {
         return tipo;
     }
 
-    public void setType(String tipo) {
-        this.tipo = tipo;
+    public LocalDate getData() {
+        return data;
     }
 
     public String getDescription() {

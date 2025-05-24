@@ -1,5 +1,7 @@
 package com.drivecare.project.controller;
 
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,18 +17,23 @@ public class DashboardController {
         this.dashboardService = dashboardService;
     }
 
-    @GetMapping("/")
-    public String dashboard(Model model) {
-        model.addAttribute("totalVeiculos", dashboardService.getTotalVehicles()); // Total de veículos
-        model.addAttribute("manutencoesOk", dashboardService.getOkMaintenances()); // Manutenções OK
-        model.addAttribute("manutencoesPendentes", dashboardService.getPendingMaintenances()); // Manutenções pendentes
-        model.addAttribute("alertasCriticos", dashboardService.getCriticalAlerts()); // Alertas críticos
-        model.addAttribute("despesasMensais", dashboardService.getMonthlyExpenses()); // Despesas mensais
-        model.addAttribute("manutencoesRecentes", dashboardService.getRecentMaintenances()); // Manutenções recentes
-        model.addAttribute("veiculos", dashboardService.getAllVehicles()); // Lista de veículos
-        model.addAttribute("proximasManutencoes", dashboardService.getUpcomingMaintenances()); // Próximas manutenções
-        model.addAttribute("dadosGrafico", dashboardService.getChartData()); // Dados do gráfico
+@GetMapping("/")
+public String dashboard(Model model) {
+    model.addAttribute("totalVeiculos", dashboardService.getTotalVehicles());
+    model.addAttribute("veiculosOk", dashboardService.getOkMaintenances()); // Alterado
+    model.addAttribute("veiculosPendentes", dashboardService.getPendingMaintenances()); // Alterado
+    model.addAttribute("veiculosAtrasados", dashboardService.getCriticalAlerts()); // Alterado
+    model.addAttribute("despesasMensais", dashboardService.getMonthlyExpenses());
+    model.addAttribute("manutencoesRecentes", dashboardService.getRecentMaintenances());
+    model.addAttribute("veiculos", dashboardService.getAllVehicles());
+    model.addAttribute("proximasManutencoes", dashboardService.getUpcomingMaintenances());
+    
+    // Adicionar os dados dos gráficos diretamente
+    Map<String, Object> dadosGrafico = dashboardService.getChartData();
+    model.addAttribute("dadosStatusVeiculos", dadosGrafico.get("dadosStatusVeiculos"));
+    model.addAttribute("tiposManutencao", dadosGrafico.get("tiposManutencao"));
+    model.addAttribute("dadosSaudeVeiculos", dadosGrafico.get("dadosSaudeVeiculos"));
 
-        return "index";
-    }
+    return "index";
+}
 }

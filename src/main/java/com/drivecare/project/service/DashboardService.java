@@ -56,18 +56,23 @@ public class DashboardService {
         return repositorioManutencoes.findUpcomingMaintenances();
     }
 
-    public Map<String, Object> getChartData() {
-        Map<String, Object> dadosGrafico = new HashMap<>();
+public Map<String, Object> getChartData() {
+    Map<String, Object> dadosGrafico = new HashMap<>();
 
-        // Dados para gráfico de status dos veículos
-        dadosGrafico.put("totalVeiculos", getTotalVehicles());
-        dadosGrafico.put("veiculosOk", getOkMaintenances()); 
-        dadosGrafico.put("veiculosPendentes", getPendingMaintenances());
-        dadosGrafico.put("veiculosAtrasados", getCriticalAlerts());
+    // Dados para gráfico de status dos veículos
+    Map<String, Object> statusVeiculos = new HashMap<>();
+    statusVeiculos.put("valores", List.of(getOkMaintenances(), getPendingMaintenances(), getCriticalAlerts()));
+    dadosGrafico.put("dadosStatusVeiculos", statusVeiculos);
 
-        // Dados para gráfico de tipos de manutenção
-        dadosGrafico.put("tiposManutencao", repositorioManutencoes.countByMaintenanceType()); // Contagem de tipos de manutenção
+    // Dados para gráfico de tipos de manutenção
+    dadosGrafico.put("tiposManutencao", repositorioManutencoes.countByMaintenanceType());
 
-        return dadosGrafico;
-    }
+    // Dados para gráfico de saúde (exemplo - ajuste conforme sua lógica)
+    Map<String, Object> saudeVeiculos = new HashMap<>();
+    saudeVeiculos.put("rotulos", List.of("Bom", "Regular", "Ruim"));
+    saudeVeiculos.put("valores", List.of(70, 20, 10));
+    dadosGrafico.put("dadosSaudeVeiculos", saudeVeiculos);
+
+    return dadosGrafico;
+}
 }
