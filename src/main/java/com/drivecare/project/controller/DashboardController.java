@@ -26,7 +26,7 @@ public class DashboardController {
         model.addAttribute("vehicles", dashboardService.getAllVehicles());
         model.addAttribute("proximasManutencoes", dashboardService.getUpcomingMaintenances());
         model.addAttribute("chartData", dashboardService.getChartData());
-        
+
         return "index";
     }
 }

@@ -17,8 +17,8 @@ public class DashboardService {
     private final VehicleRepository vehicleRepository;
     private final MaintenanceRepository maintenanceRepository;
 
-    public DashboardService(VehicleRepository vehicleRepository, 
-                          MaintenanceRepository maintenanceRepository) {
+    public DashboardService(VehicleRepository vehicleRepository,
+            MaintenanceRepository maintenanceRepository) {
         this.vehicleRepository = vehicleRepository;
         this.maintenanceRepository = maintenanceRepository;
     }
@@ -58,16 +58,16 @@ public class DashboardService {
 
     public Map<String, Object> getChartData() {
         Map<String, Object> chartData = new HashMap<>();
-        
+
         // Dados para gráfico de status dos veículos
         chartData.put("totalVehicles", getTotalVehicles());
         chartData.put("okVehicles", getOkMaintenances());
         chartData.put("pendingVehicles", getPendingMaintenances());
         chartData.put("lateVehicles", getCriticalAlerts());
-        
+
         // Dados para gráfico de tipos de manutenção
         chartData.put("maintenanceTypes", maintenanceRepository.countByMaintenanceType());
-        
+
         return chartData;
     }
 }
