@@ -1,0 +1,242 @@
+/* ==================== */
+/* VARIÁVEIS DE CORES */
+/* ==================== */
+:root {
+  --dark-bg: #121212;
+  --dark-card: #1e1e1e;
+  --dark-border: #333;
+  --primary-dark: #0d1b2a;
+  --primary-hover: #1b263b;
+  --primary-active: #415a77;
+  --text-light: #e0e0e0;
+  --scrollbar-thumb: #415a77;
+  --scrollbar-hover: #778da9;
+}
+
+/* ==================== */
+/* ESTILOS GERAIS */
+/* ==================== */
+.dark-mode {
+  background-color: var(--dark-bg);
+  color: var(--text-light);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* ==================== */
+/* LAYOUT PRINCIPAL */
+/* ==================== */
+.sidebar {
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.main-content {
+  min-height: 100vh;
+}
+
+/* ==================== */
+/* COMPONENTES */
+/* ==================== */
+/* SIDEBAR */
+.bg-primary-dark {
+  background-color: var(--primary-dark) !important;
+}
+
+.sidebar .nav-link {
+  color: var(--text-light);
+  transition: all 0.3s ease;
+  border-radius: 0.25rem;
+  margin: 0.25rem 0;
+  padding: 0.5rem 1rem;
+}
+
+.sidebar .nav-link:hover {
+  background-color: var(--primary-hover);
+  color: white;
+}
+
+.sidebar .nav-link.active {
+  background-color: var(--primary-active);
+  color: white;
+}
+
+/* CARDS */
+.bg-dark-light {
+  background-color: var(--dark-card);
+  border: 1px solid var(--dark-border);
+}
+
+.card {
+  border: 1px solid var(--dark-border);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.animate-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+/* TABELAS */
+.table-dark {
+  --bs-table-bg: var(--dark-card);
+  --bs-table-striped-bg: #252525;
+  --bs-table-hover-bg: #2a2a2a;
+  --bs-table-border-color: var(--dark-border);
+}
+
+.table-dark .animate-row {
+  transition: all 0.3s ease;
+}
+
+.table-dark .animate-row:hover {
+  background-color: #2a2a2a;
+}
+
+.table-dark td {
+  vertical-align: middle;
+}
+
+/* BARRAS DE PROGRESSO */
+.table-dark .progress {
+  background-color: var(--dark-border);
+  border-radius: 3px;
+  min-width: 80px;
+  height: 6px;
+}
+
+/* BADGES */
+.table-dark .badge {
+  font-weight: 500;
+  padding: 0.35em 0.65em;
+  font-size: 0.85em;
+}
+
+/* PAGINAÇÃO */
+.pagination .page-item .page-link {
+  background-color: var(--dark-card);
+  border-color: var(--dark-border);
+  color: var(--text-light);
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.pagination .page-item.disabled .page-link {
+  background-color: var(--dark-card);
+  color: #6c757d;
+}
+
+/* GRÁFICOS */
+.chart-container {
+  position: relative;
+  height: 300px;
+  width: 100%;
+}
+
+/* ANIMAÇÕES */
+.animate-hover:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+/* BARRA DE ROLAGEM */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dark-card);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-hover);
+}
+
+/* ==================== */
+/* RESPONSIVIDADE */
+/* ==================== */
+@media (max-width: 992px) {
+  .sidebar {
+    position: fixed;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .sidebar.show {
+    transform: translateX(0);
+  }
+  
+  .main-content {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .card-body h3 {
+    font-size: 1.4rem;
+  }
+
+  .card-body h6 {
+    font-size: 0.9rem;
+  }
+
+  .row.g-3 > div {
+    margin-bottom: 1rem;
+  }
+  
+  .main-content {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  header {
+    justify-content: center !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .my-4 {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ==================== */
+/* UTILITÁRIOS */
+/* ==================== */
+.vh-100 {
+  height: 100vh;
+}
+
+.position-sticky {
+  position: sticky;
+  top: 0;
+}
+
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
