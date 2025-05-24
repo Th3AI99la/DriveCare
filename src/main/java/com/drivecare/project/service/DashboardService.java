@@ -14,60 +14,60 @@ import com.drivecare.project.repository.VehicleRepository;
 @Service
 public class DashboardService {
 
-    private final VehicleRepository vehicleRepository;
-    private final MaintenanceRepository maintenanceRepository;
+    private final VehicleRepository repositorioVeiculos;
+    private final MaintenanceRepository repositorioManutencoes;
 
-    public DashboardService(VehicleRepository vehicleRepository,
-            MaintenanceRepository maintenanceRepository) {
-        this.vehicleRepository = vehicleRepository;
-        this.maintenanceRepository = maintenanceRepository;
+    public DashboardService(VehicleRepository repositorioVeiculos,
+            MaintenanceRepository repositorioManutencoes) {
+        this.repositorioVeiculos = repositorioVeiculos;
+        this.repositorioManutencoes = repositorioManutencoes;
     }
 
     public long getTotalVehicles() {
-        return vehicleRepository.count();
+        return repositorioVeiculos.count();
     }
 
     public long getOkMaintenances() {
-        return vehicleRepository.countByStatus("OK");
+        return repositorioVeiculos.countByStatus("OK");
     }
 
     public long getPendingMaintenances() {
-        return vehicleRepository.countByStatus("PENDING");
+        return repositorioVeiculos.countByStatus("PENDING");
     }
 
     public long getCriticalAlerts() {
-        return vehicleRepository.countByStatus("LATE");
+        return repositorioVeiculos.countByStatus("LATE");
     }
 
     public double getMonthlyExpenses() {
-        Double expenses = maintenanceRepository.sumMonthlyExpenses();
-        return expenses != null ? expenses : 0.0;
+        Double despesas = repositorioManutencoes.sumMonthlyExpenses();
+        return despesas != null ? despesas : 0.0;
     }
 
     public List<Maintenance> getRecentMaintenances() {
-        return maintenanceRepository.findRecentMaintenances();
+        return repositorioManutencoes.findRecentMaintenances();
     }
 
     public List<Vehicle> getAllVehicles() {
-        return vehicleRepository.findAll();
+        return repositorioVeiculos.findAll();
     }
 
     public List<Maintenance> getUpcomingMaintenances() {
-        return maintenanceRepository.findUpcomingMaintenances();
+        return repositorioManutencoes.findUpcomingMaintenances();
     }
 
     public Map<String, Object> getChartData() {
-        Map<String, Object> chartData = new HashMap<>();
+        Map<String, Object> dadosGrafico = new HashMap<>();
 
         // Dados para gráfico de status dos veículos
-        chartData.put("totalVehicles", getTotalVehicles()); // Total de veículos
-        chartData.put("okVehicles", getOkMaintenances()); // Veículos com manutenção OK
-        chartData.put("pendingVehicles", getPendingMaintenances()); // Veículos com manutenção pendente
-        chartData.put("lateVehicles", getCriticalAlerts()); // Veículos com manutenção atrasada
+        dadosGrafico.put("totalVehicles", getTotalVehicles()); // Total de veículos
+        dadosGrafico.put("okVehicles", getOkMaintenances()); // Veículos com manutenção OK
+        dadosGrafico.put("pendingVehicles", getPendingMaintenances()); // Veículos com manutenção pendente
+        dadosGrafico.put("lateVehicles", getCriticalAlerts()); // Veículos com manutenção atrasada
 
         // Dados para gráfico de tipos de manutenção
-        chartData.put("maintenanceTypes", maintenanceRepository.countByMaintenanceType()); // Contagem de tipos de manutenção
+        dadosGrafico.put("maintenanceTypes", repositorioManutencoes.countByMaintenanceType()); // Contagem de tipos de manutenção
 
-        return chartData;
+        return dadosGrafico;
     }
 }

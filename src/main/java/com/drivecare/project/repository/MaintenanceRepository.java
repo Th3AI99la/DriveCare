@@ -11,17 +11,17 @@ import com.drivecare.project.model.Maintenance;
 @Repository
 public interface MaintenanceRepository extends JpaRepository<Maintenance, Long> {
 
-    List<Maintenance> findByVehicleId(Long vehicleId);
+    List<Maintenance> findByVehicleId(Long idVeiculo);
 
-    @Query("SELECT m FROM Maintenance m ORDER BY m.date DESC LIMIT 5")
+    @Query("SELECT m FROM Maintenance m ORDER BY m.data DESC LIMIT 5")
     List<Maintenance> findRecentMaintenances();
 
-    @Query("SELECT m.type, COUNT(m) FROM Maintenance m GROUP BY m.type")
+    @Query("SELECT m.tipo, COUNT(m) FROM Maintenance m GROUP BY m.tipo")
     List<Object[]> countByMaintenanceType();
 
-    @Query("SELECT SUM(m.cost) FROM Maintenance m WHERE YEAR(m.date) = YEAR(CURRENT_DATE) AND MONTH(m.date) = MONTH(CURRENT_DATE)")
+    @Query("SELECT SUM(m.custo) FROM Maintenance m WHERE YEAR(m.data) = YEAR(CURRENT_DATE) AND MONTH(m.data) = MONTH(CURRENT_DATE)")
     Double sumMonthlyExpenses();
 
-    @Query("SELECT m FROM Maintenance m WHERE m.nextDate BETWEEN CURRENT_DATE AND CURRENT_DATE + 30")
+    @Query("SELECT m FROM Maintenance m WHERE m.proximaData BETWEEN CURRENT_DATE AND CURRENT_DATE + 30")
     List<Maintenance> findUpcomingMaintenances();
 }

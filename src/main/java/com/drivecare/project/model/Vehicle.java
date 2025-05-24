@@ -18,27 +18,27 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String brand; // Marca do veículo
-    private String model; // Modelo do veículo
-    private Integer year; // Ano do veículo
-    private String plate; // Placa do veículo
-    private Double mileage; // Quilometragem do veículo
+    private String marca; // Marca do veículo
+    private String modelo; // Modelo do veículo
+    private Integer ano; // Ano do veículo
+    private String placa; // Placa do veículo
+    private Double quilometragem; // Quilometragem do veículo
     private String status; // OK, PENDENTE, ATRASADO
 
     @Column(name = "next_maintenance")
-    private LocalDate nextMaintenance;
+    private LocalDate proximaManutencao;
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
-    private List<Maintenance> maintenances;
+    private List<Maintenance> manutencoes;
 
     // Construtores
     public Vehicle() {
     }
 
-    public Vehicle(String brand, String model, String plate) {
-        this.brand = brand;
-        this.model = model;
-        this.plate = plate;
+    public Vehicle(String marca, String modelo, String placa) {
+        this.marca = marca;
+        this.modelo = modelo;
+        this.placa = placa;
     }
 
     // Getters e Setters
@@ -51,43 +51,43 @@ public class Vehicle {
     }
 
     public String getBrand() {
-        return brand;
+        return marca;
     }
 
-    public void setBrand(String brand) {
-        this.brand = brand;
+    public void setBrand(String marca) {
+        this.marca = marca;
     }
 
     public String getModel() {
-        return model;
+        return modelo;
     }
 
-    public void setModel(String model) {
-        this.model = model;
+    public void setModel(String modelo) {
+        this.modelo = modelo;
     }
 
     public Integer getYear() {
-        return year;
+        return ano;
     }
 
-    public void setYear(Integer year) {
-        this.year = year;
+    public void setYear(Integer ano) {
+        this.ano = ano;
     }
 
     public String getPlate() {
-        return plate;
+        return placa;
     }
 
-    public void setPlate(String plate) {
-        this.plate = plate;
+    public void setPlate(String placa) {
+        this.placa = placa;
     }
 
     public Double getMileage() {
-        return mileage;
+        return quilometragem;
     }
 
-    public void setMileage(Double mileage) {
-        this.mileage = mileage;
+    public void setMileage(Double quilometragem) {
+        this.quilometragem = quilometragem;
     }
 
     public String getStatus() {
@@ -99,18 +99,18 @@ public class Vehicle {
     }
 
     public LocalDate getNextMaintenance() {
-        return nextMaintenance;
+        return proximaManutencao;
     }
 
-    public void setNextMaintenance(LocalDate nextMaintenance) {
-        this.nextMaintenance = nextMaintenance;
+    public void setNextMaintenance(LocalDate proximaManutencao) {
+        this.proximaManutencao = proximaManutencao;
     }
 
     public List<Maintenance> getMaintenances() {
-        return maintenances;
+        return manutencoes;
     }
 
-    public void setMaintenances(List<Maintenance> maintenances) {
-        this.maintenances = maintenances;
+    public void setMaintenances(List<Maintenance> manutencoes) {
+        this.manutencoes = manutencoes;
     }
 }

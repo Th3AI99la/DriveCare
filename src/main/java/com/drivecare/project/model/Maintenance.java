@@ -17,26 +17,26 @@ public class Maintenance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String type; // Preventiva, Corretiva, Revisão
-    private String description;
-    private Double cost;
-    private LocalDate date;
+    private String tipo; // Preventiva, Corretiva, Revisão
+    private String descricao;
+    private Double custo;
+    private LocalDate data;
 
     @Column(name = "next_date")
-    private LocalDate nextDate;
+    private LocalDate proximaData;
 
     @ManyToOne
     @JoinColumn(name = "vehicle_id")
-    private Vehicle vehicle;
+    private Vehicle veiculo;
 
     // Construtores
     public Maintenance() {
     }
 
-    public Maintenance(String type, LocalDate date, Vehicle vehicle) {
-        this.type = type; // Preventiva, Corretiva, Revisão
-        this.date = date; // Data da manutenção
-        this.vehicle = vehicle; // Veículo associado à manutenção
+    public Maintenance(String tipo, LocalDate data, Vehicle veiculo) {
+        this.tipo = tipo; // Preventiva, Corretiva, Revisão
+        this.data = data; // Data da manutenção
+        this.veiculo = veiculo; // Veículo associado à manutenção
     }
 
     // Getters e Setters
@@ -49,50 +49,50 @@ public class Maintenance {
     }
 
     public String getType() {
-        return type;
+        return tipo;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setType(String tipo) {
+        this.tipo = tipo;
     }
 
     public String getDescription() {
-        return description;
+        return descricao;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescription(String descricao) {
+        this.descricao = descricao;
     }
 
     public Double getCost() {
-        return cost;
+        return custo;
     }
 
-    public void setCost(Double cost) {
-        this.cost = cost;
+    public void setCost(Double custo) {
+        this.custo = custo;
     }
 
     public LocalDate getDate() {
-        return date;
+        return data;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setDate(LocalDate data) {
+        this.data = data;
     }
 
     public LocalDate getNextDate() {
-        return nextDate;
+        return proximaData;
     }
 
-    public void setNextDate(LocalDate nextDate) {
-        this.nextDate = nextDate;
+    public void setNextDate(LocalDate proximaData) {
+        this.proximaData = proximaData;
     }
 
     public Vehicle getVehicle() {
-        return vehicle;
+        return veiculo;
     }
 
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
+    public void setVehicle(Vehicle veiculo) {
+        this.veiculo = veiculo;
     }
 }
