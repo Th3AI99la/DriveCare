@@ -238,10 +238,10 @@
 
                 <!-- Status da manutenção -->
                   <td class="text-end">
-                      <span th:if="${manutencao.diasCalculados != null and manutencao.diasCalculados.longValue() >= 0}"
-                            th:classappend="manutencao.diasCalculados.longValue() <= 2 ? 'bg-warning text-dark' : 'bg-info'"
-                            th:text="manutencao.diasCalculados.longValue() == 0 ? 'Hoje' : (manutencao.diasCalculados.longValue() == 1 ? 'Em 1 dia' : ('Em ' + manutencao.diasCalculados.longValue() + ' dias'))"
-                            class="badge">-</span>
+                    <span th:if="${manutencao.diasCalculados != null and manutencao.diasCalculados.longValue() >= 0}"
+                          th:classappend="manutencao.diasCalculados.longValue() <= 2 ? 'bg-warning text-dark' : 'bg-info'"
+                          th:text="manutencao.diasCalculados.longValue() == 0 ? 'Hoje' : (manutencao.diasCalculados.longValue() == 1 ? 'Em 1 dia' : ('Em ' + manutencao.diasCalculados.longValue() + ' dias'))"
+                          class="badge">-</span>
 
                       <span th:if="${manutencao.diasCalculados != null and manutencao.diasCalculados.longValue() < 0}"
                             class="badge bg-danger"
