@@ -189,10 +189,21 @@
               </thead>
               <tbody>
                 <tr th:each="manutencao : ${manutencoesRecentes}">
-                  <td th:text="${manutencao.veiculo?.modelo}">Modelo</td>
+                  <td>
+                    <div th:if="${manutencao.veiculo != null}" th:text="${manutencao.veiculo.modelo}">Modelo do Veículo</div>
+                    <div th:if="${manutencao.veiculo == null}">-</div> <small class="text-muted" 
+                           th:if="${manutencao.veiculo != null}" 
+                           th:text="${manutencao.veiculo.marca} + (${manutencao.veiculo.placa != null ? ' - ' + manutencao.veiculo.placa : ''})">
+                           Marca - Placa
+                    </small>
+                    <small class="text-muted" th:if="${manutencao.veiculo == null}">-</small>
+                  </td>
                   <td th:text="${manutencao.tipo}">Tipo</td>
                   <td th:text="${manutencao.dataFormatada}">-</td>
                   <td th:text="${manutencao.proximaDataFormatada}">-</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(manutencoesRecentes)}">
+                    <td colspan="4" class="text-center text-muted">Nenhuma manutenção recente.</td>
                 </tr>
               </tbody>
             </table>
