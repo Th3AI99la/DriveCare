@@ -218,19 +218,22 @@
                 </tr>
               </thead>
               <tbody>
-                <tr class="animate-row" th:each="manutencao : ${proximasManutencoes}">
+               <tr class="animate-row" th:each="manutencao : ${proximasManutencoes}">
                   <td>
                     <div class="d-flex align-items-center">
-                      <i class="bi bi-car-front-fill me-2 text-secondary"></i> <div>
-                        <div th:text="${manutencao.veiculo?.modelo}">-</div> <small class="text-muted" th:text="${manutencao.tipo}">-</small>
+                      <i class="bi bi-car-front-fill me-2 text-secondary"></i> 
+                      <div>
+                        <div th:text="${manutencao.veiculo?.modelo}">-</div>
+                        <small class="text-muted" th:text="${manutencao.tipo}">-</small>
                       </div>
                     </div>
                   </td>
+     
+                  <td th:text="${manutencao.veiculo?.placa}">-</td> 
                   
-                  <td th:text="${manutencao.veiculo.placa}">-</td>
+                  <td th:text="${manutencao.description}">-</td>
                   
-                  <td th:text="${manutencao.proximaDataFormatada}">-</td>
-                
+          
                 <!-- Barra de progresso para o status da manutenção -->
                   <td>
                     <div class="progress" style="height: 6px; width: 100px;">
@@ -241,22 +244,23 @@
                   </td>
 
                 <!-- Status da manutenção -->
-            <td class="text-end">
-                <th:block th:if="${manutencao.diasCalculados != null}">
-                    <th:block th:with="dias = ${manutencao.diasCalculados.longValue()}">
-                        <span th:if="${dias >= 20}"
-                              class="badge bg-success"
-                              th:text="'Em ' + ${dias} + ' dias'">-</span>
-                        <span th:if="${dias < 20 and dias >= 0}"
-                              class="badge bg-warning text-dark" th:text="${dias == 0 ? 'Hoje' : (dias == 1 ? 'Em 1 dia' : ('Em ' + dias + ' dias'))}">-</span>
-                        <span th:if="${dias < 0}"
-                              class="badge bg-danger"
-                              th:text="'Atrasada há ' + (${dias} * -1) + ' dias'">-</span>
-                    </th:block>
-                </th:block>
-                <span th:if="${manutencao.diasCalculados == null}"
-                      class="badge bg-secondary">N/D</span>
-            </td>
+                  <td class="text-end">
+                      <div th:if="${manutencao.diasCalculados != null}"> <th:block th:with="dias = ${manutencao.diasCalculados.longValue()}">
+                              <span th:if="${dias >= 20}"
+                                    class="badge bg-success d-block mb-1" th:text="'Em ' + ${dias} + ' dias'">-</span>
+                              <span th:if="${dias < 20 and dias >= 0}"
+                                    class="badge bg-warning text-dark d-block mb-1"
+                                    th:text="${dias == 0 ? 'Hoje' : (dias == 1 ? 'Em 1 dia' : ('Em ' + dias + ' dias'))}">-</span>
+                              <span th:if="${dias < 0}"
+                                    class="badge bg-danger d-block mb-1"
+                                    th:text="'Atrasada há ' + (${dias} * -1) + ' dias'">-</span>
+                          </th:block>
+                          <small class="text-muted date-under-badge" th:text="${manutencao.proximaDataFormatada}">dd/MM/yyyy</small>
+                      </div>
+                      <div th:if="${manutencao.diasCalculados == null}"> <span class="badge bg-secondary d-block mb-1">N/D</span>
+                          <small class="text-muted date-under-badge" th:text="${manutencao.proximaDataFormatada}">-</small>
+                      </div>
+                  </td>
                 </tr>
                 
                 <tr th:if="${#lists.isEmpty(proximasManutencoes)}" class="animate-row">
