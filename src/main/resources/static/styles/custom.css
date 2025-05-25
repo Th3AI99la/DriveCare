@@ -16,9 +16,16 @@
 /* ==================== */
 /* ESTILOS GERAIS */
 /* ==================== */
-.dark-mode {
+body.dark-mode {
   background-color: var(--dark-bg);
   color: var(--text-light);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.text-muted {
+  color: #bcbbbb !important;
 }
 
 img {
@@ -27,25 +34,43 @@ img {
   object-fit: cover;
 }
 
-/* ==================== */
-/* LAYOUT PRINCIPAL */
-/* ==================== */
-.sidebar {
-  height: 100vh;
-  position: sticky;
-  top: 0;
-}
-
-.main-content {
-  min-height: 100vh;
+/* Efeito padrão para elementos interativos */
+.card,
+.btn,
+.nav-link,
+.page-link {
+  transition: all 0.25s ease-in-out;
 }
 
 /* ==================== */
 /* COMPONENTES */
 /* ==================== */
+
+/* BOTÕES E LINKS */
+.btn-primary-custom {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out,
+    transform 0.2s ease;
+}
+
+.btn-primary-custom:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+  transform: translateY(-2px);
+  color: #fff;
+}
+
 /* SIDEBAR */
 .bg-primary-dark {
   background-color: var(--primary-dark) !important;
+}
+
+.sidebar {
+  height: 100vh;
+  position: sticky;
+  top: 0;
 }
 
 .sidebar .nav-link {
@@ -54,11 +79,13 @@ img {
   border-radius: 0.25rem;
   margin: 0.25rem 0;
   padding: 0.5rem 1rem;
+  position: relative;
 }
 
 .sidebar .nav-link:hover {
   background-color: var(--primary-hover);
   color: white;
+  transform: translateX(3px);
 }
 
 .sidebar .nav-link.active {
@@ -66,6 +93,26 @@ img {
   color: white;
 }
 
+.sidebar .nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 70%;
+  width: 4px;
+  background-color: #007bff;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ==================== */
+/* LAYOUT PRINCIPAL */
+/* ==================== */
+.main-content {
+  min-height: 100vh;
+}
+
+/* ==================== */
 /* CARDS */
 .bg-dark-light {
   background-color: var(--dark-card);
@@ -74,7 +121,6 @@ img {
 
 .card {
   border: 1px solid var(--dark-border);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .animate-card:hover {
@@ -83,6 +129,7 @@ img {
   z-index: 10;
 }
 
+/* ==================== */
 /* TABELAS */
 .table-dark {
   --bs-table-bg: var(--dark-card);
@@ -96,14 +143,16 @@ img {
 }
 
 .table-dark .animate-row:hover {
-  background-color: #2a2a2a;
+  background-color: #2c2c2e;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transform: scale(1.01);
+  z-index: 1;
 }
 
 .table-dark td {
   vertical-align: middle;
 }
 
-/* BARRAS DE PROGRESSO */
 .table-dark .progress {
   background-color: var(--dark-border);
   border-radius: 3px;
@@ -111,13 +160,24 @@ img {
   height: 6px;
 }
 
-/* BADGES */
 .table-dark .badge {
   font-weight: 500;
   padding: 0.35em 0.65em;
   font-size: 0.85em;
 }
 
+/* ==================== */
+/* BADGES */
+.btn,
+.badge {
+  transition: all 0.3s ease;
+}
+
+.badge:hover {
+  opacity: 0.85;
+}
+
+/* ==================== */
 /* PAGINAÇÃO */
 .pagination .page-item .page-link {
   background-color: var(--dark-card);
@@ -135,6 +195,7 @@ img {
   color: #6c757d;
 }
 
+/* ==================== */
 /* GRÁFICOS */
 .chart-container {
   position: relative;
@@ -142,12 +203,13 @@ img {
   width: 100%;
 }
 
+/* ==================== */
 /* ANIMAÇÕES */
 .animate-hover:hover {
   transform: scale(1.05);
-  transition: transform 0.3s ease;
 }
 
+/* ==================== */
 /* BARRA DE ROLAGEM */
 ::-webkit-scrollbar {
   width: 8px;
@@ -177,11 +239,11 @@ img {
     transform: translateX(-100%);
     transition: transform 0.3s ease;
   }
-  
+
   .sidebar.show {
     transform: translateX(0);
   }
-  
+
   .main-content {
     width: 100% !important;
     margin-left: 0 !important;
@@ -200,12 +262,12 @@ img {
   .row.g-3 > div {
     margin-bottom: 1rem;
   }
-  
+
   .main-content {
     padding-left: 1rem !important;
     padding-right: 1rem !important;
   }
-  
+
   header {
     justify-content: center !important;
   }
@@ -216,7 +278,7 @@ img {
     margin-top: 1rem !important;
     margin-bottom: 1rem !important;
   }
-  
+
   .table-responsive {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -239,4 +301,41 @@ img {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* ESTILOS DO PERFIL DO USUÁRIO */
+
+.user-profile {
+  display: flex;
+  flex-direction: row-reverse; /* inverte posição: ícone à direita */
+  align-items: center;
+  text-align: left;
+}
+
+.user-icon-wrapper {
+  width: 40px; /* largura fixa para isolar o ícone */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* impede que o ícone diminua com nomes longos */
+}
+
+.user-icon {
+  font-size: 25px; /* controle manual do tamanho */
+  transition: transform 0.3s ease;
+  color: #1670d0;
+}
+
+.animate-hover-icon:hover {
+  transform: scale(1.2);
+}
+
+.user-name {
+  margin-left: 0.9rem; /* espaço entre ícone e nome */
+  font-size: 15px;
+  color: var(--text-light);
+  max-width: 100px; /* controla nomes longos */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

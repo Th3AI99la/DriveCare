@@ -14,8 +14,10 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="/scripts/custom.js" defer></script>
 </head>
-<body class="dark-mode">
 
+
+<!-- BODY -->
+<body class="dark-mode">
   <div class="container-fluid">
     <div class="row">
 
@@ -72,10 +74,17 @@
       <!-- CONTEÚDO PRINCIPAL -->
       <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4 bg-dark text-light">
 
-        <!-- HEADER com ícone do usuário -->
+<!-- HEADER com ícone do usuário e nome ao lado -->
         <header class="d-flex justify-content-end py-3 border-bottom border-secondary">
-          <a href="#" th:href="@{/profile}" class="animate-hover">
-            <img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png" alt="Perfil" width="40" height="40" class="rounded-circle">
+          <a href="#" th:href="@{/profile}" class="text-decoration-none text-light">
+            <div class="d-flex align-items-center user-profile">
+              <div class="user-icon-wrapper me-2">
+                <i class="bi bi-person-circle user-icon animate-hover-icon"></i>
+              </div>
+              <div class="user-name-wrapper">
+                <span class="user-name">José Albino</span>
+              </div>
+            </div>
           </a>
         </header>
 
@@ -212,12 +221,8 @@
                 <tr class="animate-row" th:each="manutencao : ${proximasManutencoes}">
                   <td>
                     <div class="d-flex align-items-center">
-                      <i class="bi me-2" 
-                        th:classappend="${manutencao.tipo == 'Troca de óleo'} ? 'bi-droplet-fill text-primary' : (${manutencao.tipo == 'Revisão'} ? 'bi-tools text-warning' : 'bi-exclamation-triangle-fill text-danger')">
-                      </i>
-                      <div>
-                        <div th:text="${manutencao.veiculo.modelo}">-</div>
-                        <small class="text-muted" th:text="${manutencao.tipo}">-</small>
+                      <i class="bi bi-car-front-fill me-2 text-secondary"></i> <div>
+                        <div th:text="${manutencao.veiculo?.modelo}">-</div> <small class="text-muted" th:text="${manutencao.tipo}">-</small>
                       </div>
                     </div>
                   </td>
@@ -236,23 +241,22 @@
                   </td>
 
                 <!-- Status da manutenção -->
-                  <td class="text-end">
-                      <th:block th:if="${manutencao.diasCalculados != null}">
-                          <th:block th:with="dias = ${manutencao.diasCalculados.longValue()}">
-                              <span th:if="${dias >= 0}"
-                                    th:with="isWarning = ${dias <= 2}" 
-                                    th:classappend="${isWarning ? 'bg-warning text-dark' : 'bg-info'}"
-                                    th:text="${dias == 0 ? 'Hoje' : (dias == 1 ? 'Em 1 dia' : ('Em ' + dias + ' dias'))}"
-                                    class="badge">-</span>
-
-                              <span th:if="${dias < 0}"
-                                    class="badge bg-danger"
-                                    th:text="'Atrasada há ' + (dias * -1) + ' dias'">-</span>
-                          </th:block>
-                      </th:block>
-                      <span th:if="${manutencao.diasCalculados == null}"
-                            class="badge bg-secondary">N/D</span>
-                  </td>
+            <td class="text-end">
+                <th:block th:if="${manutencao.diasCalculados != null}">
+                    <th:block th:with="dias = ${manutencao.diasCalculados.longValue()}">
+                        <span th:if="${dias >= 20}"
+                              class="badge bg-success"
+                              th:text="'Em ' + ${dias} + ' dias'">-</span>
+                        <span th:if="${dias < 20 and dias >= 0}"
+                              class="badge bg-warning text-dark" th:text="${dias == 0 ? 'Hoje' : (dias == 1 ? 'Em 1 dia' : ('Em ' + dias + ' dias'))}">-</span>
+                        <span th:if="${dias < 0}"
+                              class="badge bg-danger"
+                              th:text="'Atrasada há ' + (${dias} * -1) + ' dias'">-</span>
+                    </th:block>
+                </th:block>
+                <span th:if="${manutencao.diasCalculados == null}"
+                      class="badge bg-secondary">N/D</span>
+            </td>
                 </tr>
                 
                 <tr th:if="${#lists.isEmpty(proximasManutencoes)}" class="animate-row">

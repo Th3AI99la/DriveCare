@@ -221,3 +221,5 @@ document.addEventListener('DOMContentLoaded', function() {
   // ... outros códigos existentes ...
   initTableAnimations();
 });
+
+// <!-- FIM PRÓXIMAS MANUTENÇÕES -->
