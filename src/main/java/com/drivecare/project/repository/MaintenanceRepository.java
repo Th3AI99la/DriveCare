@@ -1,11 +1,11 @@
 package com.drivecare.project.repository;
 
-import java.time.LocalDate; // Adicionar importação
+import java.time.LocalDate; 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param; // Adicionar importação
+import org.springframework.data.repository.query.Param; 
 import org.springframework.stereotype.Repository;
 
 import com.drivecare.project.model.Maintenance;
@@ -25,7 +25,7 @@ public interface MaintenanceRepository extends JpaRepository<Maintenance, Long> 
     Double sumMonthlyExpenses();
 
 
-    @Query("SELECT m FROM Maintenance m WHERE m.proximaData >= CURRENT_DATE AND m.proximaData <= :endDate")
+   @Query("SELECT m FROM Maintenance m WHERE m.proximaData >= CURRENT_DATE AND m.proximaData <= :endDate ORDER BY m.proximaData ASC") 
     List<Maintenance> findUpcomingMaintenances(@Param("endDate") LocalDate endDate);
 
     

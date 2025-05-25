@@ -214,7 +214,7 @@
         <div class="my-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h4>Próximas Manutenções</h4>
-            <span class="text-muted" th:text="'Mostrando ' + ${contagemAtual} + ' de ' + ${totalContagem} + ' veículos'">Mostrando 0 de 0 veículos</span>
+            <span class="text-muted" th:text="'Mostrando ' + ${contagemAtual} + ' de ' + ${totalContagem} + ' itens'">Mostrando 0 de 0 itens</span>
           </div>
           
           <div class="table-responsive">
@@ -283,21 +283,18 @@
           
           <!-- Paginação dinâmica -->
           <nav aria-label="Navegação de páginas" th:if="${totalPaginas > 1}">
-            <ul class="pagination justify-content-end mt-3">
-              <li th:classappend="${paginaAtual == 1} ? 'disabled'" class="page-item">
-                <a class="page-link" th:href="@{/dashboard(pagina=${paginaAtual-1})}" tabindex="-1">Anterior</a>
-              </li>
-              
-              <li th:each="pagina : ${#numbers.sequence(1, totalPaginas)}"
-                  th:classappend="${pagina == paginaAtual} ? 'active'"
-                  class="page-item">
-                <a class="page-link" th:href="@{/dashboard(pagina=${pagina})}" th:text="${pagina}">1</a>
-              </li>
-              
-              <li th:classappend="${paginaAtual == totalPaginas} ? 'disabled'" class="page-item">
-                <a class="page-link" th:href="@{/dashboard(pagina=${paginaAtual+1})}">Próxima</a>
-              </li>
-            </ul>
+              <ul class="pagination justify-content-end mt-3">
+                  <li th:classappend="${paginaAtual == 1} ? 'disabled'" class="page-item">
+                      <a class="page-link" th:href="@{/(pagina=${paginaAtual-1})}" tabindex="-1">Anterior</a> </li>
+                  <li th:each="i : ${#numbers.sequence(1, totalPaginas)}"
+                      th:classappend="${i == paginaAtual} ? 'active'"
+                      class="page-item">
+                      <a class="page-link" th:href="@{/(pagina=${i})}" th:text="${i}">1</a>
+                  </li>
+                  <li th:classappend="${paginaAtual == totalPaginas} ? 'disabled'" class="page-item">
+                      <a class="page-link" th:href="@{/(pagina=${paginaAtual+1})}">Próxima</a>
+                  </li>
+              </ul>
           </nav>
         </div>
 
