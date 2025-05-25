@@ -10,7 +10,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -24,31 +23,30 @@ public class ManutencaoRealizada {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "veiculo_id", nullable = false)
-    private Vehicle veiculo; // Mapeia para a coluna 'veiculo_id' (BIGINT)
+    private Vehicle veiculo;
 
     @Column(name = "data_execucao", nullable = false)
-    private LocalDate dataExecucao; // Mapeia para 'data_execucao' (DATE) - IMPORTANTE PARA O REPOSITÓRIO
+    private LocalDate dataExecucao;
 
-    @Lob
-    @Column(name = "descricao_servico_realizado", columnDefinition = "TEXT")
-    private String descricaoServicoRealizado; // Mapeia para 'descricao_servico_realizado' (TEXT) - CORRETO COMO STRING
+    // para String, ou especificando um VARCHAR com length.
+    @Column(name = "descricao_servico_realizado", length = 1000) // Exemplo: VARCHAR(1000)
+    private String descricaoServicoRealizado;
 
     @Column(name = "tipo_manutencao")
-    private String tipoManutencao; // Mapeia para 'tipo_manutencao' (VARCHAR)
+    private String tipoManutencao;
 
     @Column(name = "custo_real")
-    private Double custoReal; // Mapeia para 'custo_real' (DOUBLE PRECISION)
+    private Double custoReal;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manutencao_agendada_id", nullable = true)
-    private Maintenance manutencaoAgendada; // Mapeia para 'manutencao_agendada_id' (BIGINT)
+    private Maintenance manutencaoAgendada;
 
     // Construtor padrão
     public ManutencaoRealizada() {
     }
 
-    // Construtor ajustado (sem localOficina e notasAdicionais, mas com
-    // descricaoServicoRealizado)
+    // Construtor completo (ajustado se você removeu campos como localOficina)
     public ManutencaoRealizada(Vehicle veiculo, LocalDate dataExecucao, String descricaoServicoRealizado,
             String tipoManutencao, Double custoReal, Maintenance manutencaoAgendada) {
         this.veiculo = veiculo;
@@ -59,7 +57,7 @@ public class ManutencaoRealizada {
         this.manutencaoAgendada = manutencaoAgendada;
     }
 
-    // Getters e Setters para TODOS os campos acima
+    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -76,20 +74,19 @@ public class ManutencaoRealizada {
         this.veiculo = veiculo;
     }
 
-    public LocalDate getDataExecucao() { // Getter para dataExecucao
+    public LocalDate getDataExecucao() {
         return dataExecucao;
     }
 
-    public void setDataExecucao(LocalDate dataExecucao) { // Setter para dataExecucao
+    public void setDataExecucao(LocalDate dataExecucao) {
         this.dataExecucao = dataExecucao;
     }
 
-    public String getDescricaoServicoRealizado() { // Getter para descricaoServicoRealizado (String)
+    public String getDescricaoServicoRealizado() {
         return descricaoServicoRealizado;
     }
 
-    public void setDescricaoServicoRealizado(String descricaoServicoRealizado) { // Setter para
-                                                                                 // descricaoServicoRealizado (String)
+    public void setDescricaoServicoRealizado(String descricaoServicoRealizado) {
         this.descricaoServicoRealizado = descricaoServicoRealizado;
     }
 
