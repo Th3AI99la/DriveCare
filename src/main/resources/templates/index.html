@@ -175,35 +175,37 @@
         </div>
 
         <!-- MANUTENÇÕES RECENTES -->
-        <div class="my-4">
-          <h4>Manutenções Recentes</h4>
-          <div class="table-responsive">
+      <div class="my-4">
+          <h4>Manutenções Realizadas Recentemente</h4> <div class="table-responsive">
             <table class="table table-dark table-striped table-hover">
               <thead>
                 <tr>
                   <th>Veículo</th>
+                  <th>Serviço Realizado</th>
                   <th>Tipo</th>
-                  <th>Data</th>
-                  <th>Próxima</th>
+                  <th>Data da Execução</th>
+                  <th class="text-end">Custo Real</th>
                 </tr>
               </thead>
               <tbody>
-                <tr th:each="manutencao : ${manutencoesRecentes}">
+                <tr class="animate-row" th:each="realizada : ${historicoManutencoesRecentes}">
                   <td>
-                    <div th:if="${manutencao.veiculo != null}" th:text="${manutencao.veiculo.modelo}">Modelo do Veículo</div>
-                    <div th:if="${manutencao.veiculo == null}">-</div> <small class="text-muted" 
-                           th:if="${manutencao.veiculo != null}" 
-                           th:text="${manutencao.veiculo.marca} + (${manutencao.veiculo.placa != null ? ' - ' + manutencao.veiculo.placa : ''})">
+                    <div th:if="${realizada.veiculo != null}" th:text="${realizada.veiculo.modelo}">Modelo</div>
+                    <div th:if="${realizada.veiculo == null}">-</div>
+                    <small class="text-muted"
+                           th:if="${realizada.veiculo != null}"
+                           th:text="${realizada.veiculo.marca} + (${realizada.veiculo.placa != null ? ' - ' + realizada.veiculo.placa : ''})">
                            Marca - Placa
                     </small>
-                    <small class="text-muted" th:if="${manutencao.veiculo == null}">-</small>
+                    <small class="text-muted" th:if="${realizada.veiculo == null}">-</small>
                   </td>
-                  <td th:text="${manutencao.tipo}">Tipo</td>
-                  <td th:text="${manutencao.dataFormatada}">-</td>
-                  <td th:text="${manutencao.proximaDataFormatada}">-</td>
+                  <td th:text="${realizada.descricaoServicoRealizado}">-</td>
+                  <td th:text="${realizada.tipoManutencao}">-</td>
+                  <td th:text="${realizada.dataExecucaoFormatada}">-</td>
+                  <td class="text-end" th:text="${realizada.custoReal != null ? #numbers.formatCurrency(realizada.custoReal) : '-'}">R$ 0,00</td>
                 </tr>
-                <tr th:if="${#lists.isEmpty(manutencoesRecentes)}">
-                    <td colspan="4" class="text-center text-muted">Nenhuma manutenção recente.</td>
+                <tr th:if="${#lists.isEmpty(historicoManutencoesRecentes)}">
+                    <td colspan="5" class="text-center text-muted">Nenhuma manutenção realizada recentemente.</td>
                 </tr>
               </tbody>
             </table>
@@ -211,54 +213,52 @@
         </div>
 
         <!-- PRÓXIMAS MANUTENÇÕES - TABELA DINÂMICA -->
-        <div class="my-4">
+<div class="my-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4>Próximas Manutenções</h4>
-            <span class="text-muted" th:text="'Mostrando ' + ${contagemAtual} + ' de ' + ${totalContagem} + ' itens'">Mostrando 0 de 0 itens</span>
+            <h4>Agendamentos Pendentes</h4> <span class="text-muted" th:text="'Mostrando ' + ${contagemAtual} + ' de ' + ${totalContagem} + ' agendamentos'">Mostrando 0 de 0 agendamentos</span>
           </div>
-          
+
           <div class="table-responsive">
             <table class="table table-dark table-hover">
               <thead>
                 <tr>
                   <th>Veículo</th>
                   <th>Placa</th>
-                  <th>Próxima Manutenção</th>
-                  <th>Status</th>
-                  <th class="text-end">Dias</th>
+                  <th>Descrição do Serviço</th>
+                  <th>Progresso</th> <th class="text-end">Dias / Data</th>
                 </tr>
               </thead>
               <tbody>
-               <tr class="animate-row" th:each="manutencao : ${proximasManutencoes}">
+                <tr class="animate-row" th:each="agendamento : ${agendamentosPendentes}">
                   <td>
                     <div class="d-flex align-items-center">
-                      <i class="bi bi-car-front-fill me-2 text-secondary"></i> 
-                      <div>
-                        <div th:text="${manutencao.veiculo?.modelo}">-</div>
-                        <small class="text-muted" th:text="${manutencao.tipo}">-</small>
+                      <i class="bi bi-calendar-event me-2 text-secondary"></i> <div>
+                        <div th:text="${agendamento.veiculo?.modelo}">-</div>
+                        <small class="text-muted" th:text="${agendamento.tipo}">-</small>
                       </div>
                     </div>
                   </td>
-     
-                  <td th:text="${manutencao.veiculo?.placa}">-</td> 
-                  
-                  <td th:text="${manutencao.description}">-</td>
-                  
-          
-                <!-- Barra de progresso para o status da manutenção -->
+                  <td th:text="${agendamento.veiculo?.placa}">-</td>
+                  <td th:text="${agendamento.description}">Revisão completa</td>
                   <td>
-                    <div class="progress" style="height: 6px; width: 100px;">
-                      <div th:classappend="manutencao.statusCalculado == 'EM_DIA' ? 'bg-success' : (manutencao.statusCalculado == 'PROXIMO' ? 'bg-warning' : 'bg-danger')"  
-                           th:styleappend="manutencao.statusCalculado == 'EM_DIA' ? 'width: 30%' : (manutencao.statusCalculado == 'PROXIMO' ? 'width: 70%' : 'width: 100%')"
-                           class="progress-bar"></div>
-                    </div>
+                    <th:block th:with="statusVisual = ${agendamento.getStatusVisualAgendamento()}">
+                        <div class="progress" style="height: 6px; width: 100px;">
+                            <div th:classappend="${statusVisual == 'EM_DIA'} ? 'bg-success' : 
+                                                (${statusVisual == 'PROXIMO'} ? 'bg-warning' : 
+                                                (${statusVisual == 'ATRASADO'} ? 'bg-danger' : 'bg-secondary'))"
+                                 th:styleappend="${statusVisual == 'EM_DIA'} ? 'width: 30%' : 
+                                                  (${statusVisual == 'PROXIMO'} ? 'width: 70%' : 
+                                                  (${statusVisual == 'ATRASADO'} ? 'width: 100%' : 'width: 10%'))"  
+                                 class="progress-bar"
+                                 th:title="${statusVisual}"></div> </div>
+                    </th:block>
                   </td>
-
-                <!-- Status da manutenção -->
                   <td class="text-end">
-                      <div th:if="${manutencao.diasCalculados != null}"> <th:block th:with="dias = ${manutencao.diasCalculados.longValue()}">
+                      <div th:if="${agendamento.diasCalculados != null}">
+                          <th:block th:with="dias = ${agendamento.diasCalculados.longValue()}">
                               <span th:if="${dias >= 20}"
-                                    class="badge bg-success d-block mb-1" th:text="'Em ' + ${dias} + ' dias'">-</span>
+                                    class="badge bg-success d-block mb-1"
+                                    th:text="'Em ' + ${dias} + ' dias'">-</span>
                               <span th:if="${dias < 20 and dias >= 0}"
                                     class="badge bg-warning text-dark d-block mb-1"
                                     th:text="${dias == 0 ? 'Hoje' : (dias == 1 ? 'Em 1 dia' : ('Em ' + dias + ' dias'))}">-</span>
@@ -266,37 +266,38 @@
                                     class="badge bg-danger d-block mb-1"
                                     th:text="'Atrasada há ' + (${dias} * -1) + ' dias'">-</span>
                           </th:block>
-                          <small class="text-muted date-under-badge" th:text="${manutencao.proximaDataFormatada}">dd/MM/yyyy</small>
+                          <small class="text-muted date-under-badge" th:text="${agendamento.proximaDataFormatada}">dd/MM/yyyy</small>
                       </div>
-                      <div th:if="${manutencao.diasCalculados == null}"> <span class="badge bg-secondary d-block mb-1">N/D</span>
-                          <small class="text-muted date-under-badge" th:text="${manutencao.proximaDataFormatada}">-</small>
+                      <div th:if="${agendamento.diasCalculados == null}">
+                          <span class="badge bg-secondary d-block mb-1" 
+                                th:text="${agendamento.statusAgendamento != null ? agendamento.statusAgendamento.displayName : 'N/D'}">N/D</span>
+                          <small class="text-muted date-under-badge" th:text="${agendamento.proximaDataFormatada}">-</small>
                       </div>
                   </td>
+                </tr> 
+
+                <!-- Linha para quando não houver agendamentos pendentes -->
+                <tr th:if="${#lists.isEmpty(agendamentosPendentes)}" class="animate-row">
+                  <td colspan="5" class="text-center text-muted">Nenhum agendamento pendente.</td>
                 </tr>
-                
-                <tr th:if="${#lists.isEmpty(proximasManutencoes)}" class="animate-row">
-                  <td colspan="5" class="text-center text-muted">Nenhuma manutenção agendada</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          
-          <!-- Paginação dinâmica -->
-          <nav aria-label="Navegação de páginas" th:if="${totalPaginas > 1}">
-              <ul class="pagination justify-content-end mt-3">
-                  <li th:classappend="${paginaAtual == 1} ? 'disabled'" class="page-item">
-                      <a class="page-link" th:href="@{/(pagina=${paginaAtual-1})}" tabindex="-1">Anterior</a> </li>
-                  <li th:each="i : ${#numbers.sequence(1, totalPaginas)}"
-                      th:classappend="${i == paginaAtual} ? 'active'"
-                      class="page-item">
-                      <a class="page-link" th:href="@{/(pagina=${i})}" th:text="${i}">1</a>
-                  </li>
-                  <li th:classappend="${paginaAtual == totalPaginas} ? 'disabled'" class="page-item">
-                      <a class="page-link" th:href="@{/(pagina=${paginaAtual+1})}">Próxima</a>
-                  </li>
-              </ul>
-          </nav>
-        </div>
+                </tbody>
+                </table>
+              
+                <!--  PAGINAÇÃO DINÂMICA -->
+                <nav aria-label="Navegação de páginas" th:if="${totalPaginas != null and totalPaginas > 0}">
+                  <ul class="pagination justify-content-end mt-3">
+                    <li th:classappend="${paginaAtual == 1} ? 'disabled'" class="page-item">
+                      <a class="page-link" th:href="@{/dashboard(pagina=${paginaAtual-1})}" tabindex="-1">Anterior</a>
+                    </li>
+                    <li th:each="i : ${#numbers.sequence(1, totalPaginas)}" th:classappend="${i == paginaAtual} ? 'active'" class="page-item">
+                      <a class="page-link" th:href="@{/dashboard(pagina=${i})}" th:text="${i}">1</a>
+                    </li>
+                    <li th:classappend="${paginaAtual == totalPaginas} ? 'disabled'" class="page-item">
+                      <a class="page-link" th:href="@{/dashboard(pagina=${paginaAtual+1})}">Próxima</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
 
         <!-- GRÁFICO DE BARRAS: SAÚDE DOS VEÍCULOS -->
         <div class="my-4">
@@ -402,22 +403,24 @@
 
         // Gráfico de Donut - Tipos de Manutenção
         const donutChartCanvas = document.getElementById('donutChart');
-        if (donutChartCanvas && tiposLabels && tiposValores) {
-            donutChartInstance = new Chart(donutChartCanvas, {
-                type: 'doughnut',
-                data: {
-                    labels: tiposLabels,
-                    datasets: [{
-                        data: tiposValores,
-                        backgroundColor: ['#4CAF50', '#FF5722', '#2196F3', '#FFC107', '#9C27B0']
-                    }]
-                },
-                options: {
-                    ...getChartOptions('Tipos de Manutenção'),
-                    cutout: '70%'
-                }
-            });
-        }
+          // Adicionada verificação se tiposValores tem comprimento > 0
+          if (donutChartCanvas && tiposLabels && tiposValores && tiposValores.length > 0) {
+              donutChartInstance = new Chart(donutChartCanvas, {
+                  type: 'doughnut',
+                  data: {
+                      labels: tiposLabels,
+                      datasets: [{
+                          data: tiposValores,
+                          backgroundColor: ['#4CAF50', '#FF5722', '#2196F3', '#FFC107', '#9C27B0']
+                      }]
+                  },
+                  options: {
+                      ...getChartOptions('Tipos de Manutenção'),
+                      cutout: '70%'
+                  }
+              });
+          } else if (donutChartCanvas) {       
+          }
 
         // Gráfico de Barras - Saúde dos Veículos
         const barChartCanvas = document.getElementById('barChart');

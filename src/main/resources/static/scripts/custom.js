@@ -216,9 +216,8 @@ function initTableAnimations() {
   });
 }
 
-// Chame esta função no DOMContentLoaded
 document.addEventListener('DOMContentLoaded', function() {
-  // ... outros códigos existentes ...
+
   initTableAnimations();
 });
 
