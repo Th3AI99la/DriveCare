@@ -174,7 +174,8 @@
           </div>
         </div>
 
-        <!-- MANUTENÇÕES RECENTES -->
+    <!-- MANUTENÇÕES RECENTES-->
+        
       <div class="my-4">
           <h4>Manutenções Realizadas Recentemente</h4> <div class="table-responsive">
             <table class="table table-dark table-striped table-hover">
@@ -199,7 +200,7 @@
                     </small>
                     <small class="text-muted" th:if="${realizada.veiculo == null}">-</small>
                   </td>
-                  <td th:text="${realizada.descricaoServicoRealizado}">-</td>
+                  <td>Serviço (Descrição Removida para Teste)</td>
                   <td th:text="${realizada.tipoManutencao}">-</td>
                   <td th:text="${realizada.dataExecucaoFormatada}">-</td>
                   <td class="text-end" th:text="${realizada.custoReal != null ? #numbers.formatCurrency(realizada.custoReal) : '-'}">R$ 0,00</td>

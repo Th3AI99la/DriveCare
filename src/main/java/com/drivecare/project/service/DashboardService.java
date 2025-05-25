@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service; // Para injeção automática
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable; // Para injeção automática
+import org.springframework.stereotype.Service; 
 
 import com.drivecare.project.model.Maintenance;
 import com.drivecare.project.model.ManutencaoRealizada;
@@ -59,10 +61,12 @@ public class DashboardService {
         return despesas != null ? despesas : 0.0;
     }
 
-    // Busca as últimas 5 manutenções realizadas (ManutencaoRealizada)
-    public List<ManutencaoRealizada> getManutencoesRealizadasRecentes() {
-        return repositorioManutencoesRealizadas.findTop5ByOrderByDataExecucaoDesc();
-    }
+
+   public List<ManutencaoRealizada> getManutencoesRealizadasRecentes() {
+    // Define que queremos a primeira página (índice 0) com 5 itens
+    Pageable topFive = PageRequest.of(0, 5);
+    return repositorioManutencoesRealizadas.findRecentManutencoesRealizadas(topFive);
+}
 
     // Busca agendamentos pendentes ordenados pela próxima data
     public List<Maintenance> getAgendamentosPendentesOrdenados() {
