@@ -200,7 +200,7 @@
                     </small>
                     <small class="text-muted" th:if="${realizada.veiculo == null}">-</small>
                   </td>
-                  <td>Serviço (Descrição Removida para Teste)</td>
+                  <td th:text="${realizada.descricaoServicoRealizado}">-</td>
                   <td th:text="${realizada.tipoManutencao}">-</td>
                   <td th:text="${realizada.dataExecucaoFormatada}">-</td>
                   <td class="text-end" th:text="${realizada.custoReal != null ? #numbers.formatCurrency(realizada.custoReal) : '-'}">R$ 0,00</td>
@@ -214,7 +214,7 @@
         </div>
 
         <!-- PRÓXIMAS MANUTENÇÕES - TABELA DINÂMICA -->
-<div class="my-4">
+      <div class="my-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h4>Agendamentos Pendentes</h4> <span class="text-muted" th:text="'Mostrando ' + ${contagemAtual} + ' de ' + ${totalContagem} + ' agendamentos'">Mostrando 0 de 0 agendamentos</span>
           </div>
