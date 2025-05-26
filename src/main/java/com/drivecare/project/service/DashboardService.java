@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.drivecare.project.model.Maintenance;
 import com.drivecare.project.model.ManutencaoRealizada;
 import com.drivecare.project.model.Vehicle;
+import com.drivecare.project.model.enums.CategoriaManutencao;
 import com.drivecare.project.model.enums.StatusAgendamentoManutencao;
 import com.drivecare.project.repository.MaintenanceRepository;
 import com.drivecare.project.repository.ManutencaoRealizadaRepository;
@@ -39,7 +40,7 @@ public class DashboardService {
         return repositorioVeiculos.count();
     }
 
-        public long getOkMaintenances() {
+    public long getOkMaintenances() {
         return repositorioVeiculos.countByStatus("OK");
     }
 
@@ -48,7 +49,7 @@ public class DashboardService {
     }
 
     public long getCriticalAlerts() {
-        return repositorioVeiculos.countByStatus("LATE"); // Usava "LATE" para críticos/atrasados
+        return repositorioVeiculos.countByStatus("LATE");
     }
 
     public List<ManutencaoRealizada> getManutencoesRealizadasRecentes() {
@@ -99,8 +100,11 @@ public class DashboardService {
 
         if (tiposManutencaoQueryResult != null && !tiposManutencaoQueryResult.isEmpty()) {
             for (Object[] item : tiposManutencaoQueryResult) {
-                if (item[0] != null) {
-                    rotulosTipos.add((String) item[0]);
+                if (item[0] instanceof CategoriaManutencao) {
+                    rotulosTipos.add(((CategoriaManutencao) item[0]).getDisplayName());
+                    valoresTipos.add((Long) item[1]);
+                } else if (item[0] != null) {
+                    rotulosTipos.add(item[0].toString());
                     valoresTipos.add((Long) item[1]);
                 }
             }
