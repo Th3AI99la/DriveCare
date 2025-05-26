@@ -71,9 +71,12 @@ public class DashboardService {
 
         // 4. Iterar sobre os veículos e classificar com base na próxima manutenção
         for (Vehicle vehicle : allVehicles) {
+            // DEBUG: Exibir o ID do veículo sendo processado
+            System.out.println("Processando Veículo ID: " + vehicle.getId());
             Maintenance nextMaintenance = nextMaintenancePerVehicle.get(vehicle.getId());
     
             if (nextMaintenance != null) {
+                System.out.println("  Próxima Manutenção ID: " + nextMaintenance.getId() + ", Próxima Data: " + nextMaintenance.getProximaData() + ", Dias Calculados: " + nextMaintenance.getDiasCalculados());
                 Long diasCalculados = nextMaintenance.getDiasCalculados();
 
                 if (diasCalculados != null) {
@@ -88,6 +91,7 @@ public class DashboardService {
                     okCount++;
                 }
             } else {
+                System.out.println("  Sem manutenção AGENDADA encontrada.");
                 okCount++;
             }
         }
