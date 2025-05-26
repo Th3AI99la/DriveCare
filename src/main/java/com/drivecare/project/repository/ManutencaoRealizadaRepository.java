@@ -15,6 +15,9 @@ public interface ManutencaoRealizadaRepository extends JpaRepository<ManutencaoR
 
     @Query("SELECT mr FROM ManutencaoRealizada mr ORDER BY mr.dataExecucao DESC")
     List<ManutencaoRealizada> findRecentManutencoesRealizadas(Pageable pageable);
+       
+    @Query("SELECT SUM(mr.custoReal) FROM ManutencaoRealizada mr WHERE YEAR(mr.dataExecucao) = YEAR(CURRENT_DATE) AND MONTH(mr.dataExecucao) = MONTH(CURRENT_DATE)")
+    Double sumCurrentMonthRealizedExpenses();
 
 
 }

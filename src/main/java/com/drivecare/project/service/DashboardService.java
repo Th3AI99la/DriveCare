@@ -51,7 +51,7 @@ public class DashboardService {
         // 1. Buscar todos os veículos
         List<Vehicle> allVehicles = repositorioVeiculos.findAll();
 
-        // 2. Buscar todas as manutenções AGENDADAS para otimizar
+        // 2. - Buscar todas as manutenções AGENDADAS para otimizar
         List<Maintenance> scheduledMaintenances = repositorioManutencoes
                 .findByStatusAgendamentoInOrderByProximaDataAsc(
                         Collections.singletonList(StatusAgendamentoManutencao.AGENDADA)); //
@@ -72,30 +72,22 @@ public class DashboardService {
         // 4. Iterar sobre os veículos e classificar com base na próxima manutenção
         for (Vehicle vehicle : allVehicles) {
             Maintenance nextMaintenance = nextMaintenancePerVehicle.get(vehicle.getId());
-
+    
             if (nextMaintenance != null) {
-                // O método getDiasCalculados() já existe na sua entidade Maintenance [cite: 2]
                 Long diasCalculados = nextMaintenance.getDiasCalculados();
 
                 if (diasCalculados != null) {
                     if (diasCalculados < 0) {
                         criticalCount++; // Atrasado
-                    } else if (diasCalculados < 30) { // Pendente (0 a 29 dias)
+                    } else if (diasCalculados < 20) { // Pendente (0 a 19 dias)
                         pendingCount++;
-                    } else { // Em Dia (30 dias ou mais de folga)
+                    } else { // Em Dia (20 dias ou mais de folga)
                         okCount++;
                     }
                 } else {
-                    // Se diasCalculados for null para uma manutenção AGENDADA (ex: proximaData é
-                    // null)
-                    // Isso seria um estado de dados inesperado. Por segurança, podemos classificar
-                    // como OK
-                    // ou criar uma categoria "Indeterminado". Vamos classificar como OK por ora.
                     okCount++;
                 }
             } else {
-                // Veículo não possui nenhuma manutenção AGENDADA.
-                // Interpretamos como "Em Dia" (sem pendências ativas conhecidas).
                 okCount++;
             }
         }
@@ -120,15 +112,16 @@ public class DashboardService {
         }
         return recentes;
     }
-
+    // Método para obter as manutenções agendadas pendentes, ordenadas pela próxima data
     public List<Maintenance> getAgendamentosPendentesOrdenados() {
         List<StatusAgendamentoManutencao> statusesPendentes = Arrays.asList(
+            // Statuses que indicam pendências (AGENDADA e PENDENTE_ATRASADA)
                 StatusAgendamentoManutencao.AGENDADA);
         return repositorioManutencoes.findByStatusAgendamentoInOrderByProximaDataAsc(statusesPendentes);
     }
 
     public double getMonthlyExpenses() {
-        Double despesas = repositorioManutencoes.sumMonthlyExpenses();
+        Double despesas = repositorioManutencoesRealizadas.sumCurrentMonthRealizedExpenses(); 
         return despesas != null ? despesas : 0.0;
     }
 
