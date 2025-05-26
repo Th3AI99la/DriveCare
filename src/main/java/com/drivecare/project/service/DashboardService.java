@@ -42,63 +42,47 @@ public class DashboardService {
     }
 
     // NOVO MÉTODO para calcular dinamicamente os status dos veículos
+    // Em DashboardService.java
     public Map<String, Long> getDynamicVehicleStatusCounts() {
         Map<String, Long> counts = new HashMap<>();
-        long okCount = 0;
-        long pendingCount = 0;
-        long criticalCount = 0;
+        long agendamentosOkCount = 0; // Renomeado para clareza
+        long agendamentosPendentesCount = 0; // Renomeado para clareza
+        long agendamentosCriticosCount = 0; // Renomeado para clareza
 
-        // 1. Buscar todos os veículos
-        List<Vehicle> allVehicles = repositorioVeiculos.findAll();
+        // 1. Definir quais status de manutenção devem ser considerados para os cards
+        // (AGENDADA e PENDENTE_ATRASADA, por exemplo, se PENDENTE_ATRASADA deve ser
+        // crítica)
+        List<StatusAgendamentoManutencao> statusesConsideradosParaCards = Arrays.asList(
+                StatusAgendamentoManutencao.AGENDADA
+        // Adicione StatusAgendamentoManutencao.PENDENTE_ATRASADA aqui se desejar,
+        // StatusAgendamentoManutencao.PENDENTE_ATRASADA
+        );
 
-        // 2. - Buscar todas as manutenções AGENDADAS para otimizar
-        List<Maintenance> scheduledMaintenances = repositorioManutencoes
-                .findByStatusAgendamentoInOrderByProximaDataAsc(
-                        Collections.singletonList(StatusAgendamentoManutencao.AGENDADA)); //
+        // 2. Buscar TODAS as manutenções com os status definidos
+        List<Maintenance> todasManutencoesRelevantes = repositorioManutencoes
+                .findByStatusAgendamentoInOrderByProximaDataAsc(statusesConsideradosParaCards);
 
-        // 3. Mapear a próxima manutenção agendada por ID do veículo
-        Map<Long, Maintenance> nextMaintenancePerVehicle = new HashMap<>();
-        for (Maintenance m : scheduledMaintenances) {
-            if (m.getVeiculo() != null && m.getProximaData() != null) {
-                Long vehicleId = m.getVeiculo().getId();
-                // Se o veículo ainda não está no mapa ou a manutenção atual é mais próxima
-                if (!nextMaintenancePerVehicle.containsKey(vehicleId) ||
-                        m.getProximaData().isBefore(nextMaintenancePerVehicle.get(vehicleId).getProximaData())) {
-                    nextMaintenancePerVehicle.put(vehicleId, m);
+        // 3. Iterar sobre CADA manutenção relevante e classificá-la
+        for (Maintenance manutencao : todasManutencoesRelevantes) {
+
+            Long diasCalculados = manutencao.getDiasCalculados();
+
+            if (diasCalculados != null) {
+                if (diasCalculados < 0) {
+                    agendamentosCriticosCount++; // Conta este agendamento como crítico
+                } else if (diasCalculados < 20) { // Pendente (0 a 19 dias)
+                    agendamentosPendentesCount++; // Conta este agendamento como pendente
+                } else { // Em Dia (20 dias ou mais de folga)
+                    agendamentosOkCount++; // Conta este agendamento como em dia
                 }
             }
+
         }
 
-        // 4. Iterar sobre os veículos e classificar com base na próxima manutenção
-        for (Vehicle vehicle : allVehicles) {
-            // DEBUG: Exibir o ID do veículo sendo processado
-            System.out.println("Processando Veículo ID: " + vehicle.getId());
-            Maintenance nextMaintenance = nextMaintenancePerVehicle.get(vehicle.getId());
-    
-            if (nextMaintenance != null) {
-                System.out.println("  Próxima Manutenção ID: " + nextMaintenance.getId() + ", Próxima Data: " + nextMaintenance.getProximaData() + ", Dias Calculados: " + nextMaintenance.getDiasCalculados());
-                Long diasCalculados = nextMaintenance.getDiasCalculados();
-
-                if (diasCalculados != null) {
-                    if (diasCalculados < 0) {
-                        criticalCount++; // Atrasado
-                    } else if (diasCalculados < 20) { // Pendente (0 a 19 dias)
-                        pendingCount++;
-                    } else { // Em Dia (20 dias ou mais de folga)
-                        okCount++;
-                    }
-                } else {
-                    okCount++;
-                }
-            } else {
-                System.out.println("  Sem manutenção AGENDADA encontrada.");
-                okCount++;
-            }
-        }
-
-        counts.put("veiculosOk", okCount);
-        counts.put("veiculosPendentes", pendingCount);
-        counts.put("veiculosAtrasados", criticalCount);
+        // Os nomes das chaves no Map devem corresponder ao que o Controller e o HTML
+        counts.put("veiculosOk", agendamentosOkCount);
+        counts.put("veiculosPendentes", agendamentosPendentesCount);
+        counts.put("veiculosAtrasados", agendamentosCriticosCount);
         return counts;
     }
 
@@ -106,8 +90,6 @@ public class DashboardService {
         Pageable topFive = PageRequest.of(0, 5);
         List<ManutencaoRealizada> recentes = repositorioManutencoesRealizadas.findRecentManutencoesRealizadas(topFive);
 
-        System.out.println("### DEBUG [Service]: Manutenções Realizadas Recentes - Tamanho: "
-                + (recentes != null ? recentes.size() : "null"));
         if (recentes != null) {
             for (ManutencaoRealizada mr : recentes) {
                 System.out.println(
@@ -116,16 +98,18 @@ public class DashboardService {
         }
         return recentes;
     }
-    // Método para obter as manutenções agendadas pendentes, ordenadas pela próxima data
+
+    // Método para obter as manutenções agendadas pendentes, ordenadas pela próxima
+    // data
     public List<Maintenance> getAgendamentosPendentesOrdenados() {
         List<StatusAgendamentoManutencao> statusesPendentes = Arrays.asList(
-            // Statuses que indicam pendências (AGENDADA e PENDENTE_ATRASADA)
+                // Statuses que indicam pendências (AGENDADA e PENDENTE_ATRASADA)
                 StatusAgendamentoManutencao.AGENDADA);
         return repositorioManutencoes.findByStatusAgendamentoInOrderByProximaDataAsc(statusesPendentes);
     }
 
     public double getMonthlyExpenses() {
-        Double despesas = repositorioManutencoesRealizadas.sumCurrentMonthRealizedExpenses(); 
+        Double despesas = repositorioManutencoesRealizadas.sumCurrentMonthRealizedExpenses();
         return despesas != null ? despesas : 0.0;
     }
 
@@ -140,17 +124,18 @@ public class DashboardService {
         Map<String, Object> statusVeiculos = new HashMap<>();
         statusVeiculos.put("rotulos", List.of("Em Dia", "Pendentes", "Atrasados")); // Rótulos permanecem
 
-        // Reutilizar a lógica dinâmica já implementada em getDynamicVehicleStatusCounts()
-        Map<String, Long> dynamicCounts = getDynamicVehicleStatusCounts(); 
+        // Reutilizar a lógica dinâmica já implementada em
+        // getDynamicVehicleStatusCounts()
+        Map<String, Long> dynamicCounts = getDynamicVehicleStatusCounts();
 
         statusVeiculos.put("valores", List.of(
                 dynamicCounts.getOrDefault("veiculosOk", 0L),
                 dynamicCounts.getOrDefault("veiculosPendentes", 0L),
-                dynamicCounts.getOrDefault("veiculosAtrasados", 0L)
-        ));
+                dynamicCounts.getOrDefault("veiculosAtrasados", 0L)));
         dadosGrafico.put("dadosStatusVeiculos", statusVeiculos);
 
-        // 2. Dados para o gráfico "Tipos de Manutenção" (lógica existente, sem alterações aqui)
+        // 2. Dados para o gráfico "Tipos de Manutenção" (lógica existente, sem
+        // alterações aqui)
         Map<String, Object> dadosTiposManutencao = new HashMap<>();
         List<String> rotulosTipos = new ArrayList<>();
         List<Long> valoresTipos = new ArrayList<>();
@@ -163,7 +148,7 @@ public class DashboardService {
                     valoresTipos.add((Long) item[1]);
                 } else if (item[0] != null) {
                     // Fallback caso o tipo não seja um Enum (improvável com a query atual)
-                    rotulosTipos.add(item[0].toString()); 
+                    rotulosTipos.add(item[0].toString());
                     valoresTipos.add((Long) item[1]);
                 }
             }
@@ -173,15 +158,15 @@ public class DashboardService {
         dadosTiposManutencao.put("valores", valoresTipos.isEmpty() ? Collections.emptyList() : valoresTipos);
         dadosGrafico.put("tiposManutencao", dadosTiposManutencao);
 
-
-        // 3. Dados para o gráfico "Saúde dos Veículos" (lógica existente, sem alterações aqui)
+        // 3. Dados para o gráfico "Saúde dos Veículos" (lógica existente, sem
+        // alterações aqui)
         Map<String, Object> saudeVeiculos = new HashMap<>();
         saudeVeiculos.put("rotulos", List.of("Bom", "Regular", "Ruim")); // Exemplo de rótulos
         long totalVeiculos = getTotalVehicles(); // getTotalVehicles() continua válido
         List<Long> valoresSaude;
         if (totalVeiculos > 0) {
             // Lógica de exemplo para saúde (você pode ajustar conforme suas regras)
-            long bons = (long) (totalVeiculos * 0.7); 
+            long bons = (long) (totalVeiculos * 0.7);
             long regulares = (long) (totalVeiculos * 0.2);
             long ruins = totalVeiculos - bons - regulares;
             valoresSaude = List.of(bons, regulares, ruins);
