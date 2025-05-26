@@ -100,8 +100,8 @@ public class DashboardService {
 
         if (tiposManutencaoQueryResult != null && !tiposManutencaoQueryResult.isEmpty()) {
             for (Object[] item : tiposManutencaoQueryResult) {
-                if (item[0] instanceof CategoriaManutencao) {
-                    rotulosTipos.add(((CategoriaManutencao) item[0]).getDisplayName());
+                if (item[0] instanceof CategoriaManutencao categoriaManutencao) {
+                    rotulosTipos.add(categoriaManutencao.getDisplayName());
                     valoresTipos.add((Long) item[1]);
                 } else if (item[0] != null) {
                     rotulosTipos.add(item[0].toString());

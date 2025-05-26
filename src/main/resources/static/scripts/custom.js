@@ -88,7 +88,7 @@ function renderCharts() {
   new Chart(donutCtx, {
     type: 'doughnut',
     data: {
-      labels: ['Preventiva', 'Corretiva', 'Revisão', 'Emergencial'],
+      labels: ['Preventiva', 'Corretiva', 'Revisão'],
       datasets: [{
         data: [45, 25, 20, 10],
         backgroundColor: [
