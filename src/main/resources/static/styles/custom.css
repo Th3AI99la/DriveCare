@@ -112,6 +112,13 @@ img {
   min-height: 100vh;
 }
 
+.drive_name_nav {
+  font-size: 1.29rem;
+  font-weight: bold;
+  padding-bottom: 10px;
+  color: var(--text-light);
+}
+
 /* ==================== */
 /* CARDS */
 .bg-dark-light {

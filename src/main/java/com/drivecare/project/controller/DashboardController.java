@@ -87,7 +87,7 @@ public class DashboardController {
             model.addAttribute("tiposManutencaoLabels", Collections.emptyList());
             model.addAttribute("tiposManutencaoData", Collections.emptyList());
         }
-
+        
         Object saudeVeiculosObj = dadosGrafico.get("dadosSaudeVeiculos");
         if (saudeVeiculosObj instanceof Map) {
             @SuppressWarnings("unchecked")
