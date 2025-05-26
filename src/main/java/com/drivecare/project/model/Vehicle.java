@@ -24,7 +24,7 @@ public class Vehicle {
     private Integer ano; 
     private String placa;
     private Double quilometragem;
-    private String status; // OK, PENDENTE, ATRASADO
+  
 
     @Column(name = "next_maintenance")
     private LocalDate proximaManutencao;
@@ -89,14 +89,6 @@ public class Vehicle {
 
     public void setQuilometragem(Double quilometragem) {
         this.quilometragem = quilometragem;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public LocalDate getNextMaintenance() {

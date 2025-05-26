@@ -1,6 +1,6 @@
 package com.drivecare.project.controller;
 
-import java.util.Collections; 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -27,10 +27,14 @@ public class DashboardController {
     public String dashboard(@RequestParam(name = "pagina", defaultValue = "1") int paginaAtual, Model model) {
         // Dados gerais
         model.addAttribute("totalVeiculos", dashboardService.getTotalVehicles());
-        model.addAttribute("veiculosOk", dashboardService.getOkMaintenances());
-        model.addAttribute("veiculosPendentes", dashboardService.getPendingMaintenances());
-        model.addAttribute("veiculosAtrasados", dashboardService.getCriticalAlerts());
         model.addAttribute("despesasMensais", dashboardService.getMonthlyExpenses());
+
+        // Chamando o novo método do serviço e declarando a variável
+        Map<String, Long> dynamicStatusCounts = dashboardService.getDynamicVehicleStatusCounts(); // Declaração da variável
+        model.addAttribute("veiculosOk", dynamicStatusCounts.get("veiculosOk"));
+        model.addAttribute("veiculosPendentes", dynamicStatusCounts.get("veiculosPendentes"));
+        model.addAttribute("veiculosAtrasados", dynamicStatusCounts.get("veiculosAtrasados"));
+
 
         // Buscar histórico de manutenções realizadas
         List<ManutencaoRealizada> historicoRecente = dashboardService.getManutencoesRealizadasRecentes();
@@ -41,7 +45,7 @@ public class DashboardController {
         int totalContagemAgendamentos = todosAgendamentosPendentes.size();
 
         int totalPaginasAgendamentos = (int) Math
-                        .ceil((double) totalContagemAgendamentos / ITENS_POR_PAGINA_AGENDAMENTOS);
+                        .ceil((double) totalContagemAgendamentos / ITENS_POR_PAGINA_AGENDAMENTOS); // ITENS_POR_PAGINA_AGENDAMENTOS precisa estar definido
         if (totalPaginasAgendamentos == 0)
             totalPaginasAgendamentos = 1;
 
@@ -53,8 +57,8 @@ public class DashboardController {
         int inicio = (paginaAtual - 1) * ITENS_POR_PAGINA_AGENDAMENTOS;
         int fim = Math.min(inicio + ITENS_POR_PAGINA_AGENDAMENTOS, totalContagemAgendamentos);
 
-        List<Maintenance> agendamentosPendentesPaginado = (inicio > fim || inicio >= totalContagemAgendamentos) ? 
-                                                            Collections.emptyList() : // Usar Collections.emptyList()
+        List<Maintenance> agendamentosPendentesPaginado = (inicio >= fim) ? // Condição simplificada para subList
+                                                            Collections.emptyList() :
                                                             todosAgendamentosPendentes.subList(inicio, fim);
 
         model.addAttribute("agendamentosPendentes", agendamentosPendentesPaginado);
@@ -66,37 +70,31 @@ public class DashboardController {
         // --- DADOS DOS GRÁFICOS  ---
         Map<String, Object> dadosGrafico = dashboardService.getChartData();
 
-        // Para statusVeiculosData (geralmente este não deve ser nulo, mas uma checagem não faz mal)
         Object statusVeiculosDataObj = dadosGrafico.get("dadosStatusVeiculos");
         if (statusVeiculosDataObj instanceof Map) {
             model.addAttribute("statusVeiculosData", statusVeiculosDataObj);
         } else {
-            model.addAttribute("statusVeiculosData", Collections.emptyMap()); // Fallback com mapa vazio
+            model.addAttribute("statusVeiculosData", Collections.emptyMap());
         }
 
-
-        // Tratamento seguro para tiposManutencao
         Object tiposManutencaoObj = dadosGrafico.get("tiposManutencao");
         if (tiposManutencaoObj instanceof Map) {
-            @SuppressWarnings("unchecked") // Seguro após instanceof
+            @SuppressWarnings("unchecked")
             Map<String, Object> tiposManutencaoMap = (Map<String, Object>) tiposManutencaoObj;
             model.addAttribute("tiposManutencaoLabels", tiposManutencaoMap.get("rotulos"));
             model.addAttribute("tiposManutencaoData", tiposManutencaoMap.get("valores"));
         } else {
-            // Adiciona listas vazias como fallback para evitar erros no Thymeleaf se o JS esperar essas props
             model.addAttribute("tiposManutencaoLabels", Collections.emptyList());
             model.addAttribute("tiposManutencaoData", Collections.emptyList());
         }
 
-        // Tratamento seguro para saudeVeiculos
         Object saudeVeiculosObj = dadosGrafico.get("dadosSaudeVeiculos");
         if (saudeVeiculosObj instanceof Map) {
-            @SuppressWarnings("unchecked") // Seguro após instanceof
+            @SuppressWarnings("unchecked")
             Map<String, Object> saudeVeiculosMap = (Map<String, Object>) saudeVeiculosObj;
             model.addAttribute("saudeVeiculosLabels", saudeVeiculosMap.get("rotulos"));
             model.addAttribute("saudeVeiculosData", saudeVeiculosMap.get("valores"));
         } else {
-            // Adiciona listas vazias como fallback
             model.addAttribute("saudeVeiculosLabels", Collections.emptyList());
             model.addAttribute("saudeVeiculosData", Collections.emptyList());
         }

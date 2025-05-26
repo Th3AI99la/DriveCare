@@ -11,14 +11,9 @@ import com.drivecare.project.model.Vehicle;
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
-    List<Vehicle> findByStatus(String status);
-    
-    @Query("SELECT COUNT(v) FROM Vehicle v WHERE v.status = :status")
-    Long countByStatus(String status);
-    
-    @Query("SELECT v FROM Vehicle v WHERE v.proximaManutencao BETWEEN CURRENT_DATE AND FUNCTION('DATE_ADD', CURRENT_DATE, 7, 'DAY')")
+    // Ajuste para função SQL comum ou específica do DB se necessário
+    @Query("SELECT v FROM Vehicle v WHERE v.proximaManutencao BETWEEN CURRENT_DATE AND FUNCTION('ADDDATE', CURRENT_DATE, 7)")
     List<Vehicle> findVehiclesWithUpcomingMaintenance();
-    
-    
+
     Vehicle findByPlaca(String placa);
 }

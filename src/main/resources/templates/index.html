@@ -1,154 +1,158 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DriveCare - Dashboard</title>
-  <!-- Bootstrap CSS e Bootstrap Icons -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DriveCare - Dashboard</title>
+    <!-- Bootstrap CSS e Bootstrap Icons -->
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/styles/custom.css" th:href="@{/styles/custom.css}">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet">
+    <link rel="stylesheet" href="/styles/custom.css"
+      th:href="@{/styles/custom.css}">
 
+    <!-- Scripts do Chart.js e custom -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/scripts/custom.js" th:src="@{/scripts/custom.js}"
+      defer></script>
+  </head>
 
-  <!-- Scripts do Chart.js e custom -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="/scripts/custom.js" th:src="@{/scripts/custom.js}" defer></script>
-</head>
+  <!-- BODY -->
+  <body class="dark-mode">
+    <div class="container-fluid">
+      <div class="row">
 
-<!-- BODY -->
-<body class="dark-mode">
-  <div class="container-fluid">
-    <div class="row">
+        <!-- NAV LATERAL ESQUERDA -->
+        <nav class="col-md-2 d-none d-md-block sidebar vh-100 bg-primary-dark">
+          <div class="position-sticky pt-3">
+            <ul class="nav flex-column">
 
-   <!-- NAV LATERAL ESQUERDA -->
-      <nav class="col-md-2 d-none d-md-block sidebar vh-100 bg-primary-dark">
-        <div class="position-sticky pt-3">
-          <ul class="nav flex-column">
+              <!-- Painel -->
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" th:href="@{/}">
+                  <i class="bi bi-speedometer2 me-2"></i>
+                  Painel
+                </a>
+              </li>
 
-          <!-- Painel -->
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" th:href="@{/}">
-                <i class="bi bi-speedometer2 me-2"></i>
-                Painel
-              </a>
-            </li>
+              <!-- Veículos -->
+              <li class="nav-item">
+                <a class="nav-link" th:href="@{/vehicles}">
+                  <i class="bi bi-car-front me-2"></i>
+                  Veículos
+                </a>
+              </li>
 
-            <!-- Veículos -->
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/vehicles}">
-                <i class="bi bi-car-front me-2"></i>
-                Veículos
-              </a>
-            </li>
+              <!-- Manutenções -->
+              <li class="nav-item">
+                <a class="nav-link" th:href="@{/maintenances}">
+                  <i class="bi bi-tools me-2"></i>
+                  Manutenções
+                </a>
+              </li>
 
-        <!-- Manutenções -->
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/maintenances}">
-                <i class="bi bi-tools me-2"></i>
-                Manutenções
-              </a>
-            </li>
+              <!-- Perfil -->
+              <li class="nav-item">
+                <a class="nav-link" th:href="@{/profile}">
+                  <i class="bi bi-person-circle me-2"></i>
+                  Perfil
+                </a>
+              </li>
 
-          <!-- Perfil -->
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/profile}">
-                <i class="bi bi-person-circle me-2"></i>
-                Perfil
-              </a>
-            </li>
+              <!-- Espaço harmônico -->
+              <br /><br />
 
-          <!-- Espaço harmônico -->
-            <br /><br />
+              <!-- Sair -->
+              <li class="nav-item">
+                <a class="nav-link text-danger" th:href="@{/logout}">
+                  <i class="bi bi-box-arrow-right me-2"></i>
+                  Sair
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
 
-          <!-- Sair -->
-            <li class="nav-item">
-              <a class="nav-link text-danger" th:href="@{/logout}">
-                <i class="bi bi-box-arrow-right me-2"></i>
-                Sair
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4 bg-dark text-light">
 
-    <!-- CONTEÚDO PRINCIPAL -->
-      <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4 bg-dark text-light">
+          <!-- HEADER com ícone do usuário e nome ao lado -->
+          <header
+            class="d-flex justify-content-end py-3 border-bottom border-secondary">
 
-    <!-- HEADER com ícone do usuário e nome ao lado -->
-        <header class="d-flex justify-content-end py-3 border-bottom border-secondary">
+            <a href="#" th:href="@{/profile}"
+              class="text-decoration-none text-light">
+              <div class="d-flex align-items-center user-profile">
+                <div class="user-icon-wrapper me-2">
+                  <i
+                    class="bi bi-person-circle user-icon animate-hover-icon"></i>
+                </div>
+                <div class="user-name-wrapper">
+                  <span class="user-name">José Albino</span>
+                </div>
+              </div>
+            </a>
+          </header>
+
+          <!-- CARDS RESUMO -->
+          <div class="row my-4 g-3">
+            <!-- Total de Veículos -->
+            <div class="col-md-2">
+              <div class="card bg-primary text-white text-center animate-card">
+                <div class="card-body">
+                  <i class="bi bi-car-front-fill fs-1 mb-2"></i>
+                  <h6>Total de Veículos</h6>
+                  <h3 th:text="${totalVeiculos}">0</h3> </div>
+              </div>
+            </div>
+            <!-- Manutenções em Dia -->
+            <div class="col-md-2">
+              <div class="card bg-success text-white text-center animate-card">
+                <div class="card-body">
+                  <i class="bi bi-check-circle-fill fs-1 mb-2"></i>
+                  <h6>Em Dia</h6>
+                  <h3 th:text="${veiculosOk}">0</h3> </div>
+              </div>
+            </div>
+            <!-- Manutenções Pendentes -->
+            <div class="col-md-2">
+              <div class="card bg-warning text-dark text-center animate-card">
+                <div class="card-body">
+                  <i class="bi bi-exclamation-triangle-fill fs-1 mb-2"></i>
+                  <h6>Pendentes</h6>
+                  <h3 th:text="${veiculosPendentes}">0</h3> </div>
+              </div>
+            </div>
+            <!-- Alertas Críticos -->
+            <div class="col-md-2">
+              <div class="card bg-danger text-white text-center animate-card">
+                <div class="card-body">
+                  <i class="bi bi-exclamation-octagon-fill fs-1 mb-2"></i>
+                  <h6>Alertas Críticos</h6>
+                  <h3 th:text="${veiculosAtrasados}">0</h3>
+                </div>
+              </div>
+            </div>
+            <!-- Gastos Totais -->
+            <div class="col-md-4">
+              <div
+                class="card bg-secondary text-white text-center animate-card">
+                <div class="card-body">
+                  <i class="bi bi-currency-dollar fs-1 mb-2"></i>
+                  <h6>Gastos Totais (mês)</h6>
+                  <h3
+                    th:text="${despesasMensais != null ? 'R$ ' + #numbers.formatDecimal(despesasMensais, 1, 'POINT', 2, 'COMMA') : 'R$ 0,00'}">R$
+                    0,00</h3>
+                </div>
+              </div>
+            </div>
+          </div>
         
-          <a href="#" th:href="@{/profile}" class="text-decoration-none text-light">
-            <div class="d-flex align-items-center user-profile">
-              <div class="user-icon-wrapper me-2">
-                <i class="bi bi-person-circle user-icon animate-hover-icon"></i>
-              </div>
-              <div class="user-name-wrapper">
-                <span class="user-name">José Albino</span>
-              </div>
-            </div>
-          </a>
-        </header>
-
-     <!-- CARDS RESUMO -->
-        <div class="row my-4 g-3">
-          <!-- Total de Veículos -->
-          <div class="col-md-2">
-            <div class="card bg-primary text-white text-center animate-card">
-              <div class="card-body">
-                <i class="bi bi-car-front-fill fs-1 mb-2"></i>
-                <h6>Total de Veículos</h6>
-                <h3 th:text="${totalVeiculos ?: 0}">0</h3>
-              </div>
-            </div>
-          </div>
-
-      <!-- Manutenções em Dia -->
-          <div class="col-md-2">
-            <div class="card bg-success text-white text-center animate-card">
-              <div class="card-body">
-                <i class="bi bi-check-circle-fill fs-1 mb-2"></i>
-                <h6>Em Dia</h6>
-                <h3 th:text="${veiculosOk ?: 0}">0</h3>
-              </div>
-            </div>
-          </div>
-
-      <!-- Manutenções Pendentes -->
-          <div class="col-md-2">
-            <div class="card bg-warning text-dark text-center animate-card">
-              <div class="card-body">
-                <i class="bi bi-exclamation-triangle-fill fs-1 mb-2"></i>
-                <h6>Pendentes</h6>
-                <h3 th:text="${veiculosPendentes ?: 0}">0</h3>
-              </div>
-            </div>
-          </div>
-
-      <!-- Alertas Críticos -->
-          <div class="col-md-2">
-            <div class="card bg-danger text-white text-center animate-card">
-              <div class="card-body">
-                <i class="bi bi-exclamation-octagon-fill fs-1 mb-2"></i>
-                <h6>Alertas Críticos</h6>
-                <h3 th:text="${veiculosAtrasados ?: 0}">0</h3>
-              </div>
-            </div>
-          </div>
-
-      <!-- Gastos Totais -->
-          <div class="col-md-4">
-            <div class="card bg-secondary text-white text-center animate-card">
-              <div class="card-body">
-                <i class="bi bi-currency-dollar fs-1 mb-2"></i>
-                <h6>Gastos Totais (mês)</h6>
-                <h3 th:text="${despesasMensais != null ? 'R$ ' + #numbers.formatDecimal(despesasMensais, 1, 'POINT', 2, 'COMMA') : 'R$ 0,00'}">R$ 0,00</h3>
-              </div>
-            </div>
-          </div>
-        </div>
-
-   <!-- GRÁFICOS -->
+        <!-- GRÁFICOS -->
         <div class="row my-4">
           <!-- Gráfico de Linhas: Status dos veículos -->
           <div class="col-md-8">
@@ -156,7 +160,9 @@
               <div class="card-header bg-dark border-secondary">Status dos Veículos</div>
               <div class="card-body">
                 <canvas id="lineChart"></canvas>
-                <div th:unless="${statusVeiculosData != null and statusVeiculosData.valores != null and not #lists.isEmpty(statusVeiculosData.valores)}" class="text-center text-muted mt-2">
+                <div
+                  th:unless="${statusVeiculosData != null and statusVeiculosData.valores != null and not #lists.isEmpty(statusVeiculosData.valores)}"
+                  class="text-center text-muted mt-2">
                   Nenhum dado de status de veículos disponível.
                 </div>
               </div>
@@ -164,20 +170,23 @@
           </div>
 
           <!-- Gráfico de Donut: Tipos de Manutenção -->
-        <div class="col-md-4">
-          <div class="card bg-dark-light">
-            <div class="card-header bg-dark border-secondary">Tipos de Manutenção</div>
-            <div class="card-body">
-              <canvas id="donutChart"></canvas>
-              <div th:unless="${tiposManutencaoData != null and not #lists.isEmpty(tiposManutencaoData)}" class="text-center text-muted">
-                Nenhum dado disponível
+          <div class="col-md-4">
+            <div class="card bg-dark-light">
+              <div class="card-header bg-dark border-secondary">Tipos de
+                Manutenção</div>
+              <div class="card-body">
+                <canvas id="donutChart"></canvas>
+                <div
+                  th:unless="${tiposManutencaoData != null and not #lists.isEmpty(tiposManutencaoData)}"
+                  class="text-center text-muted">
+                  Nenhum dado disponível
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-    <!-- MANUTENÇÕES RECENTES-->
-        <div class="my-4">
+          <!-- MANUTENÇÕES RECENTES-->
+          <div class="my-4">
             <h4>Manutenções Realizadas Recentemente</h4>
             <div class="table-responsive">
               <table class="table table-dark table-striped table-hover">
@@ -190,37 +199,49 @@
                     <th class="text-end">Custo Real</th>
                   </tr>
                 </thead>
-        <!-- Tabela de Manutenções Recentes-->
+                <!-- Tabela de Manutenções Recentes-->
                 <tbody>
-                  <tr class="animate-row" th:each="realizada : ${historicoManutencoesRecentes}">
+                  <tr class="animate-row"
+                    th:each="realizada : ${historicoManutencoesRecentes}">
                     <td>
-                      <div th:if="${realizada.veiculo != null}" th:text="${realizada.veiculo.modelo}">Modelo</div>
+                      <div th:if="${realizada.veiculo != null}"
+                        th:text="${realizada.veiculo.modelo}">Modelo</div>
                       <div th:if="${realizada.veiculo == null}">-</div>
                       <small class="text-muted"
-                             th:if="${realizada.veiculo != null}"
-                             th:text="${realizada.veiculo.marca} + (${realizada.veiculo.placa != null ? ' - ' + realizada.veiculo.placa : ''})">
-                             Marca - Placa
+                        th:if="${realizada.veiculo != null}"
+                        th:text="${realizada.veiculo.marca} + (${realizada.veiculo.placa != null ? ' - ' + realizada.veiculo.placa : ''})">
+                        Marca - Placa
                       </small>
-                      <small class="text-muted" th:if="${realizada.veiculo == null}">-</small>
+                      <small class="text-muted"
+                        th:if="${realizada.veiculo == null}">-</small>
                     </td>
-                    <td th:text="${realizada.descricaoServicoRealizado ?: '-'}">-</td>
+                    <td
+                      th:text="${realizada.descricaoServicoRealizado ?: '-'}">-</td>
                     <td th:text="${realizada.tipoManutencao ?: '-'}">-</td>
-                    <td th:text="${realizada.dataExecucaoFormatada ?: '-'}">-</td>
-                    <td class="text-end" th:text="${realizada.custoReal != null ? #numbers.formatCurrency(realizada.custoReal) : '-'}">R$ 0,00</td>
+                    <td
+                      th:text="${realizada.dataExecucaoFormatada ?: '-'}">-</td>
+                    <td class="text-end"
+                      th:text="${realizada.custoReal != null ? #numbers.formatCurrency(realizada.custoReal) : '-'}">R$
+                      0,00</td>
                   </tr>
-                  <tr th:if="${historicoManutencoesRecentes == null or #lists.isEmpty(historicoManutencoesRecentes)}">
-                      <td colspan="5" class="text-center text-muted">Nenhuma manutenção realizada recentemente.</td>
+                  <tr
+                    th:if="${historicoManutencoesRecentes == null or #lists.isEmpty(historicoManutencoesRecentes)}">
+                    <td colspan="5" class="text-center text-muted">Nenhuma
+                      manutenção realizada recentemente.</td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
 
-    <!-- PRÓXIMAS MANUTENÇÕES - TABELA DINÂMICA -->
-        <div class="my-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
+          <!-- PRÓXIMAS MANUTENÇÕES - TABELA DINÂMICA -->
+          <div class="my-4">
+            <div
+              class="d-flex justify-content-between align-items-center mb-3">
               <h4>Agendamentos Pendentes</h4>
-              <span class="text-muted" th:text="'Mostrando ' + (${contagemAtual ?: 0}) + ' de ' + (${totalContagem ?: 0}) + ' agendamentos'">Mostrando 0 de 0 agendamentos</span>
+              <span class="text-muted"
+                th:text="'Mostrando ' + (${contagemAtual ?: 0}) + ' de ' + (${totalContagem ?: 0}) + ' agendamentos'">Mostrando
+                0 de 0 agendamentos</span>
             </div>
             <div class="table-responsive">
               <table class="table table-dark table-hover">
@@ -234,102 +255,132 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="animate-row" th:each="agendamento : ${agendamentosPendentes}">
+                  <tr class="animate-row"
+                    th:each="agendamento : ${agendamentosPendentes}">
                     <td>
                       <div class="d-flex align-items-center">
-                        <i class="bi bi-calendar-event me-2 text-secondary"></i>
+                        <i
+                          class="bi bi-calendar-event me-2 text-secondary"></i>
                         <div>
-                          <div th:text="${agendamento.veiculo?.modelo ?: '-'}">-</div>
-                          <small class="text-muted" th:text="${agendamento.tipo ?: '-'}">-</small>
+                          <div
+                            th:text="${agendamento.veiculo?.modelo ?: '-'}">-</div>
+                          <small class="text-muted"
+                            th:text="${agendamento.tipo ?: '-'}">-</small>
                         </div>
                       </div>
                     </td>
                     <td th:text="${agendamento.veiculo?.placa ?: '-'}">-</td>
-                    <td th:text="${agendamento.description ?: 'N/D'}">Revisão completa</td>
+                    <td th:text="${agendamento.description ?: 'N/D'}">Revisão
+                      completa</td>
                     <td>
-                      <th:block th:with="statusVisual = ${agendamento.getStatusVisualAgendamento()}">
-                          <div class="progress" style="height: 6px; width: 100px;">
-                              <div th:classappend="${statusVisual == 'EM_DIA'} ? 'bg-success' :
+                      <th:block
+                        th:with="statusVisual = ${agendamento.getStatusVisualAgendamento()}">
+                        <div class="progress"
+                          style="height: 6px; width: 100px;">
+                          <div
+                            th:classappend="${statusVisual == 'EM_DIA'} ? 'bg-success' :
                                                   (${statusVisual == 'PROXIMO'} ? 'bg-warning' :
                                                   (${statusVisual == 'ATRASADO'} ? 'bg-danger' : 'bg-secondary'))"
-                                   th:styleappend="${statusVisual == 'EM_DIA'} ? 'width: 30%' :
+                            th:styleappend="${statusVisual == 'EM_DIA'} ? 'width: 30%' :
                                                     (${statusVisual == 'PROXIMO'} ? 'width: 70%' :
                                                     (${statusVisual == 'ATRASADO'} ? 'width: 100%' : 'width: 10%'))"
-                                   class="progress-bar"
-                                   th:title="${statusVisual}"></div>
-                          </div>
+                            class="progress-bar"
+                            th:title="${statusVisual}"></div>
+                        </div>
                       </th:block>
                     </td>
                     <td class="text-end">
-                        <div th:if="${agendamento.diasCalculados != null}">
-                            <th:block th:with="dias = ${agendamento.diasCalculados.longValue()}">
-                                <span th:if="${dias >= 20}"
-                                      class="badge bg-success d-block mb-1"
-                                      th:text="'Em ' + ${dias} + ' dias'">-</span>
-                                <span th:if="${dias < 20 and dias >= 0}"
-                                      class="badge bg-warning text-dark d-block mb-1"
-                                      th:text="${dias == 0 ? 'Hoje' : (dias == 1 ? 'Em 1 dia' : ('Em ' + dias + ' dias'))}">-</span>
-                                <span th:if="${dias < 0}"
-                                      class="badge bg-danger d-block mb-1"
-                                      th:text="'Atrasada há ' + (${dias} * -1) + ' dias'">-</span>
-                            </th:block>
-                            <small class="text-muted date-under-badge" th:text="${agendamento.proximaDataFormatada ?: '-'}">dd/MM/yyyy</small>
-                        </div>
-                        <div th:if="${agendamento.diasCalculados == null}">
-                            <span class="badge bg-secondary d-block mb-1"
-                                  th:text="${agendamento.statusAgendamento != null ? agendamento.statusAgendamento.displayName : 'N/D'}">N/D</span>
-                            <small class="text-muted date-under-badge" th:text="${agendamento.proximaDataFormatada ?: '-'}">-</small>
-                        </div>
+                      <div th:if="${agendamento.diasCalculados != null}">
+                        <th:block
+                          th:with="dias = ${agendamento.diasCalculados.longValue()}">
+                          <span th:if="${dias >= 20}"
+                            class="badge bg-success d-block mb-1"
+                            th:text="'Em ' + ${dias} + ' dias'">-</span>
+                          <span th:if="${dias < 20 and dias >= 0}"
+                            class="badge bg-warning text-dark d-block mb-1"
+                            th:text="${dias == 0 ? 'Hoje' : (dias == 1 ? 'Em 1 dia' : ('Em ' + dias + ' dias'))}">-</span>
+                          <span th:if="${dias < 0}"
+                            class="badge bg-danger d-block mb-1"
+                            th:text="'Atrasada há ' + (${dias} * -1) + ' dias'">-</span>
+                        </th:block>
+                        <small class="text-muted date-under-badge"
+                          th:text="${agendamento.proximaDataFormatada ?: '-'}">dd/MM/yyyy</small>
+                      </div>
+                      <div th:if="${agendamento.diasCalculados == null}">
+                        <span class="badge bg-secondary d-block mb-1"
+                          th:text="${agendamento.statusAgendamento != null ? agendamento.statusAgendamento.displayName : 'N/D'}">N/D</span>
+                        <small class="text-muted date-under-badge"
+                          th:text="${agendamento.proximaDataFormatada ?: '-'}">-</small>
+                      </div>
                     </td>
                   </tr>
-    <!-- Linha para quando não houver agendamentos pendentes -->
-                  <tr th:if="${agendamentosPendentes == null or #lists.isEmpty(agendamentosPendentes)}" class="animate-row">
-                    <td colspan="5" class="text-center text-muted">Nenhum agendamento pendente.</td>
+                  <!-- Linha para quando não houver agendamentos pendentes -->
+                  <tr
+                    th:if="${agendamentosPendentes == null or #lists.isEmpty(agendamentosPendentes)}"
+                    class="animate-row">
+                    <td colspan="5" class="text-center text-muted">Nenhum
+                      agendamento pendente.</td>
                   </tr>
-                  </tbody>
-                  </table>
-    <!--  PAGINAÇÃO DINÂMICA -->
-                  <nav aria-label="Navegação de páginas" th:if="${totalPaginas != null and totalPaginas > 0}">
-                    <ul class="pagination justify-content-end mt-3">
-                      <li th:classappend="${paginaAtual == null or paginaAtual == 1} ? 'disabled'" class="page-item">
-                        <a class="page-link" th:href="@{/(pagina=${(paginaAtual ?: 1) -1})}" tabindex="-1">Anterior</a>
-                      </li>
-                      <li th:each="i : ${#numbers.sequence(1, totalPaginas)}" th:classappend="${i == (paginaAtual ?: 1)} ? 'active'" class="page-item">
-                        <a class="page-link" th:href="@{/(pagina=${i})}" th:text="${i}">1</a>
-                      </li>
-                      <li th:classappend="${paginaAtual == totalPaginas} ? 'disabled'" class="page-item">
-                        <a class="page-link" th:href="@{/(pagina=${(paginaAtual ?: 1) +1})}">Próxima</a>
-                      </li>
-                    </ul>
-                  </nav>
-                </div>
+                </tbody>
+              </table>
+              <!--  PAGINAÇÃO DINÂMICA -->
+              <nav aria-label="Navegação de páginas"
+                th:if="${totalPaginas != null and totalPaginas > 0}">
+                <ul class="pagination justify-content-end mt-3">
+                  <li
+                    th:classappend="${paginaAtual == null or paginaAtual == 1} ? 'disabled'"
+                    class="page-item">
+                    <a class="page-link"
+                      th:href="@{/(pagina=${(paginaAtual ?: 1) -1})}"
+                      tabindex="-1">Anterior</a>
+                  </li>
+                  <li th:each="i : ${#numbers.sequence(1, totalPaginas)}"
+                    th:classappend="${i == (paginaAtual ?: 1)} ? 'active'"
+                    class="page-item">
+                    <a class="page-link" th:href="@{/(pagina=${i})}"
+                      th:text="${i}">1</a>
+                  </li>
+                  <li
+                    th:classappend="${paginaAtual == totalPaginas} ? 'disabled'"
+                    class="page-item">
+                    <a class="page-link"
+                      th:href="@{/(pagina=${(paginaAtual ?: 1) +1})}">Próxima</a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
           </div>
 
-    <!-- GRÁFICO DE BARRAS: SAÚDE DOS VEÍCULOS -->
-        <div class="my-4">
-          <div class="card bg-dark-light">
-            <div class="card-header bg-dark border-secondary">Saúde dos Veículos</div>
-            <div class="card-body">
-              <canvas id="barChart"></canvas>
-              <div th:unless="${saudeVeiculosLabels != null and saudeVeiculosData != null and not #lists.isEmpty(saudeVeiculosLabels) and not #lists.isEmpty(saudeVeiculosData)}" class="text-center text-muted mt-2">
-                Nenhum dado de saúde dos veículos disponível.
+          <!-- GRÁFICO DE BARRAS: SAÚDE DOS VEÍCULOS -->
+          <div class="my-4">
+            <div class="card bg-dark-light">
+              <div class="card-header bg-dark border-secondary">Saúde dos
+                Veículos</div>
+              <div class="card-body">
+                <canvas id="barChart"></canvas>
+                <div
+                  th:unless="${saudeVeiculosLabels != null and saudeVeiculosData != null and not #lists.isEmpty(saudeVeiculosLabels) and not #lists.isEmpty(saudeVeiculosData)}"
+                  class="text-center text-muted mt-2">
+                  Nenhum dado de saúde dos veículos disponível.
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      <!-- RODAPÉ -->
-        <footer class="text-center py-4">
-          <hr class="border-secondary">
-          <p class="text-muted">DriveCare © <span th:text="${#dates.year(#dates.createNow())}">2025</span></p>
-        </footer>
+          <!-- RODAPÉ -->
+          <footer class="text-center py-4">
+            <hr class="border-secondary">
+            <p class="text-muted">DriveCare © <span
+                th:text="${#dates.year(#dates.createNow())}">2025</span></p>
+          </footer>
 
-      </main>
+        </main>
+      </div>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <script th:inline="javascript">
+    <script th:inline="javascript">
   /*<![CDATA[*/
     // Função para opções comuns dos gráficos
     // Definida aqui para estar disponível quando os gráficos são criados
@@ -487,5 +538,5 @@
 
   /*]]>*/
   </script>
-</body>
+  </body>
 </html>
