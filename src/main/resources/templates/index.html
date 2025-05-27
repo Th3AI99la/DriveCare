@@ -432,7 +432,7 @@
           };
         }
 
-        // Nova Função para opções do gráfico de Ganhos (com múltiplos eixos Y)
+        // Função para opções do gráfico de Ganhos (com múltiplos eixos Y)
         function getGanhosChartOptions(titulo) {
           return {
             responsive: true,
@@ -446,21 +446,20 @@
                 grid: { color: 'rgba(255, 255, 255, 0.1)' },
                 ticks: { color: '#e0e0e0' }
               },
-              yGanhos: { // Eixo Y para Ganhos (R$)
-                type: 'linear',
-                display: true,
-                position: 'left',
-                title: { display: true, text: 'Ganhos Faturados (R$)', color: '#4CAF50' },
-                grid: { drawOnChartArea: false, color: 'rgba(76, 175, 80, 0.2)' },
-                ticks: { color: '#4CAF50' }
-              },
-              yQtd: { // Eixo Y para Quantidade
+                yQtd: { // Eixo Y para Ganhos (R$)
                 type: 'linear',
                 display: true,
                 position: 'right',
                 title: { display: true, text: 'Qtd. Manutenções Realizadas', color: '#2196F3' },
-                grid: { drawOnChartArea: false, color: 'rgba(33, 150, 243, 0.2)' },
-                ticks: { color: '#2196F3' },
+                grid: { 
+                    drawOnChartArea: false // Para não sobrepor grades se a de yGanhos estiver visível
+                }, 
+                ticks: { 
+                    color: '#2196F3',
+                    display: true,   // Garante que os números deste eixo sejam exibidos
+                    stepSize: 1,     // <<< CORRIGIDO: DENTRO DE 'ticks'
+                    precision: 0     // <<< CORRIGIDO: DENTRO DE 'ticks'
+                },
                 beginAtZero: true
               }
             }
