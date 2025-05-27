@@ -356,12 +356,12 @@
             </div>
           </div>
 
-          <!-- GRÁFICO DE BARRAS: SAÚDE DOS VEÍCULOS -->
+          <!-- GRÁFICO DE BARCHAR: SAÚDE DOS VEÍCULOS -->
           <div class="my-4">
             <div class="card bg-dark-light">
               <div class="card-header bg-dark border-secondary"> <h4 class="card-color">Saúde dos
-                Veículos</h4></div>
-              <div class="card-body">
+                Veículos (Marcas)</h4></div>
+              <div class="card-body card-body-grafico-polar">
                 <canvas id="barChart"></canvas>
                 <div
                   th:unless="${saudeVeiculosLabels != null and saudeVeiculosData != null and not #lists.isEmpty(saudeVeiculosLabels) and not #lists.isEmpty(saudeVeiculosData)}"
@@ -371,6 +371,7 @@
               </div>
             </div>
           </div>
+
           <!-- RODAPÉ -->
           <footer class="text-center py-4">
             <hr class="border-secondary">
@@ -628,80 +629,146 @@
                 ctx.font = '16px Arial';
                 ctx.fillText('Dados indisponíveis', donutChartCanvas.width / 2, donutChartCanvas.height / 2);
             }
+            
+        // Gráfico de Área Polar - Veículos por Marca (antigo Saúde dos Veículos/Barras)
+        const polarAreaChartCanvas = document.getElementById('barChart'); 
+                                                                      
+        
+        let polarAreaChartInstance; // Variável para a instância do gráfico polar
 
-          // Gráfico de Barras - Veículos por Marca (antigo Saúde dos Veículos)
-            const barChartCanvas = document.getElementById('barChart');
-            // saudeLabels agora conterá nomes de marcas
-            // saudeValores agora conterá a contagem de veículos por marca
-            if (barChartCanvas && saudeLabels && saudeValores && saudeLabels.length > 0) { // Ajustada a condição para verificar apenas se saudeLabels e saudeValores têm dados
-                if (typeof barChartInstance !== 'undefined' && barChartInstance) { // Destruir instância anterior se existir
-                    barChartInstance.destroy();
-                }
-                barChartInstance = new Chart(barChartCanvas.getContext('2d'), {
-                    type: 'bar',
-                    data: {
-                        labels: saudeLabels, // Conterá as MARCAS dos veículos
-                        datasets: [{
-                            label: 'Quantidade de Veículos', 
-                            data: saudeValores,           // Conterá a QUANTIDADE por marca
-                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: { // Opções específicas para este gráfico
-                        ...getChartOptions('Veículos por Marca'), // Usa opções genéricas como base e atualiza o título
-                        scales: {
-                            x: { // Configurações do eixo X (marcas)
-                              grid: { 
-                                    color: 'rgba(255, 255, 255, 0.1)'
-                              },
-                              ticks: { 
-                                    color: '#e0e0e0' 
-                              }
-                            },
-                            y: { // Configurações do eixo Y (quantidade)
-                                beginAtZero: true,
-                                grid: { 
-                                    color: 'rgba(255, 255, 255, 0.1)' 
-                                },
-                                ticks: {
-                                    color: '#e0e0e0',
-                                    precision: 0, // Garante que a contagem seja em números inteiros
-                                    stepSize: 1   // Sugere passos de 1 se apropriado, mas Chart.js pode ajustar
-                                },
-                                title: { // Título para o eixo Y
-                                    display: true,
-                                    text: 'Quantidade',
-                                    color: '#e0e0e0'
-                                }
-                            }
-                        },
-                        plugins: {
+        if (polarAreaChartCanvas && saudeLabels && saudeValores && saudeLabels.length > 0) {
+            if (typeof barChartInstance !== 'undefined' && barChartInstance) { 
+                barChartInstance.destroy(); 
+            }
+            if (typeof polarAreaChartInstance !== 'undefined' && polarAreaChartInstance) { 
+                polarAreaChartInstance.destroy();
+            }
+
+            // Array de cores predefinido e reutilizável (se quiser criar mais)
+              const coresGraficoMarcas = [
+                  'rgba(255, 99, 132, 0.7)',   // Vermelho
+                  'rgba(54, 162, 235, 0.7)',   // Azul
+                  'rgba(255, 206, 86, 0.7)',   // Amarelo
+                  'rgba(75, 192, 192, 0.7)',   // Verde Água
+                  'rgba(153, 102, 255, 0.7)',  // Roxo
+                  'rgba(255, 159, 64, 0.7)',   // Laranja
+                  'rgba(199, 199, 199, 0.7)',  // Cinza
+                  'rgba(83, 102, 252, 0.7)',   // Azul Índigo
+                  'rgba(255, 105, 180, 0.7)',  // Rosa
+                  'rgba(0, 206, 209, 0.7)',    // Turquesa Escuro
+                  'rgba(160, 82, 45, 0.7)',    // Marrom
+                  'rgba(0, 128, 0, 0.7)',      // Verde
+                  'rgba(128, 0, 128, 0.7)',    // Púrpura
+                  'rgba(255, 140, 0, 0.7)',    // Laranja Escuro
+                  'rgba(100, 149, 237, 0.7)',  // Azul Claro
+                  'rgba(220, 20, 60, 0.7)',    // Carmesim
+                  'rgba(64, 224, 208, 0.7)',   // Turquesa Claro
+                  'rgba(0, 191, 255, 0.7)',    // Azul Céu
+                  'rgba(240, 230, 140, 0.7)',  // Caqui
+                  'rgba(47, 79, 79, 0.7)',     // Cinza Escuro
+                  'rgba(189, 183, 107, 0.7)',  // Verde Oliva Claro
+                  'rgba(72, 61, 139, 0.7)',    // Azul Meia-noite
+                  'rgba(0, 250, 154, 0.7)',    // Verde Primavera
+                  'rgba(233, 150, 122, 0.7)',  // Salmão Escuro
+                  'rgba(70, 130, 180, 0.7)',   // Azul Aço
+                  'rgba(255, 127, 80, 0.7)',   // Coral
+                  'rgba(154, 205, 50, 0.7)',   // Verde Amarelado
+                  'rgba(255, 69, 0, 0.7)',     // Vermelho Alaranjado
+                  'rgba(186, 85, 211, 0.7)',   // Orquídea Média
+                  'rgba(210, 105, 30, 0.7)'    // Chocolate
+              ];
+
+            // Gerar as cores de fundo e borda para o número exato de marcas
+            let backgroundColorsArray = [];
+            let borderColorsArray = [];
+            for (let i = 0; i < saudeLabels.length; i++) {
+                const color = coresGraficoMarcas[i % coresGraficoMarcas.length]; // Reutiliza cores se necessário
+                backgroundColorsArray.push(color);
+                // Para a borda, podemos usar a mesma cor com opacidade total (alpha = 1)
+                borderColorsArray.push(color.replace('0.7', '1')); 
+            }
+
+            polarAreaChartInstance = new Chart(polarAreaChartCanvas.getContext('2d'), {
+                type: 'polarArea', 
+                data: {
+                    labels: saudeLabels, // Marcas dos veículos
+                    datasets: [{
+                        label: 'Quantidade de Veículos', 
+                        data: saudeValores, // Contagem por marca
+                        backgroundColor: backgroundColorsArray, // ARRAY DINÂMICO DE CORES
+                        borderColor: borderColorsArray,       // ARRAY DINÂMICO DE CORES DE BORDA
+                        borderWidth: 1, // Largura da borda
+                        hoverOffset: 1, // Distância do hover 
+                        hoverBorderWidth: 1, // Largura da borda ao passar o mouse 
+                                        
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Bom para responsividade
+                    plugins: {
+                        // Título do gráfico
                             legend: {
-                                display: false 
+                                position: 'left', // Ou 'bottom', 'left', 'right'
+                                labels: {
+                                    color: '#e0e0e0'
+                            },                     
+                        // Título da legenda
+                            title: {
+                                display: true,
+                                text: 'Marcas',
+                                color: '#e0e0e0',
+                                font: {
+                                    size: 14
+                                },
+                        // Estilo do título
+                                padding: {
+                                    top: 10,
+                                    bottom: 10,
+                                    
+                                },
+                                align: 'start' // Alinhamento do título
                             },
-                            title: { 
-                              display: true,
-                              text: 'Veículos por Marca',
-                              color: '#e0e0e0',
-                              font: {
-                                  size: 16
-                              }
+                        // Interação com a legenda
+                            onClick: (e, legendItem, legend) => {
+                                // Evita que o clique na legenda desative o gráfico
+                                e.stopPropagation();
+                            }               
+                        },
+                    },
+                    scales: { 
+                        r: { 
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#e0e0e0',
+                                backdropColor: 'rgba(0, 0, 0, 0.5)', // Fundo para os números, se necessário
+                                precision: 0, // Garante números inteiros
+                                stepSize: 1   // Tenta passos de 1
+                            },
+                            pointLabels: { // Rótulos das "fatias" (marcas)
+                                display: true, // Pode ser redundante se a legenda estiver visível
+                                color: '#e0e0e0',
+                                font: {
+                                    size: 12
+                                }
                             }
                         }
                     }
-                });
-            } else if (barChartCanvas) {
-                console.warn('Dados para o gráfico de Barras (Veículos por Marca) ausentes ou inconsistentes.');
-                if (typeof barChartInstance !== 'undefined' && barChartInstance) { barChartInstance.destroy(); }
-                const ctx = barChartCanvas.getContext('2d');
-                ctx.clearRect(0, 0, barChartCanvas.width, barChartCanvas.height);
-                ctx.fillStyle = '#e0e0e0';
-                ctx.textAlign = 'center';
-                ctx.font = '16px Segoe UI';
-                ctx.fillText('Nenhum dado de veículos por marca disponível', barChartCanvas.width / 2, barChartCanvas.height / 2);
-            }
+                }
+            });
+        } else if (polarAreaChartCanvas) {
+            console.warn('Dados para o gráfico Polar Area (Veículos por Marca) ausentes ou inconsistentes.');
+            if (typeof barChartInstance !== 'undefined' && barChartInstance) { barChartInstance.destroy(); }
+            if (typeof polarAreaChartInstance !== 'undefined' && polarAreaChartInstance) { polarAreaChartInstance.destroy(); }
+            const ctx = polarAreaChartCanvas.getContext('2d');
+            ctx.clearRect(0, 0, polarAreaChartCanvas.width, polarAreaChartCanvas.height);
+            ctx.fillStyle = '#e0e0e0';
+            ctx.textAlign = 'center';
+            ctx.font = '16px Segoe UI';
+            ctx.fillText('Nenhum dado de veículos por marca disponível', polarAreaChartCanvas.width / 2, polarAreaChartCanvas.height / 2);
+        }
 
             // Função para atualizar gráficos (se houver atualizações em tempo real via WebSocket, por exemplo)
             window.updateDashboardCharts = function(data) {

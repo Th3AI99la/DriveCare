@@ -214,6 +214,11 @@ img {
   width: 100%;
 }
 
+.card-body-grafico-polar{
+  position: relative;
+  height: 600px; /* Altura desejada */
+}
+
 /* ==================== */
 /* ANIMAÇÕES */
 .animate-hover:hover {
