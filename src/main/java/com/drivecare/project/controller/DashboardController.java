@@ -35,7 +35,6 @@ public class DashboardController {
         model.addAttribute("veiculosPendentes", dynamicStatusCounts.get("veiculosPendentes"));
         model.addAttribute("veiculosAtrasados", dynamicStatusCounts.get("veiculosAtrasados"));
 
-
         // Buscar histórico de manutenções realizadas
         List<ManutencaoRealizada> historicoRecente = dashboardService.getManutencoesRealizadasRecentes();
         model.addAttribute("historicoManutencoesRecentes", historicoRecente);
@@ -68,36 +67,16 @@ public class DashboardController {
         model.addAttribute("totalPaginas", totalPaginasAgendamentos);
 
         // --- DADOS DOS GRÁFICOS  ---
-        Map<String, Object> dadosGrafico = dashboardService.getChartData();
+        // Dados para Donut e Barras (se o getChartData foi simplificado)
+        Map<String, Object> outrosDadosGrafico = dashboardService.getChartData(); 
+        model.addAttribute("tiposManutencaoLabels", ((Map<String, Object>) outrosDadosGrafico.getOrDefault("tiposManutencao", Collections.emptyMap())).get("rotulos"));
+        model.addAttribute("tiposManutencaoData", ((Map<String, Object>) outrosDadosGrafico.getOrDefault("tiposManutencao", Collections.emptyMap())).get("valores"));
+        model.addAttribute("saudeVeiculosLabels", ((Map<String, Object>) outrosDadosGrafico.getOrDefault("dadosSaudeVeiculos", Collections.emptyMap())).get("rotulos"));
+        model.addAttribute("saudeVeiculosData", ((Map<String, Object>) outrosDadosGrafico.getOrDefault("dadosSaudeVeiculos", Collections.emptyMap())).get("valores"));
 
-        Object statusVeiculosDataObj = dadosGrafico.get("dadosStatusVeiculos");
-        if (statusVeiculosDataObj instanceof Map) {
-            model.addAttribute("statusVeiculosData", statusVeiculosDataObj);
-        } else {
-            model.addAttribute("statusVeiculosData", Collections.emptyMap());
-        }
-
-        Object tiposManutencaoObj = dadosGrafico.get("tiposManutencao");
-        if (tiposManutencaoObj instanceof Map) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> tiposManutencaoMap = (Map<String, Object>) tiposManutencaoObj;
-            model.addAttribute("tiposManutencaoLabels", tiposManutencaoMap.get("rotulos"));
-            model.addAttribute("tiposManutencaoData", tiposManutencaoMap.get("valores"));
-        } else {
-            model.addAttribute("tiposManutencaoLabels", Collections.emptyList());
-            model.addAttribute("tiposManutencaoData", Collections.emptyList());
-        }
-        
-        Object saudeVeiculosObj = dadosGrafico.get("dadosSaudeVeiculos");
-        if (saudeVeiculosObj instanceof Map) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> saudeVeiculosMap = (Map<String, Object>) saudeVeiculosObj;
-            model.addAttribute("saudeVeiculosLabels", saudeVeiculosMap.get("rotulos"));
-            model.addAttribute("saudeVeiculosData", saudeVeiculosMap.get("valores"));
-        } else {
-            model.addAttribute("saudeVeiculosLabels", Collections.emptyList());
-            model.addAttribute("saudeVeiculosData", Collections.emptyList());
-        }
+        // NOVO: Adicionar dados para o Gráfico de Ganhos (Line Chart)
+        Map<String, Map<String, Object>> dadosGraficoGanhos = dashboardService.getDadosGraficoGanhos();
+        model.addAttribute("dadosGraficoGanhos", dadosGraficoGanhos); // Passa toda a estrutura (semanal, mensal, anual)
 
         return "index";
     }

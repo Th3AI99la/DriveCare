@@ -1,11 +1,17 @@
 package com.drivecare.project.service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Map;            
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -41,21 +47,18 @@ public class DashboardService {
         return repositorioVeiculos.count();
     }
 
-    // NOVO MÉTODO para calcular dinamicamente os status dos veículos
-    // Em DashboardService.java
+    // MÉTODO para calcular dinamicamente os status dos veículos
     public Map<String, Long> getDynamicVehicleStatusCounts() {
         Map<String, Long> counts = new HashMap<>();
-        long agendamentosOkCount = 0; // Renomeado para clareza
-        long agendamentosPendentesCount = 0; // Renomeado para clareza
-        long agendamentosCriticosCount = 0; // Renomeado para clareza
+        long agendamentosOkCount = 0; 
+        long agendamentosPendentesCount = 0;
+        long agendamentosCriticosCount = 0;
 
         // 1. Definir quais status de manutenção devem ser considerados para os cards
-        // (AGENDADA e PENDENTE_ATRASADA, por exemplo, se PENDENTE_ATRASADA deve ser
-        // crítica)
+        // (AGENDADA e PENDENTE_ATRASADA, por exemplo, se PENDENTE_ATRASADA deve se crítica)
         List<StatusAgendamentoManutencao> statusesConsideradosParaCards = Arrays.asList(
                 StatusAgendamentoManutencao.AGENDADA
-        // Adicione StatusAgendamentoManutencao.PENDENTE_ATRASADA aqui se desejar,
-        // StatusAgendamentoManutencao.PENDENTE_ATRASADA
+
         );
 
         // 2. Buscar TODAS as manutenções com os status definidos
@@ -99,8 +102,7 @@ public class DashboardService {
         return recentes;
     }
 
-    // Método para obter as manutenções agendadas pendentes, ordenadas pela próxima
-    // data
+    // Método para obter as manutenções agendadas pendentes, ordenadas pela próxima data
     public List<Maintenance> getAgendamentosPendentesOrdenados() {
         List<StatusAgendamentoManutencao> statusesPendentes = Arrays.asList(
                 // Statuses que indicam pendências (AGENDADA e PENDENTE_ATRASADA)
@@ -117,25 +119,126 @@ public class DashboardService {
         return repositorioVeiculos.findAll();
     }
 
+    // Novo método para buscar dados para o gráfico de Ganhos
+    public Map<String, Map<String, Object>> getDadosGraficoGanhos() {
+        Map<String, Map<String, Object>> todosOsDadosDeGanhos = new HashMap<>();
+        LocalDate hoje = LocalDate.now(); // referência: data atual
+
+        // --- DADOS SEMANAIS (Semana atual) ---
+        Map<String, Object> dadosSemanais = new LinkedHashMap<>(); // Usar LinkedHashMap para manter ordem das labels
+        List<String> labelsSemanais = new ArrayList<>();
+        List<Double> ganhosSemanais = new ArrayList<>();
+        List<Long> qtdSemanais = new ArrayList<>();
+
+        LocalDate inicioSemana = hoje.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate fimSemana = hoje.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+        Map<LocalDate, Object[]> mapaResultadosSemanais = new HashMap<>();
+        List<Object[]> resultadosRepoSemanais = repositorioManutencoesRealizadas.findGanhoEQuantidadePorDiaAgrupado(inicioSemana, fimSemana);
+        for (Object[] resultado : resultadosRepoSemanais) {
+            mapaResultadosSemanais.put((LocalDate) resultado[0], resultado);
+        }
+
+        DateTimeFormatter formatterDiaSemana = DateTimeFormatter.ofPattern("EEE"); // Ex: Seg, Ter
+        for (int i = 0; i < 7; i++) {
+            LocalDate diaCorrente = inicioSemana.plusDays(i);
+            labelsSemanais.add(diaCorrente.format(formatterDiaSemana));
+            Object[] dadosDoDia = mapaResultadosSemanais.get(diaCorrente);
+            if (dadosDoDia != null) {
+                ganhosSemanais.add(dadosDoDia[1] != null ? ((Number) dadosDoDia[1]).doubleValue() : 0.0);
+                qtdSemanais.add(dadosDoDia[2] != null ? ((Number) dadosDoDia[2]).longValue() : 0L);
+            } else {
+                ganhosSemanais.add(0.0);
+                qtdSemanais.add(0L);
+            }
+        }
+        dadosSemanais.put("labels", labelsSemanais);
+        dadosSemanais.put("datasets", Arrays.asList(
+                Map.of("label", "Ganhos (R$)", "data", ganhosSemanais, "borderColor", "#4CAF50", "backgroundColor", "rgba(76, 175, 80, 0.1)", "yAxisID", "yGanhos"),
+                Map.of("label", "Qtd. Manutenções", "data", qtdSemanais, "borderColor", "#2196F3", "backgroundColor", "rgba(33, 150, 243, 0.1)", "yAxisID", "yQtd")
+        ));
+        todosOsDadosDeGanhos.put("semanal", dadosSemanais);
+
+
+        // --- DADOS MENSAIS (Mês atual, detalhado por dia) ---
+        Map<String, Object> dadosMensais = new LinkedHashMap<>();
+        List<String> labelsMensais = new ArrayList<>();
+        List<Double> ganhosMensais = new ArrayList<>();
+        List<Long> qtdMensais = new ArrayList<>();
+
+        YearMonth mesAtual = YearMonth.from(hoje);
+        LocalDate inicioMes = hoje.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate fimMes = hoje.with(TemporalAdjusters.lastDayOfMonth());
+        Map<LocalDate, Object[]> mapaResultadosMensais = new HashMap<>();
+        List<Object[]> resultadosRepoMensais = repositorioManutencoesRealizadas.findGanhoEQuantidadePorDiaAgrupado(inicioMes, fimMes);
+        for (Object[] resultado : resultadosRepoMensais) {
+            mapaResultadosMensais.put((LocalDate) resultado[0], resultado);
+        }
+
+        for (int i = 1; i <= mesAtual.lengthOfMonth(); i++) {
+            LocalDate diaCorrente = inicioMes.withDayOfMonth(i);
+            labelsMensais.add(String.valueOf(i)); // Label: 1, 2, ..., 31
+            Object[] dadosDoDia = mapaResultadosMensais.get(diaCorrente);
+            if (dadosDoDia != null) {
+                ganhosMensais.add(dadosDoDia[1] != null ? ((Number) dadosDoDia[1]).doubleValue() : 0.0);
+                qtdMensais.add(dadosDoDia[2] != null ? ((Number) dadosDoDia[2]).longValue() : 0L);
+            } else {
+                ganhosMensais.add(0.0);
+                qtdMensais.add(0L);
+            }
+        }
+        dadosMensais.put("labels", labelsMensais);
+        dadosMensais.put("datasets", Arrays.asList(
+                Map.of("label", "Ganhos (R$)", "data", ganhosMensais, "borderColor", "#4CAF50", "backgroundColor", "rgba(76, 175, 80, 0.1)", "yAxisID", "yGanhos"),
+                Map.of("label", "Qtd. Manutenções", "data", qtdMensais, "borderColor", "#2196F3", "backgroundColor", "rgba(33, 150, 243, 0.1)", "yAxisID", "yQtd")
+        ));
+        todosOsDadosDeGanhos.put("mensal", dadosMensais);
+
+        // --- DADOS ANUAIS (Últimos 6 meses, agrupado por mês) ---
+        Map<String, Object> dadosAnuais = new LinkedHashMap<>();
+        List<String> labelsAnuais = new ArrayList<>();
+        List<Double> ganhosAnuais = new ArrayList<>();
+        List<Long> qtdAnuais = new ArrayList<>();
+
+        LocalDate fimPeriodoAnual = hoje.with(TemporalAdjusters.lastDayOfMonth()); // Até o fim do mês atual
+        LocalDate inicioPeriodoAnual = hoje.minusMonths(5).with(TemporalAdjusters.firstDayOfMonth()); // Início de 6 meses atrás
+        
+        Map<YearMonth, Object[]> mapaResultadosAnuais = new HashMap<>();
+        List<Object[]> resultadosRepoAnuais = repositorioManutencoesRealizadas.findGanhoEQuantidadePorMesAgrupado(inicioPeriodoAnual, fimPeriodoAnual);
+
+        for (Object[] resultado : resultadosRepoAnuais) {
+            // Assumindo que resultado[0] é Ano (Integer/Long) e resultado[1] é Mês (Integer/Long)
+            int ano = ((Number) resultado[0]).intValue();
+            int mes = ((Number) resultado[1]).intValue();
+            mapaResultadosAnuais.put(YearMonth.of(ano, mes), resultado);
+        }
+        
+        DateTimeFormatter formatterMesAno = DateTimeFormatter.ofPattern("MMM/yy"); // Ex: Mai/25
+        for (int i = 0; i < 6; i++) {
+            YearMonth mesCorrenteLoop = YearMonth.from(inicioPeriodoAnual.plusMonths(i));
+            labelsAnuais.add(mesCorrenteLoop.format(formatterMesAno));
+            Object[] dadosDoMes = mapaResultadosAnuais.get(mesCorrenteLoop);
+            if (dadosDoMes != null) {
+                ganhosAnuais.add(dadosDoMes[2] != null ? ((Number) dadosDoMes[2]).doubleValue() : 0.0);
+                qtdAnuais.add(dadosDoMes[3] != null ? ((Number) dadosDoMes[3]).longValue() : 0L);
+            } else {
+                ganhosAnuais.add(0.0);
+                qtdAnuais.add(0L);
+            }
+        }
+        dadosAnuais.put("labels", labelsAnuais);
+        dadosAnuais.put("datasets", Arrays.asList(
+                Map.of("label", "Ganhos (R$)", "data", ganhosAnuais, "borderColor", "#4CAF50", "backgroundColor", "rgba(76, 175, 80, 0.1)", "yAxisID", "yGanhos"),
+                Map.of("label", "Qtd. Manutenções", "data", qtdAnuais, "borderColor", "#2196F3", "backgroundColor", "rgba(33, 150, 243, 0.1)", "yAxisID", "yQtd")
+        ));
+        todosOsDadosDeGanhos.put("anual", dadosAnuais);
+
+        return todosOsDadosDeGanhos;
+    }
+
     public Map<String, Object> getChartData() {
         Map<String, Object> dadosGrafico = new HashMap<>();
 
-        // 1. Dados para o gráfico "Status dos Veículos" usando a nova lógica dinâmica
-        Map<String, Object> statusVeiculos = new HashMap<>();
-        statusVeiculos.put("rotulos", List.of("Em Dia", "Pendentes", "Atrasados")); // Rótulos permanecem
-
-        // Reutilizar a lógica dinâmica já implementada em
-        // getDynamicVehicleStatusCounts()
-        Map<String, Long> dynamicCounts = getDynamicVehicleStatusCounts();
-
-        statusVeiculos.put("valores", List.of(
-                dynamicCounts.getOrDefault("veiculosOk", 0L),
-                dynamicCounts.getOrDefault("veiculosPendentes", 0L),
-                dynamicCounts.getOrDefault("veiculosAtrasados", 0L)));
-        dadosGrafico.put("dadosStatusVeiculos", statusVeiculos);
-
-        // 2. Dados para o gráfico "Tipos de Manutenção" (lógica existente, sem
-        // alterações aqui)
+        // Dados para o gráfico "Manutenções Pendentes"
         Map<String, Object> dadosTiposManutencao = new HashMap<>();
         List<String> rotulosTipos = new ArrayList<>();
         List<Long> valoresTipos = new ArrayList<>();
@@ -147,26 +250,24 @@ public class DashboardService {
                     rotulosTipos.add(categoriaManutencao.getDisplayName());
                     valoresTipos.add((Long) item[1]);
                 } else if (item[0] != null) {
-                    // Fallback caso o tipo não seja um Enum (improvável com a query atual)
-                    rotulosTipos.add(item[0].toString());
+                    rotulosTipos.add(item[0].toString()); 
                     valoresTipos.add((Long) item[1]);
                 }
             }
         }
-        // Garantir que, mesmo sem dados, as listas existam para o Thymeleaf/JS
         dadosTiposManutencao.put("rotulos", rotulosTipos.isEmpty() ? Collections.emptyList() : rotulosTipos);
         dadosTiposManutencao.put("valores", valoresTipos.isEmpty() ? Collections.emptyList() : valoresTipos);
         dadosGrafico.put("tiposManutencao", dadosTiposManutencao);
 
-        // 3. Dados para o gráfico "Saúde dos Veículos" (lógica existente, sem
-        // alterações aqui)
+
+        // Dados para o gráfico "Saúde dos Veículos"
+
         Map<String, Object> saudeVeiculos = new HashMap<>();
-        saudeVeiculos.put("rotulos", List.of("Bom", "Regular", "Ruim")); // Exemplo de rótulos
-        long totalVeiculos = getTotalVehicles(); // getTotalVehicles() continua válido
+        saudeVeiculos.put("rotulos", List.of("Bom", "Regular", "Ruim"));
+        long totalVeiculos = getTotalVehicles();
         List<Long> valoresSaude;
         if (totalVeiculos > 0) {
-            // Lógica de exemplo para saúde (você pode ajustar conforme suas regras)
-            long bons = (long) (totalVeiculos * 0.7);
+            long bons = (long) (totalVeiculos * 0.7); 
             long regulares = (long) (totalVeiculos * 0.2);
             long ruins = totalVeiculos - bons - regulares;
             valoresSaude = List.of(bons, regulares, ruins);
@@ -175,7 +276,7 @@ public class DashboardService {
         }
         saudeVeiculos.put("valores", valoresSaude);
         dadosGrafico.put("dadosSaudeVeiculos", saudeVeiculos);
-
+        
         return dadosGrafico;
     }
 }

@@ -157,19 +157,20 @@
         
         <!-- GRÁFICOS -->
         <div class="row my-4">
-          <!-- Gráfico de Linhas: Status dos veículos -->
-          <div class="col-md-8">
+          <!-- Gráfico de Linhas: Controle de Ganhos -->
+            <div class="col-md-8">
             <div class="card bg-dark-light">
-              <div class="card-header bg-dark border-secondary">
-              <h4 class="card-color">Status dos Veículos</h4></div>
-              <div class="card-body">
-                <canvas id="lineChart"></canvas>
-                <div
-                  th:unless="${statusVeiculosData != null and statusVeiculosData.valores != null and not #lists.isEmpty(statusVeiculosData.valores)}"
-                  class="text-center text-muted mt-2">
-                  Nenhum dado de status de veículos disponível.
+              <div class="card-header bg-dark border-secondary d-flex justify-content-between align-items-center">
+                <h4 class="card-color mb-0">Controle de Ganhos</h4>
+                <div>
+                  <button id="btnGanhosSemanal" class="btn btn-sm btn-outline-light">Semanal</button>
+                  <button id="btnGanhosMensal" class="btn btn-sm btn-outline-light active">Mensal</button> 
+                  <button id="btnGanhosAnual" class="btn btn-sm btn-outline-light">Anual</button>
                 </div>
               </div>
+              <div class="card-body">
+                <canvas id="lineChart"></canvas>
+                </div>
             </div>
           </div>
 
@@ -387,163 +388,316 @@
     </script>
 
     <script th:inline="javascript">
-    
-  /*<![CDATA[*/
-    // Função para opções comuns dos gráficos
-    // Definida aqui para estar disponível quando os gráficos são criados
-    function getChartOptions(titulo) {
-      return {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            labels: {
-              color: '#e0e0e0'
-            },
-          },
-          title: {
-            display: true,
-            text: titulo,
-            color: '#e0e0e0',
-            font: {
-                size: 16
-            }
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            grid: {
-              color: 'rgba(255, 255, 255, 0.1)'
-            },
-            ticks: {
-              color: '#e0e0e0'
-            }
-          },
-          x: {
-            grid: {
-              color: 'rgba(255, 255, 255, 0.1)'
-            },
-            ticks: {
-              color: '#e0e0e0'
-            }
-          }
-        }
-      };
-    }
+    /*<![CDATA[*/
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const statusValores = /*[[${statusVeiculosData?.valores}]]*/ null;
-        const statusRotulos = /*[[${statusVeiculosData?.rotulos}]]*/ null;
-
-        const tiposLabels = /*[[${tiposManutencaoLabels}]]*/ null;
-        const tiposValores = /*[[${tiposManutencaoData}]]*/ null;
-
-        const saudeLabels = /*[[${saudeVeiculosLabels}]]*/ null;
-        const saudeValores = /*[[${saudeVeiculosData}]]*/ null;
- // Variáveis para guardar as instâncias dos gráficos
-        let lineChartInstance, donutChartInstance, barChartInstance;
-// Gráfico de Status dos Veículos
-        const lineChartCanvas = document.getElementById('lineChart');
-        if (lineChartCanvas && statusValores && statusRotulos && statusValores.length > 0 && statusRotulos.length === statusValores.length) {
-            lineChartInstance = new Chart(lineChartCanvas.getContext('2d'), {
-                type: 'line',
-                data: {
-                    labels: statusRotulos,
-                    datasets: [{
-                        label: 'Status dos Veículos',
-                        data: statusValores,
-                        borderColor: '#4CAF50',
-                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                        tension: 0.3,
-                        fill: true
-                    }]
+        // Função para opções comuns dos gráficos (usada pelo gráfico de Barras)
+        function getChartOptions(titulo) {
+          return {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                labels: {
+                  color: '#e0e0e0'
                 },
-                options: getChartOptions('Status dos Veículos')
-            });
-        } else if (lineChartCanvas) {
-            console.warn('Dados para o gráfico de Linha (Status dos Veículos) ausentes ou inconsistentes.');
-        }
- // Gráfico de Donut - Tipos de Manutenção
-        const donutChartCanvas = document.getElementById('donutChart');
-        if (donutChartCanvas && tiposLabels && tiposValores && tiposLabels.length > 0 && tiposValores.length > 0 && tiposLabels.length === tiposValores.length) {
-            donutChartInstance = new Chart(donutChartCanvas.getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: tiposLabels,
-                    datasets: [{
-                        data: tiposValores,
-                        backgroundColor: ['#4CAF50', '#FF5722', '#2196F3', '#FFC107', '#9C27B0', '#FF9800', '#00BCD4', '#E91E63'],
-                        borderColor: '#1e1e1e',
-                        borderWidth: 2
-                    }]
+              },
+              title: {
+                display: true,
+                text: titulo,
+                color: '#e0e0e0',
+                font: {
+                    size: 16
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: {
+                  color: 'rgba(255, 255, 255, 0.1)'
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '70%',
-                    plugins: {
-                      legend: {
-                        position: 'bottom',
-                        labels: {
-                          color: '#e0e0e0'
+                ticks: {
+                  color: '#e0e0e0'
+                }
+              },
+              x: {
+                grid: {
+                  color: 'rgba(255, 255, 255, 0.1)'
+                },
+                ticks: {
+                  color: '#e0e0e0'
+                }
+              }
+            }
+          };
+        }
+
+        // Nova Função para opções do gráfico de Ganhos (com múltiplos eixos Y)
+        function getGanhosChartOptions(titulo) {
+          return {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { labels: { color: '#e0e0e0' } },
+              title: { display: true, text: titulo, color: '#e0e0e0', font: { size: 16 } }
+            },
+            scales: {
+              x: {
+                grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                ticks: { color: '#e0e0e0' }
+              },
+              yGanhos: { // Eixo Y para Ganhos (R$)
+                type: 'linear',
+                display: true,
+                position: 'left',
+                title: { display: true, text: 'Ganhos (R$)', color: '#4CAF50' },
+                grid: { drawOnChartArea: false, color: 'rgba(76, 175, 80, 0.2)' },
+                ticks: { color: '#4CAF50' }
+              },
+              yQtd: { // Eixo Y para Quantidade
+                type: 'linear',
+                display: true,
+                position: 'right',
+                title: { display: true, text: 'Qtd. Manutenções', color: '#2196F3' },
+                grid: { drawOnChartArea: false, color: 'rgba(33, 150, 243, 0.2)' },
+                ticks: { color: '#2196F3' },
+                beginAtZero: true
+              }
+            }
+          };
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dados para os gráficos
+            const tiposLabels = /*[[${tiposManutencaoLabels}]]*/ null;
+            const tiposValores = /*[[${tiposManutencaoData}]]*/ null;
+
+            const saudeLabels = /*[[${saudeVeiculosLabels}]]*/ null;
+            const saudeValores = /*[[${saudeVeiculosData}]]*/ null;
+
+            // Dados para o gráfico de ganhos
+            const dadosGanhos = /*[[${dadosGraficoGanhos}]]*/ null;
+            
+            // Variáveis para guardar as instâncias dos gráficos
+            let lineChartInstance, donutChartInstance, barChartInstance;
+
+            // Gráfico de Linha - Controle de Ganhos (NOVO)
+            const lineChartCanvas = document.getElementById('lineChart');
+            let periodoAtualGanhos = 'mensal'; // Para guardar o período atual para atualizações
+
+            function criarOuAtualizarGraficoGanhos(periodo) {
+                periodoAtualGanhos = periodo; // Atualiza o período atual
+                if (!lineChartCanvas) {
+                    console.warn('Canvas para o gráfico de Linha (Ganhos) não encontrado.');
+                    return;
+                }
+                if (!dadosGanhos || !dadosGanhos[periodo]) {
+                    console.warn('Dados para o gráfico de Ganhos ausentes ou inconsistentes para o período:', periodo);
+                    if (lineChartInstance) lineChartInstance.destroy(); // Limpa instância anterior
+                    lineChartInstance = null; // Garante que será recriado se os dados chegarem depois
+                    const ctx = lineChartCanvas.getContext('2d');
+                    ctx.clearRect(0, 0, lineChartCanvas.width, lineChartCanvas.height);
+                    ctx.fillStyle = '#e0e0e0';
+                    ctx.textAlign = 'center';
+                    ctx.font = '16px Arial';
+                    ctx.fillText('Nenhum dado disponível para ' + periodo, lineChartCanvas.width / 2, lineChartCanvas.height / 2);
+                    return;
+                }
+
+                const dadosDoPeriodo = dadosGanhos[periodo];
+                const chartTitle = 'Controle de Ganhos - ' + periodo.charAt(0).toUpperCase() + periodo.slice(1);
+
+                if (lineChartInstance) {
+                    lineChartInstance.data.labels = dadosDoPeriodo.labels;
+                    lineChartInstance.data.datasets = dadosDoPeriodo.datasets;
+                    lineChartInstance.options = getGanhosChartOptions(chartTitle); // Reaplicar opções para título e eixos
+                    lineChartInstance.update();
+                } else {
+                    lineChartInstance = new Chart(lineChartCanvas.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: dadosDoPeriodo.labels,
+                            datasets: dadosDoPeriodo.datasets 
+                        },
+                        options: getGanhosChartOptions(chartTitle)
+                    });
+                }
+            }
+
+            // Inicializar com dados mensais por padrão para o gráfico de ganhos
+            if (dadosGanhos) {
+                criarOuAtualizarGraficoGanhos('mensal'); 
+            } else {
+                console.warn('Objeto principal dadosGraficoGanhos não encontrado na inicialização.');
+                if (lineChartCanvas) {
+                    const ctx = lineChartCanvas.getContext('2d');
+                    ctx.clearRect(0, 0, lineChartCanvas.width, lineChartCanvas.height);
+                    ctx.fillStyle = '#e0e0e0';
+                    ctx.textAlign = 'center';
+                    ctx.font = '16px Arial';
+                    ctx.fillText('Nenhum dado de ganhos disponível', lineChartCanvas.width / 2, lineChartCanvas.height / 2);
+                }
+            }
+
+            // Botões para o gráfico de ganhos
+            
+                const btnSemanal = document.getElementById('btnGanhosSemanal');
+                const btnMensal = document.getElementById('btnGanhosMensal');
+                const btnAnual = document.getElementById('btnGanhosAnual');
+                
+                // Array para facilitar o gerenciamento da classe 'active'
+                const todosBotoesPeriodo = [];
+                if (btnSemanal) todosBotoesPeriodo.push(btnSemanal);
+                if (btnMensal) todosBotoesPeriodo.push(btnMensal);
+                if (btnAnual) todosBotoesPeriodo.push(btnAnual);
+
+                function atualizarEstadoAtivoBotao(botaoClicado) {
+                    todosBotoesPeriodo.forEach(botao => {
+                        if (botao) { // Verifica se o botão existe no array
+                            botao.classList.remove('active');
                         }
-                      },
-                      title: {
-                        display: true,
-                        text: 'Tipos de Manutenção',
-                        color: '#e0e0e0',
-                        font: {
-                            size: 16
-                        }
-                      }
+                    });
+                    if (botaoClicado) { // Verifica se o botão clicado é válido
+                        botaoClicado.classList.add('active');
                     }
                 }
-            });
-        } else if (donutChartCanvas) {
-            console.warn('Dados para o gráfico Donut (Tipos de Manutenção) ausentes ou inconsistentes.', 'Labels:', tiposLabels, 'Valores:', tiposValores);
-        }
 
-        const barChartCanvas = document.getElementById('barChart');
-        if (barChartCanvas && saudeLabels && saudeValores && saudeLabels.length > 0 && saudeValores.length > 0 && saudeLabels.length === saudeValores.length) {
-            barChartInstance = new Chart(barChartCanvas.getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: saudeLabels,
-                    datasets: [{
-                        label: 'Saúde dos Veículos (%)',
-                        data: saudeValores,
-                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: getChartOptions('Saúde dos Veículos')
-            });
-        } else if (barChartCanvas) {
-            console.warn('Dados para o gráfico de Barras (Saúde dos Veículos) ausentes ou inconsistentes.');
-        }
+                if (btnSemanal) {
+                    btnSemanal.addEventListener('click', () => {
+                        atualizarEstadoAtivoBotao(btnSemanal);
+                        criarOuAtualizarGraficoGanhos('semanal');
+                    });
+                }
+                
+                if (btnMensal) {
+                    btnMensal.addEventListener('click', () => {
+                        atualizarEstadoAtivoBotao(btnMensal);
+                        criarOuAtualizarGraficoGanhos('mensal');
+                    });
+                }
+                
+                if (btnAnual) {
+                    btnAnual.addEventListener('click', () => {
+                        atualizarEstadoAtivoBotao(btnAnual);
+                        criarOuAtualizarGraficoGanhos('anual');
+                    });
+                }
 
-        window.updateDashboardCharts = function(data) {
-            if (lineChartInstance && data.dadosStatusVeiculos?.valores && data.dadosStatusVeiculos?.rotulos && data.dadosStatusVeiculos.valores.length === data.dadosStatusVeiculos.rotulos.length) {
-                lineChartInstance.data.labels = data.dadosStatusVeiculos.rotulos;
-                lineChartInstance.data.datasets[0].data = data.dadosStatusVeiculos.valores;
-                lineChartInstance.update();
-            }
-            if (donutChartInstance && data.tiposManutencao?.rotulos && data.tiposManutencao?.valores && data.tiposManutencao.valores.length === data.tiposManutencao.rotulos.length) {
-                donutChartInstance.data.labels = data.tiposManutencao.rotulos;
-                donutChartInstance.data.datasets[0].data = data.tiposManutencao.valores;
-                donutChartInstance.update();
-            }
-            if (barChartInstance && data.dadosSaudeVeiculos?.rotulos && data.dadosSaudeVeiculos?.valores && data.dadosSaudeVeiculos.valores.length === data.dadosSaudeVeiculos.rotulos.length) {
-                barChartInstance.data.labels = data.dadosSaudeVeiculos.rotulos;
-                barChartInstance.data.datasets[0].data = data.dadosSaudeVeiculos.valores;
-                barChartInstance.update();
-            }
-        };
-    });
 
-  /*]]>*/
-  </script>
+            // Gráfico de Donut - Tipos de Manutenção (do script original)
+            const donutChartCanvas = document.getElementById('donutChart');
+            if (donutChartCanvas && tiposLabels && tiposValores && tiposLabels.length > 0 && tiposValores.length > 0 && tiposLabels.length === tiposValores.length) {
+                donutChartInstance = new Chart(donutChartCanvas.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: tiposLabels,
+                        datasets: [{
+                            data: tiposValores,
+                            backgroundColor: ['#4CAF50', '#FF5722', '#2196F3', '#FFC107', '#9C27B0', '#FF9800', '#00BCD4', '#E91E63'],
+                            borderColor: '#1e1e1e',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: { // Opções específicas do Donut
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '70%',
+                        plugins: {
+                          legend: {
+                            position: 'bottom',
+                            labels: {
+                              color: '#e0e0e0'
+                            }
+                          },
+                          title: {
+                            display: true,
+                            text: 'Tipos de Manutenção',
+                            color: '#e0e0e0',
+                            font: {
+                                size: 16
+                            }
+                          }
+                        }
+                    }
+                });
+            } else if (donutChartCanvas) {
+                console.warn('Dados para o gráfico Donut (Tipos de Manutenção) ausentes ou inconsistentes.', 'Labels:', tiposLabels, 'Valores:', tiposValores);
+                const ctx = donutChartCanvas.getContext('2d');
+                ctx.clearRect(0, 0, donutChartCanvas.width, donutChartCanvas.height);
+                ctx.fillStyle = '#e0e0e0';
+                ctx.textAlign = 'center';
+                ctx.font = '16px Arial';
+                ctx.fillText('Dados indisponíveis', donutChartCanvas.width / 2, donutChartCanvas.height / 2);
+            }
+
+            // Gráfico de Barras - Saúde dos Veículos (do script original)
+            const barChartCanvas = document.getElementById('barChart');
+            if (barChartCanvas && saudeLabels && saudeValores && saudeLabels.length > 0 && saudeValores.length > 0 && saudeLabels.length === saudeValores.length) {
+                barChartInstance = new Chart(barChartCanvas.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: saudeLabels,
+                        datasets: [{
+                            label: 'Saúde dos Veículos (%)',
+                            data: saudeValores,
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: getChartOptions('Saúde dos Veículos (%)') // Usando a função de opções genérica
+                });
+            } else if (barChartCanvas) {
+                console.warn('Dados para o gráfico de Barras (Saúde dos Veículos) ausentes ou inconsistentes.');
+                const ctx = barChartCanvas.getContext('2d');
+                ctx.clearRect(0, 0, barChartCanvas.width, barChartCanvas.height);
+                ctx.fillStyle = '#e0e0e0';
+                ctx.textAlign = 'center';
+                ctx.font = '16px Arial';
+                ctx.fillText('Dados indisponíveis', barChartCanvas.width / 2, barChartCanvas.height / 2);
+            }
+
+            // Função para atualizar gráficos (se houver atualizações em tempo real via WebSocket, por exemplo)
+            window.updateDashboardCharts = function(data) {
+                // Atualização do gráfico de Ganhos
+                // Se os dados de ganhos forem recebidos, atualize o gráfico com o período atualmente selecionado
+                if (data.dadosGraficoGanhos && typeof data.dadosGraficoGanhos === 'object') {
+                    // Atualiza o objeto de dados principal
+                    for (const periodoKey in data.dadosGraficoGanhos) {
+                        if (Object.hasOwnProperty.call(data.dadosGraficoGanhos, periodoKey) && dadosGanhos) {
+                            dadosGanhos[periodoKey] = data.dadosGraficoGanhos[periodoKey];
+                        }
+                    }
+                    // Se a instância do gráfico de linha existir e houver dados para o período atual, atualize-o
+                    if (lineChartInstance && dadosGanhos && dadosGanhos[periodoAtualGanhos]) {
+                        criarOuAtualizarGraficoGanhos(periodoAtualGanhos);
+                    } else if (!lineChartInstance && dadosGanhos && dadosGanhos[periodoAtualGanhos]) {
+                        // Se a instância não existia (ex: dados iniciais ausentes), tente criar agora
+                        criarOuAtualizarGraficoGanhos(periodoAtualGanhos);
+                    }
+                }
+                
+                // Atualização do gráfico Donut (Tipos de Manutenção)
+                if (donutChartInstance && data.tiposManutencao?.rotulos && data.tiposManutencao?.valores && data.tiposManutencao.valores.length === data.tiposManutencao.rotulos.length) {
+                    donutChartInstance.data.labels = data.tiposManutencao.rotulos;
+                    donutChartInstance.data.datasets[0].data = data.tiposManutencao.valores;
+                    donutChartInstance.update();
+                } else if (donutChartInstance && data.tiposManutencao) {
+                    console.warn('Atualização para Donut: dados inconsistentes ou ausentes.');
+                }
+
+                // Atualização do gráfico de Barras (Saúde dos Veículos)
+                if (barChartInstance && data.dadosSaudeVeiculos?.rotulos && data.dadosSaudeVeiculos?.valores && data.dadosSaudeVeiculos.valores.length === data.dadosSaudeVeiculos.rotulos.length) {
+                    barChartInstance.data.labels = data.dadosSaudeVeiculos.rotulos;
+                    barChartInstance.data.datasets[0].data = data.dadosSaudeVeiculos.valores;
+                    barChartInstance.update();
+                } else if (barChartInstance && data.dadosSaudeVeiculos) {
+                    console.warn('Atualização para Barras: dados inconsistentes ou ausentes.');
+                }
+            };
+        });
+
+    /*]]>*/
+    </script>
   </body>
 </html>
