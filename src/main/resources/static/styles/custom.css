@@ -350,3 +350,9 @@ img {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* ESTILOS DO GRÁFICO CONTROLE DE GASTOS */
+.card-body-grafico-grande { /* Adicione esta classe ao card-body do gráfico de linha no HTML */
+    height: 337px; /* Altura desejada */
+    position: relative; /* Necessário para o Chart.js se comportar bem */
+}

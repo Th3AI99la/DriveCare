@@ -164,11 +164,11 @@
                 <h4 class="card-color mb-0">Controle de Ganhos</h4>
                 <div>
                   <button id="btnGanhosSemanal" class="btn btn-sm btn-outline-light">Semanal</button>
-                  <button id="btnGanhosMensal" class="btn btn-sm btn-outline-light active">Mensal</button> 
-                  <button id="btnGanhosAnual" class="btn btn-sm btn-outline-light">Anual</button>
+                  <button id="btnGanhosMensal" class="btn btn-sm btn-outline-light">Mensal</button> 
+                  <button id="btnGanhosAnual" class="btn btn-sm btn-outline-light active">Anual</button>
                 </div>
               </div>
-              <div class="card-body">
+              <div class="card-body card-body-grafico-grande">
                 <canvas id="lineChart"></canvas>
                 </div>
             </div>
@@ -526,7 +526,7 @@
 
             // Inicializar com dados mensais por padrão para o gráfico de ganhos
             if (dadosGanhos) {
-                criarOuAtualizarGraficoGanhos('mensal'); 
+                criarOuAtualizarGraficoGanhos('anual'); 
             } else {
                 console.warn('Objeto principal dadosGraficoGanhos não encontrado na inicialização.');
                 if (lineChartCanvas) {
