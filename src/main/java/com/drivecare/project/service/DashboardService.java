@@ -262,21 +262,26 @@ public class DashboardService {
 
         // Dados para o gráfico "Saúde dos Veículos"
 
-        Map<String, Object> saudeVeiculos = new HashMap<>();
-        saudeVeiculos.put("rotulos", List.of("Bom", "Regular", "Ruim"));
-        long totalVeiculos = getTotalVehicles();
-        List<Long> valoresSaude;
-        if (totalVeiculos > 0) {
-            long bons = (long) (totalVeiculos * 0.7); 
-            long regulares = (long) (totalVeiculos * 0.2);
-            long ruins = totalVeiculos - bons - regulares;
-            valoresSaude = List.of(bons, regulares, ruins);
-        } else {
-            valoresSaude = List.of(0L, 0L, 0L);
+        Map<String, Object> veiculosPorMarcaData = new HashMap<>();
+        List<String> marcasLabels = new ArrayList<>();
+        List<Long> marcasValores = new ArrayList<>();
+
+        List<Object[]> resultadosMarcas = repositorioVeiculos.countVehiclesByMarca(); // Chamando o novo método
+        if (resultadosMarcas != null) {
+            for (Object[] resultado : resultadosMarcas) {
+                if (resultado[0] != null && resultado[1] != null) { // Checagem de nulos
+                    marcasLabels.add((String) resultado[0]);    // Nome da marca
+                    marcasValores.add(((Number) resultado[1]).longValue()); // Quantidade de veículos
+                }
+            }
         }
-        saudeVeiculos.put("valores", valoresSaude);
-        dadosGrafico.put("dadosSaudeVeiculos", saudeVeiculos);
+
+        veiculosPorMarcaData.put("rotulos", marcasLabels);
+        veiculosPorMarcaData.put("valores", marcasValores);
         
+        dadosGrafico.put("dadosSaudeVeiculos", veiculosPorMarcaData); 
+        
+
         return dadosGrafico;
     }
 }

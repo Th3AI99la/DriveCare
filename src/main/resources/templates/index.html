@@ -583,7 +583,7 @@
                 }
 
 
-            // Gráfico de Donut - Tipos de Manutenção (do script original)
+          // Gráfico de Donut - Tipos de Manutenção (do script original)
             const donutChartCanvas = document.getElementById('donutChart');
             if (donutChartCanvas && tiposLabels && tiposValores && tiposLabels.length > 0 && tiposValores.length > 0 && tiposLabels.length === tiposValores.length) {
                 donutChartInstance = new Chart(donutChartCanvas.getContext('2d'), {
@@ -629,31 +629,78 @@
                 ctx.fillText('Dados indisponíveis', donutChartCanvas.width / 2, donutChartCanvas.height / 2);
             }
 
-            // Gráfico de Barras - Saúde dos Veículos (do script original)
+          // Gráfico de Barras - Veículos por Marca (antigo Saúde dos Veículos)
             const barChartCanvas = document.getElementById('barChart');
-            if (barChartCanvas && saudeLabels && saudeValores && saudeLabels.length > 0 && saudeValores.length > 0 && saudeLabels.length === saudeValores.length) {
+            // saudeLabels agora conterá nomes de marcas
+            // saudeValores agora conterá a contagem de veículos por marca
+            if (barChartCanvas && saudeLabels && saudeValores && saudeLabels.length > 0) { // Ajustada a condição para verificar apenas se saudeLabels e saudeValores têm dados
+                if (typeof barChartInstance !== 'undefined' && barChartInstance) { // Destruir instância anterior se existir
+                    barChartInstance.destroy();
+                }
                 barChartInstance = new Chart(barChartCanvas.getContext('2d'), {
                     type: 'bar',
                     data: {
-                        labels: saudeLabels,
+                        labels: saudeLabels, // Conterá as MARCAS dos veículos
                         datasets: [{
-                            label: 'Saúde dos Veículos (%)',
-                            data: saudeValores,
+                            label: 'Quantidade de Veículos', 
+                            data: saudeValores,           // Conterá a QUANTIDADE por marca
                             backgroundColor: 'rgba(54, 162, 235, 0.7)',
                             borderColor: 'rgba(54, 162, 235, 1)',
                             borderWidth: 1
                         }]
                     },
-                    options: getChartOptions('Saúde dos Veículos (%)') // Usando a função de opções genérica
+                    options: { // Opções específicas para este gráfico
+                        ...getChartOptions('Veículos por Marca'), // Usa opções genéricas como base e atualiza o título
+                        scales: {
+                            x: { // Configurações do eixo X (marcas)
+                              grid: { 
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                              },
+                              ticks: { 
+                                    color: '#e0e0e0' 
+                              }
+                            },
+                            y: { // Configurações do eixo Y (quantidade)
+                                beginAtZero: true,
+                                grid: { 
+                                    color: 'rgba(255, 255, 255, 0.1)' 
+                                },
+                                ticks: {
+                                    color: '#e0e0e0',
+                                    precision: 0, // Garante que a contagem seja em números inteiros
+                                    stepSize: 1   // Sugere passos de 1 se apropriado, mas Chart.js pode ajustar
+                                },
+                                title: { // Título para o eixo Y
+                                    display: true,
+                                    text: 'Quantidade',
+                                    color: '#e0e0e0'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false 
+                            },
+                            title: { 
+                              display: true,
+                              text: 'Veículos por Marca',
+                              color: '#e0e0e0',
+                              font: {
+                                  size: 16
+                              }
+                            }
+                        }
+                    }
                 });
             } else if (barChartCanvas) {
-                console.warn('Dados para o gráfico de Barras (Saúde dos Veículos) ausentes ou inconsistentes.');
+                console.warn('Dados para o gráfico de Barras (Veículos por Marca) ausentes ou inconsistentes.');
+                if (typeof barChartInstance !== 'undefined' && barChartInstance) { barChartInstance.destroy(); }
                 const ctx = barChartCanvas.getContext('2d');
                 ctx.clearRect(0, 0, barChartCanvas.width, barChartCanvas.height);
                 ctx.fillStyle = '#e0e0e0';
                 ctx.textAlign = 'center';
-                ctx.font = '16px Arial';
-                ctx.fillText('Dados indisponíveis', barChartCanvas.width / 2, barChartCanvas.height / 2);
+                ctx.font = '16px Segoe UI';
+                ctx.fillText('Nenhum dado de veículos por marca disponível', barChartCanvas.width / 2, barChartCanvas.height / 2);
             }
 
             // Função para atualizar gráficos (se houver atualizações em tempo real via WebSocket, por exemplo)
