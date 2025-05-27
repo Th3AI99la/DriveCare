@@ -146,7 +146,7 @@
                 class="card bg-secondary text-white text-center animate-card">
                 <div class="card-body">
                   <i class="bi bi-currency-dollar fs-1 mb-2"></i>
-                  <h6>Gastos Totais (mês)</h6>
+                  <h6>Ganhos Totais (mês)</h6>
                   <h3
                     th:text="${despesasMensais != null ? 'R$ ' + #numbers.formatDecimal(despesasMensais, 1, 'POINT', 2, 'COMMA') : 'R$ 0,00'}">R$
                     0,00</h3>
@@ -160,7 +160,8 @@
           <!-- Gráfico de Linhas: Status dos veículos -->
           <div class="col-md-8">
             <div class="card bg-dark-light">
-              <div class="card-header bg-dark border-secondary">Status dos Veículos</div>
+              <div class="card-header bg-dark border-secondary">
+              <h4 class="card-color">Status dos Veículos</h4></div>
               <div class="card-body">
                 <canvas id="lineChart"></canvas>
                 <div
@@ -175,8 +176,8 @@
           <!-- Gráfico de Donut: Tipos de Manutenção -->
           <div class="col-md-4">
             <div class="card bg-dark-light">
-              <div class="card-header bg-dark border-secondary">Tipos de
-                Manutenção</div>
+              <div class="card-header bg-dark border-secondary"> <h4 class="card-color">Tipos de
+                Manutenção</4> </div>
               <div class="card-body">
                 <canvas id="donutChart"></canvas>
                 <div
@@ -357,8 +358,8 @@
           <!-- GRÁFICO DE BARRAS: SAÚDE DOS VEÍCULOS -->
           <div class="my-4">
             <div class="card bg-dark-light">
-              <div class="card-header bg-dark border-secondary">Saúde dos
-                Veículos</div>
+              <div class="card-header bg-dark border-secondary"> <h4 class="card-color">Saúde dos
+                Veículos</h4></div>
               <div class="card-body">
                 <canvas id="barChart"></canvas>
                 <div

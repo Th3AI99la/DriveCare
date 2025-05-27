@@ -28,6 +28,10 @@ body.dark-mode {
   color: #bcbbbb !important;
 }
 
+.card-color {
+  color: white;
+}
+
 img {
   max-width: 100%;
   height: auto;
