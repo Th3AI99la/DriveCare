@@ -584,7 +584,7 @@
                 }
 
 
-          // Gráfico de Donut - Tipos de Manutenção (do script original)
+          // Gráfico de Donut - Tipos de Manutenção
             const donutChartCanvas = document.getElementById('donutChart');
             if (donutChartCanvas && tiposLabels && tiposValores && tiposLabels.length > 0 && tiposValores.length > 0 && tiposLabels.length === tiposValores.length) {
                 donutChartInstance = new Chart(donutChartCanvas.getContext('2d'), {
@@ -615,7 +615,7 @@
                             color: '#e0e0e0',
                             font: {
                                 size: 16
-                            }
+                            },                        
                           }
                         }
                     }
@@ -645,38 +645,65 @@
             }
 
             // Array de cores predefinido e reutilizável (se quiser criar mais)
-              const coresGraficoMarcas = [
-                  'rgba(255, 99, 132, 0.7)',   // Vermelho
-                  'rgba(54, 162, 235, 0.7)',   // Azul
-                  'rgba(255, 206, 86, 0.7)',   // Amarelo
-                  'rgba(75, 192, 192, 0.7)',   // Verde Água
-                  'rgba(153, 102, 255, 0.7)',  // Roxo
-                  'rgba(255, 159, 64, 0.7)',   // Laranja
-                  'rgba(199, 199, 199, 0.7)',  // Cinza
-                  'rgba(83, 102, 252, 0.7)',   // Azul Índigo
-                  'rgba(255, 105, 180, 0.7)',  // Rosa
-                  'rgba(0, 206, 209, 0.7)',    // Turquesa Escuro
-                  'rgba(160, 82, 45, 0.7)',    // Marrom
-                  'rgba(0, 128, 0, 0.7)',      // Verde
-                  'rgba(128, 0, 128, 0.7)',    // Púrpura
-                  'rgba(255, 140, 0, 0.7)',    // Laranja Escuro
-                  'rgba(100, 149, 237, 0.7)',  // Azul Claro
-                  'rgba(220, 20, 60, 0.7)',    // Carmesim
-                  'rgba(64, 224, 208, 0.7)',   // Turquesa Claro
-                  'rgba(0, 191, 255, 0.7)',    // Azul Céu
-                  'rgba(240, 230, 140, 0.7)',  // Caqui
-                  'rgba(47, 79, 79, 0.7)',     // Cinza Escuro
-                  'rgba(189, 183, 107, 0.7)',  // Verde Oliva Claro
-                  'rgba(72, 61, 139, 0.7)',    // Azul Meia-noite
-                  'rgba(0, 250, 154, 0.7)',    // Verde Primavera
-                  'rgba(233, 150, 122, 0.7)',  // Salmão Escuro
-                  'rgba(70, 130, 180, 0.7)',   // Azul Aço
-                  'rgba(255, 127, 80, 0.7)',   // Coral
-                  'rgba(154, 205, 50, 0.7)',   // Verde Amarelado
-                  'rgba(255, 69, 0, 0.7)',     // Vermelho Alaranjado
-                  'rgba(186, 85, 211, 0.7)',   // Orquídea Média
-                  'rgba(210, 105, 30, 0.7)'    // Chocolate
-              ];
+             const coresGraficoMarcas = [
+                    'rgba(255, 99, 132, 0.7)',   // Vermelho
+                    'rgba(54, 162, 235, 0.7)',   // Azul
+                    'rgba(255, 206, 86, 0.7)',   // Amarelo
+                    'rgba(75, 192, 192, 0.7)',   // Verde Água
+                    'rgba(153, 102, 255, 0.7)',  // Roxo
+                    'rgba(255, 159, 64, 0.7)',   // Laranja
+                    'rgba(199, 199, 199, 0.7)',  // Cinza
+                    'rgba(83, 102, 252, 0.7)',   // Azul Índigo
+                    'rgba(255, 105, 180, 0.7)',  // Rosa
+                    'rgba(0, 206, 209, 0.7)',    // Turquesa Escuro
+                    'rgba(160, 82, 45, 0.7)',    // Marrom
+                    'rgba(0, 128, 0, 0.7)',      // Verde
+                    'rgba(128, 0, 128, 0.7)',    // Púrpura
+                    'rgba(255, 140, 0, 0.7)',    // Laranja Escuro
+                    'rgba(100, 149, 237, 0.7)',  // Azul Claro
+                    'rgba(220, 20, 60, 0.7)',    // Carmesim
+                    'rgba(64, 224, 208, 0.7)',   // Turquesa Claro
+                    'rgba(0, 191, 255, 0.7)',    // Azul Céu
+                    'rgba(240, 230, 140, 0.7)',  // Caqui
+                    'rgba(47, 79, 79, 0.7)',     // Cinza Escuro
+                    'rgba(189, 183, 107, 0.7)',  // Verde Oliva Claro
+                    'rgba(72, 61, 139, 0.7)',    // Azul Meia-noite
+                    'rgba(0, 250, 154, 0.7)',    // Verde Primavera
+                    'rgba(233, 150, 122, 0.7)',  // Salmão Escuro
+                    'rgba(70, 130, 180, 0.7)',   // Azul Aço
+                    'rgba(255, 127, 80, 0.7)',   // Coral
+                    'rgba(154, 205, 50, 0.7)',   // Verde Amarelado
+                    'rgba(255, 69, 0, 0.7)',     // Vermelho Alaranjado
+                    'rgba(186, 85, 211, 0.7)',   // Orquídea Média
+                    'rgba(210, 105, 30, 0.7)',   // Chocolate
+                    'rgba(176, 224, 230, 0.7)',  // Azul Pó
+                    'rgba(250, 128, 114, 0.7)',  // Salmão Claro
+                    'rgba(127, 255, 212, 0.7)',  // Água-marinha
+                    'rgba(173, 255, 47, 0.7)',   // Verde Lima
+                    'rgba(255, 20, 147, 0.7)',   // Rosa Profundo
+                    'rgba(95, 158, 160, 0.7)',   // Azul Cadete
+                    'rgba(152, 251, 152, 0.7)',  // Verde Pálido
+                    'rgba(0, 0, 128, 0.7)',      // Azul Marinho
+                    'rgba(255, 250, 205, 0.7)',  // Amarelo Claro
+                    'rgba(205, 133, 63, 0.7)',   // Siena Média
+                    'rgba(124, 252, 0, 0.7)',    // Verde Gramado
+                    'rgba(255, 182, 193, 0.7)',  // Rosa Claro
+                    'rgba(32, 178, 170, 0.7)',   // Azul Verde
+                    'rgba(245, 222, 179, 0.7)',  // Trigo
+                    'rgba(106, 90, 205, 0.7)',   // Azul Ardósia Médio
+                    'rgba(255, 239, 213, 0.7)',  // Pêssego Claro
+                    'rgba(0, 100, 0, 0.7)',      // Verde Escuro
+                    'rgba(219, 112, 147, 0.7)',   // Rosa Pálido
+                    'rgba(255, 215, 0, 0.7)',    // Ouro
+                    'rgba(255, 99, 71, 0.7)',    // Tomate
+                    'rgba(255, 140, 0, 0.7)',    // Laranja Escuro
+                    'rgba(0, 0, 205, 0.7)',      // Azul Escuro
+                    'rgba(255, 228, 225, 0.7)',  // Rosa Antigo
+                    'rgba(255, 160, 122, 0.7)',  // Salmão Claro
+                    'rgba(0, 255, 127, 0.7)',    // Verde Primavera
+                    'rgba(255, 105, 180, 0.7)',  // Rosa Hot
+                    'rgba(255, 228, 181, 0.7)',  // Amêndoa Clara
+                ];
 
             // Gerar as cores de fundo e borda para o número exato de marcas
             let backgroundColorsArray = [];
@@ -705,30 +732,23 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false, // Bom para responsividade
+                    maintainAspectRatio: false,                          
                     plugins: {
                         // Título do gráfico
                             legend: {
                                 position: 'left', // Ou 'bottom', 'left', 'right'
-                                labels: {
-                                    color: '#e0e0e0'
-                            },                     
+                                labels: {color: '#e0e0e0'},                               
                         // Título da legenda
                             title: {
                                 display: true,
                                 text: 'Marcas',
                                 color: '#e0e0e0',
                                 font: {
-                                    size: 14
+                                    size: 18,
+                                    weight: 'bold', // Peso do título     
                                 },
-                        // Estilo do título
-                                padding: {
-                                    top: 10,
-                                    bottom: 10,
-                                    
-                                },
-                                align: 'start' // Alinhamento do título
                             },
+                            
                         // Interação com a legenda
                             onClick: (e, legendItem, legend) => {
                                 // Evita que o clique na legenda desative o gráfico
@@ -739,21 +759,28 @@
                     scales: { 
                         r: { 
                             grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
+                                color: 'rgba(255, 255, 255, 0.1)',
                             },
+                            // Eixo radial (ângulo)
                             ticks: {
                                 color: '#e0e0e0',
-                                backdropColor: 'rgba(0, 0, 0, 0.5)', // Fundo para os números, se necessário
+                                backdropColor: 'rgba(0, 0, 0, 0.1)', // Fundo para os números, se necessário
                                 precision: 0, // Garante números inteiros
-                                stepSize: 1   // Tenta passos de 1
+                                stepSize: 1,   // Tenta passos de 1
                             },
+                            
                             pointLabels: { // Rótulos das "fatias" (marcas)
                                 display: true, // Pode ser redundante se a legenda estiver visível
                                 color: '#e0e0e0',
                                 font: {
                                     size: 12
-                                }
-                            }
+                                },
+                                
+                            },
+                            angleLines: {
+                                display: true, // Linhas que conectam os pontos ao centro
+                                color: 'rgba(255, 255, 255, 0.1)' // Cor das linhas
+                            },
                         }
                     }
                 }
