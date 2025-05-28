@@ -588,6 +588,8 @@
             const donutChartCanvas = document.getElementById('donutChart');
             if (donutChartCanvas && tiposLabels && tiposValores && tiposLabels.length > 0 && tiposValores.length > 0 && tiposLabels.length === tiposValores.length) {
                 donutChartInstance = new Chart(donutChartCanvas.getContext('2d'), {
+
+                  // Tipo de gráfico Donut
                     type: 'doughnut',
                     data: {
                         labels: tiposLabels,
@@ -598,7 +600,9 @@
                             borderWidth: 2
                         }]
                     },
-                    options: { // Opções específicas do Donut
+                
+                    // Opções específicas do Donut
+                    options: { 
                         responsive: true,
                         maintainAspectRatio: false,
                         cutout: '70%',
@@ -609,14 +613,15 @@
                               color: '#e0e0e0'
                             }
                           },
+                          // Título do gráfico
                           title: {
                             display: true,
                             text: 'Tipos de Manutenção',
                             color: '#e0e0e0',
                             font: {
                                 size: 16
-                            },                        
-                          }
+                            },                                                
+                          },
                         }
                     }
                 });
