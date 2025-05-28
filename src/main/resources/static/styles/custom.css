@@ -1,6 +1,10 @@
 /* ==================== */
 /* VARIÁVEIS DE CORES */
 /* ==================== */
+
+/* Importando fontes do Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+/* Tema escuro */
 :root {
   --dark-bg: #121212;
   --dark-card: #1e1e1e;
@@ -19,9 +23,8 @@
 body.dark-mode {
   background-color: var(--dark-bg);
   color: var(--text-light);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 1rem;
-  line-height: 1.5;
+  font-family: "Poppins", sans-serif;
+  font-weight: 350;
 }
 
 .text-muted {
