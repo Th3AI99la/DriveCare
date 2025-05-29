@@ -9,8 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany; 
-
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Vehicle {
@@ -19,12 +18,14 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String marca; 
-    private String modelo; 
-    private Integer ano; 
+    private String marca;
+    private String modelo;
+    private Integer ano;
     private String placa;
     private Double quilometragem;
-  
+
+    @Column(name = "vehicle_color")
+    private String cor;
 
     @Column(name = "next_maintenance")
     private LocalDate proximaManutencao;
@@ -36,10 +37,11 @@ public class Vehicle {
     public Vehicle() {
     }
 
-    public Vehicle(String marca, String modelo, String placa) {
+    public Vehicle(String marca, String modelo, String placa, String cor) {
         this.marca = marca;
         this.modelo = modelo;
         this.placa = placa;
+        this.cor = cor;
     }
 
     // Getters e Setters
@@ -89,6 +91,14 @@ public class Vehicle {
 
     public void setQuilometragem(Double quilometragem) {
         this.quilometragem = quilometragem;
+    }
+
+    public String getCor() {
+        return cor;
+    }
+
+    public void setCor(String cor) {
+        this.cor = cor;
     }
 
     public LocalDate getNextMaintenance() {
