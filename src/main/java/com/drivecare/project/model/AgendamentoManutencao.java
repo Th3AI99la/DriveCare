@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 import com.drivecare.project.model.enums.CategoriaManutencao;
-import com.drivecare.project.model.enums.StatusAgendamentoManutencao; // << IMPORTAR NOVO ENUM
+import com.drivecare.project.model.enums.StatusAgendamentoManutencao;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,9 +16,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
-public class Maintenance {
+@Table(name = "agendamento_manutencao")
+public class AgendamentoManutencao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,17 +28,18 @@ public class Maintenance {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_categoria")
-
-    private CategoriaManutencao tipo; // << ALTERADO PARA O ENUM
+    private CategoriaManutencao tipo;
 
     private String descricao;
-    private Double custo;
+
+    @Column(name = "orcamento")
+    private Double orcamento;
 
     @Column(name = "creation_date")
     private LocalDate dataCriacao;
 
-    @Column(name = "next_date")
-    private LocalDate proximaData;
+    @Column(name = "data_agendamento")
+    private LocalDate dataAgendamento;
 
     @ManyToOne
     @JoinColumn(name = "veiculo_id")
@@ -46,34 +49,23 @@ public class Maintenance {
     @Column(name = "status_agendamento")
     private StatusAgendamentoManutencao statusAgendamento;
 
-    // Construtor
-    public Maintenance() {
+    public AgendamentoManutencao() {
         this.dataCriacao = LocalDate.now();
-        this.statusAgendamento = StatusAgendamentoManutencao.AGENDADA;
-
+        
     }
 
-    // Construtor ajustado
-    public Maintenance(CategoriaManutencao tipo, String descricao, Double custo, LocalDate proximaData,
-            Vehicle veiculo) {
-        this();
-        this.tipo = tipo; // << USANDO O ENUM
-        this.descricao = descricao; 
-        this.custo = custo; 
-        this.proximaData = proximaData; // << USANDO O ENUM
-        this.veiculo = veiculo; // << USANDO O ENUM
-    }
-
-    // Getters e Setters para 'tipo' ajustados
-    public CategoriaManutencao getTipo() { 
-        return tipo;
-    }
-
-    public void setTipo(CategoriaManutencao tipo) { 
+    public AgendamentoManutencao(CategoriaManutencao tipo, String descricao, Double orcamento, LocalDate dataAgendamento,
+            Vehicle veiculo, StatusAgendamentoManutencao statusAgendamento) {
+        this(); 
         this.tipo = tipo;
+        this.descricao = descricao;
+        this.orcamento = orcamento;
+        this.dataAgendamento = dataAgendamento;
+        this.veiculo = veiculo;
+        this.statusAgendamento = statusAgendamento; 
     }
 
-    // getters e setters
+    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -82,20 +74,28 @@ public class Maintenance {
         this.id = id;
     }
 
-    public String getDescription() {
+    public CategoriaManutencao getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(CategoriaManutencao tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getDescricao() { 
         return descricao;
     }
 
-    public void setDescription(String descricao) {
+    public void setDescricao(String descricao) { 
         this.descricao = descricao;
     }
 
-    public Double getCusto() {
-        return custo;
+    public Double getOrcamento() { 
+        return orcamento;
     }
 
-    public void setCusto(Double custo) {
-        this.custo = custo;
+    public void setOrcamento(Double orcamento) { 
+        this.orcamento = orcamento;
     }
 
     public LocalDate getDataCriacao() {
@@ -106,12 +106,12 @@ public class Maintenance {
         this.dataCriacao = dataCriacao;
     }
 
-    public LocalDate getProximaData() {
-        return proximaData;
+    public LocalDate getDataAgendamento() { 
+        return dataAgendamento;
     }
 
-    public void setProximaData(LocalDate proximaData) {
-        this.proximaData = proximaData;
+    public void setDataAgendamento(LocalDate dataAgendamento) { 
+        this.dataAgendamento = dataAgendamento; 
     }
 
     public Vehicle getVeiculo() {
@@ -134,37 +134,38 @@ public class Maintenance {
         return dataCriacao != null ? dataCriacao.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "-";
     }
 
-    public String getProximaDataFormatada() {
-        return proximaData != null ? proximaData.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "-";
+    public String getDataAgendamentoFormatada() { 
+        return dataAgendamento != null ? dataAgendamento.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "-";
     }
 
-    // Método para obter os dias calculados até a próxima data
+   // Método para calcular os dias restantes até o agendamento
     public Long getDiasCalculados() {
-        if (this.proximaData == null ||
+        if (this.dataAgendamento == null || 
                 this.statusAgendamento == StatusAgendamentoManutencao.CONCLUIDA ||
                 this.statusAgendamento == StatusAgendamentoManutencao.CANCELADA) {
             return null;
         }
         LocalDate hoje = LocalDate.now();
-        return ChronoUnit.DAYS.between(hoje, this.proximaData);
+        return ChronoUnit.DAYS.between(hoje, this.dataAgendamento); 
     }
 
-    // Método para obter o status visual do agendamento
+    // Método para obter a visualização do status do agendamento
     public String getStatusVisualAgendamento() {
         if (this.statusAgendamento == StatusAgendamentoManutencao.CONCLUIDA) {
-            return "CONCLUIDA_DISPLAY";
+            return "CONCLUIDA_DISPLAY"; 
         }
         if (this.statusAgendamento == StatusAgendamentoManutencao.CANCELADA) {
-            return "CANCELADA_DISPLAY";
+            return "CANCELADA_DISPLAY"; 
         }
+
         Long dias = getDiasCalculados();
-        if (dias == null) {
+        if (dias == null) { 
             return (this.statusAgendamento == StatusAgendamentoManutencao.AGENDADA) ? "AGENDADA_SEM_DATA"
                     : "INDETERMINADO";
         }
         if (dias < 0) {
             return "ATRASADO";
-        } else if (dias <= 7) {
+        } else if (dias <= 7) { 
             return "PROXIMO";
         } else {
             return "EM_DIA";

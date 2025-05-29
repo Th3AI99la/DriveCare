@@ -4,13 +4,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.data.domain.Page; // <<< ADICIONAR IMPORT
+import org.springframework.data.domain.Page; 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.drivecare.project.model.Maintenance;
+import com.drivecare.project.model.AgendamentoManutencao; 
 import com.drivecare.project.model.ManutencaoRealizada;
 import com.drivecare.project.service.DashboardService;
 
@@ -44,7 +44,7 @@ public class DashboardController {
         // Lógica de paginação para "Agendamentos Pendentes"
         int paginaParaServico = Math.max(1, paginaAtualParam); 
         
-        Page<Maintenance> paginaDeAgendamentos = dashboardService.getPaginatedAgendamentosPendentes(paginaParaServico, ITENS_POR_PAGINA_AGENDAMENTOS);
+        Page<AgendamentoManutencao> paginaDeAgendamentos = dashboardService.getPaginatedAgendamentosPendentes(paginaParaServico, ITENS_POR_PAGINA_AGENDAMENTOS);
 
         // Adiciona os dados de agendamentos pendentes ao modelo
         model.addAttribute("agendamentosPendentes", paginaDeAgendamentos.getContent());

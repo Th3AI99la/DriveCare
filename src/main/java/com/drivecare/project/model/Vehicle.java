@@ -28,7 +28,7 @@ public class Vehicle {
     private String cor;
 
     @OneToMany(mappedBy = "veiculo", cascade = CascadeType.ALL)
-    private List<Maintenance> manutencoes;
+    private List<AgendamentoManutencao> manutencoes; 
 
     // Construtores
     public Vehicle() {
@@ -98,11 +98,11 @@ public class Vehicle {
         this.cor = cor;
     }
 
-    public List<Maintenance> getManutencoes() {
+    public List<AgendamentoManutencao> getManutencoes() { 
         return manutencoes;
     }
 
-    public void setManutencoes(List<Maintenance> manutencoes) {
+     public void setManutencoes(List<AgendamentoManutencao> manutencoes) { 
         this.manutencoes = manutencoes;
     }
 }

@@ -264,25 +264,21 @@
                     <th class="text-end">Dias / Data</th>
                   </tr>
                 </thead>
+
+            <!--Tabela de Agendamentos Pendentes --> 
                 <tbody>
                   <tr class="animate-row"
-                    th:each="agendamento : ${agendamentosPendentes}">
-                    <td>
+                    th:each="agendamento : ${agendamentosPendentes}"> <td>
                       <div class="d-flex align-items-center">
-                        <i
-                          class="bi bi-calendar-event me-2 text-secondary"></i>
+                        <i class="bi bi-calendar-event me-2 text-secondary"></i>
                         <div>
-                          <div
-                            th:text="${agendamento.veiculo?.modelo ?: '-'}">-</div>
+                          <div th:text="${agendamento.veiculo?.modelo ?: '-'}">-</div>
                           <small class="text-muted"
-                            th:text="${agendamento.tipo ?: '-'}">-</small>
-                        </div>
+                            th:text="${agendamento.tipo?.displayName ?: '-'}">-</small> </div>
                       </div>
                     </td>
                     <td th:text="${agendamento.veiculo?.placa ?: '-'}">-</td>
-                    <td th:text="${agendamento.description ?: 'N/D'}">Revisão
-                      completa</td>
-                    <td>
+                    <td th:text="${agendamento.descricao ?: 'N/D'}">Revisão completa</td> <td>
                       <th:block
                         th:with="statusVisual = ${agendamento.getStatusVisualAgendamento()}">
                         <div class="progress"
@@ -314,17 +310,14 @@
                             th:text="'Atrasada há ' + (${dias} * -1) + ' dias'">-</span>
                         </th:block>
                         <small class="text-muted date-under-badge"
-                          th:text="${agendamento.proximaDataFormatada ?: '-'}">dd/MM/yyyy</small>
-                      </div>
+                          th:text="${agendamento.getDataAgendamentoFormatada() ?: '-'}">dd/MM/yyyy</small> </div>
                       <div th:if="${agendamento.diasCalculados == null}">
                         <span class="badge bg-secondary d-block mb-1"
                           th:text="${agendamento.statusAgendamento != null ? agendamento.statusAgendamento.displayName : 'N/D'}">N/D</span>
                         <small class="text-muted date-under-badge"
-                          th:text="${agendamento.proximaDataFormatada ?: '-'}">-</small>
-                      </div>
+                          th:text="${agendamento.getDataAgendamentoFormatada() ?: '-'}">-</small> </div>
                     </td>
                   </tr>
-                  <!-- Linha para quando não houver agendamentos pendentes -->
                   <tr
                     th:if="${agendamentosPendentes == null or #lists.isEmpty(agendamentosPendentes)}"
                     class="animate-row">

@@ -39,7 +39,7 @@ public class ManutencaoRealizada {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manutencao_agendada_id", nullable = true)
-    private Maintenance manutencaoAgendada;
+    private AgendamentoManutencao manutencaoAgendada; 
 
     // Construtor padrão
     public ManutencaoRealizada() {
@@ -47,12 +47,12 @@ public class ManutencaoRealizada {
 
     // Construtor que inicializa todos os campos
     public ManutencaoRealizada(Vehicle veiculo, LocalDate dataExecucao, String descricaoServicoRealizado,
-            String tipoManutencao, Double custoReal, Maintenance manutencaoAgendada) {
+            String tipoManutencao, Double custoReal, AgendamentoManutencao manutencaoAgendada) { 
         this.veiculo = veiculo;
         this.dataExecucao = dataExecucao;
         this.descricaoServicoRealizado = descricaoServicoRealizado;
         this.tipoManutencao = tipoManutencao;
-        this.custoReal = custoReal;
+        this.custoReal = custoReal; 
         this.manutencaoAgendada = manutencaoAgendada;
     }
 
@@ -105,11 +105,11 @@ public class ManutencaoRealizada {
         this.custoReal = custoReal;
     }
 
-    public Maintenance getManutencaoAgendada() {
+    public AgendamentoManutencao getManutencaoAgendada() { // <<< TIPO ALTERADO
         return manutencaoAgendada;
     }
 
-    public void setManutencaoAgendada(Maintenance manutencaoAgendada) {
+    public void setManutencaoAgendada(AgendamentoManutencao manutencaoAgendada) { // <<< TIPO ALTERADO
         this.manutencaoAgendada = manutencaoAgendada;
     }
 

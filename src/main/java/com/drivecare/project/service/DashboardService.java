@@ -19,34 +19,35 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.drivecare.project.model.Maintenance;
+import com.drivecare.project.model.AgendamentoManutencao;
 import com.drivecare.project.model.ManutencaoRealizada;
 import com.drivecare.project.model.Vehicle;
 import com.drivecare.project.model.enums.CategoriaManutencao;
 import com.drivecare.project.model.enums.StatusAgendamentoManutencao;
-import com.drivecare.project.repository.MaintenanceRepository;
+import com.drivecare.project.repository.AgendamentoManutencaoRepository;
 import com.drivecare.project.repository.ManutencaoRealizadaRepository;
 import com.drivecare.project.repository.VehicleRepository;
+
 
 @Service
 public class DashboardService {
 
     // Repositórios necessários para o serviço    
     private final VehicleRepository repositorioVeiculos;
-    private final MaintenanceRepository repositorioManutencoes;
+    private final AgendamentoManutencaoRepository repositorioManutencoes;
     private final ManutencaoRealizadaRepository repositorioManutencoesRealizadas;
     
     @Autowired
     public DashboardService(VehicleRepository repositorioVeiculos,
-            MaintenanceRepository repositorioManutencoes,
+            AgendamentoManutencaoRepository repositorioManutencoes,
             ManutencaoRealizadaRepository repositorioManutencoesRealizadas) {
         this.repositorioVeiculos = repositorioVeiculos;
         this.repositorioManutencoes = repositorioManutencoes;
         this.repositorioManutencoesRealizadas = repositorioManutencoesRealizadas;
     }
-      // Método para buscar veículos exibir no "Veículos com Manutenção Pendente" - ENUM AGENDADA
-        public Page<Maintenance> getPaginatedAgendamentosPendentes(int paginaAtual, int itensPorPagina) {
-        List<StatusAgendamentoManutencao> statusesConsiderados = Arrays.asList(StatusAgendamentoManutencao.AGENDADA);
+    // Método para buscar veículos exibir no "Veículos com Manutenção Pendente" - ENUM AGENDADA
+    public Page<AgendamentoManutencao> getPaginatedAgendamentosPendentes(int paginaAtual, int itensPorPagina) { 
+    List<StatusAgendamentoManutencao> statusesConsiderados = Arrays.asList( StatusAgendamentoManutencao.AGENDADA);
         
         // Verifica se a página atual é menor que 1, se sim, define como 1
         Pageable pageable = PageRequest.of(paginaAtual - 1, itensPorPagina);
@@ -69,11 +70,11 @@ public class DashboardService {
         List<StatusAgendamentoManutencao> statusesConsideradosParaCards = Arrays.asList(StatusAgendamentoManutencao.AGENDADA);
 
         // Busca todas as manutenções com os status considerados e ordena pela próxima data
-        List<Maintenance> todasManutencoesRelevantes = repositorioManutencoes
+        List<AgendamentoManutencao> todasManutencoesRelevantes = repositorioManutencoes
                 .findAllByStatusAgendamentoInOrderByProximaDataAsc(statusesConsideradosParaCards); 
 
         // Itera sobre as manutenções relevantes para calcular os status
-        for (Maintenance manutencao : todasManutencoesRelevantes) {
+        for (AgendamentoManutencao manutencao : todasManutencoesRelevantes) {
             Long diasCalculados = manutencao.getDiasCalculados();
             if (diasCalculados != null) {
                 if (diasCalculados < 0) {
