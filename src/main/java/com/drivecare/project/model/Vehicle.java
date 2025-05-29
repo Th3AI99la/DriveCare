@@ -1,6 +1,5 @@
 package com.drivecare.project.model;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -10,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+
 
 @Entity
 public class Vehicle {
@@ -26,9 +26,6 @@ public class Vehicle {
 
     @Column(name = "vehicle_color")
     private String cor;
-
-    @Column(name = "next_maintenance")
-    private LocalDate proximaManutencao;
 
     @OneToMany(mappedBy = "veiculo", cascade = CascadeType.ALL)
     private List<Maintenance> manutencoes;
@@ -99,14 +96,6 @@ public class Vehicle {
 
     public void setCor(String cor) {
         this.cor = cor;
-    }
-
-    public LocalDate getNextMaintenance() {
-        return proximaManutencao;
-    }
-
-    public void setNextMaintenance(LocalDate proximaManutencao) {
-        this.proximaManutencao = proximaManutencao;
     }
 
     public List<Maintenance> getManutencoes() {
