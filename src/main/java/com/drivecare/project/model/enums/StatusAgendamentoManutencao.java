@@ -1,8 +1,12 @@
 package com.drivecare.project.model.enums;
 
+// Enum que representa os status de agendamento de manutenção.
+// O Enum StatusAgendamentoManutencao define os possíveis estados de um agendamento de manutenção,
+// como "Agendada", "Concluída" e "Cancelada".
+// ou seja, no banco de dados, ele aceitará SOMENTE esse valores: "AGENDADA", "CONCLUIDA" e "CANCELADA".
+
 public enum StatusAgendamentoManutencao {
     AGENDADA("Agendada"),
-    PENDENTE_ATRASADA("Pendente (Atrasada)"), 
     CONCLUIDA("Concluída"), 
     CANCELADA("Cancelada");
 

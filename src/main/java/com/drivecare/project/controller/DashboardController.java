@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page; // <<< ADICIONAR IMPORT
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,66 +18,52 @@ import com.drivecare.project.service.DashboardService;
 public class DashboardController {
 
     private final DashboardService dashboardService;
-    private static final int ITENS_POR_PAGINA_AGENDAMENTOS = 5;
+    private static final int ITENS_POR_PAGINA_AGENDAMENTOS = 5; // Constante pode permanecer aqui
 
     public DashboardController(DashboardService dashboardService) {
         this.dashboardService = dashboardService;
     }
 
     @GetMapping("/")
-    public String dashboard(@RequestParam(name = "pagina", defaultValue = "1") int paginaAtual, Model model) {
-        // Dados gerais
+    public String dashboard(@RequestParam(name = "pagina", defaultValue = "1") int paginaAtualParam, Model model) {
+
+        // Dados do dashboard (Total de Veículos e Ganhos Totais (mês))
         model.addAttribute("totalVeiculos", dashboardService.getTotalVehicles());
         model.addAttribute("despesasMensais", dashboardService.getMonthlyExpenses());
 
-        // Chamando o novo método do serviço e declarando a variável
-        Map<String, Long> dynamicStatusCounts = dashboardService.getDynamicVehicleStatusCounts(); // Declaração da variável
+        // Dados de status dinâmico dos veículos
+        Map<String, Long> dynamicStatusCounts = dashboardService.getDynamicVehicleStatusCounts();
         model.addAttribute("veiculosOk", dynamicStatusCounts.get("veiculosOk"));
         model.addAttribute("veiculosPendentes", dynamicStatusCounts.get("veiculosPendentes"));
         model.addAttribute("veiculosAtrasados", dynamicStatusCounts.get("veiculosAtrasados"));
 
-        // Buscar histórico de manutenções realizadas
+        // Dados de manutenção
         List<ManutencaoRealizada> historicoRecente = dashboardService.getManutencoesRealizadasRecentes();
         model.addAttribute("historicoManutencoesRecentes", historicoRecente);
 
         // Lógica de paginação para "Agendamentos Pendentes"
-        List<Maintenance> todosAgendamentosPendentes = dashboardService.getAgendamentosPendentesOrdenados();
-        int totalContagemAgendamentos = todosAgendamentosPendentes.size();
+        int paginaParaServico = Math.max(1, paginaAtualParam); 
+        
+        Page<Maintenance> paginaDeAgendamentos = dashboardService.getPaginatedAgendamentosPendentes(paginaParaServico, ITENS_POR_PAGINA_AGENDAMENTOS);
 
-        int totalPaginasAgendamentos = (int) Math
-                        .ceil((double) totalContagemAgendamentos / ITENS_POR_PAGINA_AGENDAMENTOS); // ITENS_POR_PAGINA_AGENDAMENTOS precisa estar definido
-        if (totalPaginasAgendamentos == 0)
-            totalPaginasAgendamentos = 1;
+        // Adiciona os dados de agendamentos pendentes ao modelo
+        model.addAttribute("agendamentosPendentes", paginaDeAgendamentos.getContent());
+        model.addAttribute("totalContagem", paginaDeAgendamentos.getTotalElements());
+        model.addAttribute("contagemAtual", paginaDeAgendamentos.getNumberOfElements()); 
+        model.addAttribute("paginaAtual", paginaParaServico);
+        model.addAttribute("totalPaginas", paginaDeAgendamentos.getTotalPages() == 0 ? 1 : paginaDeAgendamentos.getTotalPages());
 
-        if (paginaAtual < 1)
-            paginaAtual = 1;
-        else if (paginaAtual > totalPaginasAgendamentos && totalPaginasAgendamentos > 0)
-            paginaAtual = totalPaginasAgendamentos;
 
-        int inicio = (paginaAtual - 1) * ITENS_POR_PAGINA_AGENDAMENTOS;
-        int fim = Math.min(inicio + ITENS_POR_PAGINA_AGENDAMENTOS, totalContagemAgendamentos);
-
-        List<Maintenance> agendamentosPendentesPaginado = (inicio >= fim) ? // Condição simplificada para subList
-                                                            Collections.emptyList() :
-                                                            todosAgendamentosPendentes.subList(inicio, fim);
-
-        model.addAttribute("agendamentosPendentes", agendamentosPendentesPaginado);
-        model.addAttribute("totalContagem", totalContagemAgendamentos);
-        model.addAttribute("contagemAtual", agendamentosPendentesPaginado.size());
-        model.addAttribute("paginaAtual", paginaAtual);
-        model.addAttribute("totalPaginas", totalPaginasAgendamentos);
-
-        // --- DADOS DOS GRÁFICOS  ---
-        // Dados para Donut e Barras (se o getChartData foi simplificado)
+        // Dados adicionais para gráficos
         Map<String, Object> outrosDadosGrafico = dashboardService.getChartData(); 
         model.addAttribute("tiposManutencaoLabels", ((Map<String, Object>) outrosDadosGrafico.getOrDefault("tiposManutencao", Collections.emptyMap())).get("rotulos"));
         model.addAttribute("tiposManutencaoData", ((Map<String, Object>) outrosDadosGrafico.getOrDefault("tiposManutencao", Collections.emptyMap())).get("valores"));
         model.addAttribute("saudeVeiculosLabels", ((Map<String, Object>) outrosDadosGrafico.getOrDefault("dadosSaudeVeiculos", Collections.emptyMap())).get("rotulos"));
         model.addAttribute("saudeVeiculosData", ((Map<String, Object>) outrosDadosGrafico.getOrDefault("dadosSaudeVeiculos", Collections.emptyMap())).get("valores"));
 
-        // NOVO: Adicionar dados para o Gráfico de Ganhos (Line Chart)
+        // Dados do gráfico de ganhos
         Map<String, Map<String, Object>> dadosGraficoGanhos = dashboardService.getDadosGraficoGanhos();
-        model.addAttribute("dadosGraficoGanhos", dadosGraficoGanhos); // Passa toda a estrutura (semanal, mensal, anual)
+        model.addAttribute("dadosGraficoGanhos", dadosGraficoGanhos);
 
         return "index";
     }

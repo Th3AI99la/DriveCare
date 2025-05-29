@@ -28,8 +28,7 @@ public class ManutencaoRealizada {
     @Column(name = "data_execucao", nullable = false)
     private LocalDate dataExecucao;
 
-    // para String, ou especificando um VARCHAR com length.
-    @Column(name = "descricao_servico_realizado", length = 1000) // Exemplo: VARCHAR(1000)
+    @Column(name = "descricao_servico_realizado", length = 1000) // VARCHAR(1000)
     private String descricaoServicoRealizado;
 
     @Column(name = "tipo_manutencao")
@@ -46,7 +45,7 @@ public class ManutencaoRealizada {
     public ManutencaoRealizada() {
     }
 
-    // Construtor completo (ajustado se você removeu campos como localOficina)
+    // Construtor que inicializa todos os campos
     public ManutencaoRealizada(Vehicle veiculo, LocalDate dataExecucao, String descricaoServicoRealizado,
             String tipoManutencao, Double custoReal, Maintenance manutencaoAgendada) {
         this.veiculo = veiculo;

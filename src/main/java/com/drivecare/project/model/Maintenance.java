@@ -24,13 +24,13 @@ public class Maintenance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING) 
-    @Column(name = "tipo_categoria") 
-                                    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_categoria")
+
     private CategoriaManutencao tipo; // << ALTERADO PARA O ENUM
 
-    private String descricao; 
-    private Double custo; 
+    private String descricao;
+    private Double custo;
 
     @Column(name = "creation_date")
     private LocalDate dataCriacao;
@@ -50,30 +50,30 @@ public class Maintenance {
     public Maintenance() {
         this.dataCriacao = LocalDate.now();
         this.statusAgendamento = StatusAgendamentoManutencao.AGENDADA;
-       
+
     }
 
     // Construtor ajustado
     public Maintenance(CategoriaManutencao tipo, String descricao, Double custo, LocalDate proximaData,
             Vehicle veiculo) {
         this();
-        this.tipo = tipo; // << ACEITA O ENUM
-        this.descricao = descricao;
-        this.custo = custo;
-        this.proximaData = proximaData;
-        this.veiculo = veiculo;
+        this.tipo = tipo; // << USANDO O ENUM
+        this.descricao = descricao; 
+        this.custo = custo; 
+        this.proximaData = proximaData; // << USANDO O ENUM
+        this.veiculo = veiculo; // << USANDO O ENUM
     }
 
     // Getters e Setters para 'tipo' ajustados
-    public CategoriaManutencao getTipo() { // << RETORNA O ENUM
+    public CategoriaManutencao getTipo() { 
         return tipo;
     }
 
-    public void setTipo(CategoriaManutencao tipo) { // << ACEITA O ENUM
+    public void setTipo(CategoriaManutencao tipo) { 
         this.tipo = tipo;
     }
 
-    // getters e setters 
+    // getters e setters
     public Long getId() {
         return id;
     }
@@ -138,6 +138,7 @@ public class Maintenance {
         return proximaData != null ? proximaData.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "-";
     }
 
+    // Método para obter os dias calculados até a próxima data
     public Long getDiasCalculados() {
         if (this.proximaData == null ||
                 this.statusAgendamento == StatusAgendamentoManutencao.CONCLUIDA ||
@@ -148,6 +149,7 @@ public class Maintenance {
         return ChronoUnit.DAYS.between(hoje, this.proximaData);
     }
 
+    // Método para obter o status visual do agendamento
     public String getStatusVisualAgendamento() {
         if (this.statusAgendamento == StatusAgendamentoManutencao.CONCLUIDA) {
             return "CONCLUIDA_DISPLAY";

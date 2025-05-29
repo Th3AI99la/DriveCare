@@ -112,6 +112,7 @@
                   <h3 th:text="${totalVeiculos}">0</h3> </div>
               </div>
             </div>
+
             <!-- Manutenções em Dia -->
             <div class="col-md-2">
               <div class="card bg-success text-white text-center animate-card">
@@ -121,6 +122,7 @@
                   <h3 th:text="${veiculosOk}">0</h3> </div>
               </div>
             </div>
+
             <!-- Manutenções Pendentes -->
             <div class="col-md-2">
               <div class="card bg-warning text-dark text-center animate-card">
@@ -130,6 +132,7 @@
                   <h3 th:text="${veiculosPendentes}">0</h3> </div>
               </div>
             </div>
+
             <!-- Alertas Críticos -->
             <div class="col-md-2">
               <div class="card bg-danger text-white text-center animate-card">
@@ -140,6 +143,7 @@
                 </div>
               </div>
             </div>
+
             <!-- Gastos Totais -->
             <div class="col-md-4">
               <div
@@ -204,6 +208,7 @@
                     <th class="text-end">Custo Real</th>
                   </tr>
                 </thead>
+                
                 <!-- Tabela de Manutenções Recentes-->
                 <tbody>
                   <tr class="animate-row"
@@ -328,6 +333,7 @@
                   </tr>
                 </tbody>
               </table>
+
               <!--  PAGINAÇÃO DINÂMICA -->
               <nav aria-label="Navegação de páginas"
                 th:if="${totalPaginas != null and totalPaginas > 0}">
@@ -802,7 +808,7 @@
             ctx.fillText('Nenhum dado de veículos por marca disponível', polarAreaChartCanvas.width / 2, polarAreaChartCanvas.height / 2);
         }
 
-            // Função para atualizar gráficos (se houver atualizações em tempo real via WebSocket, por exemplo)
+            // Função para atualizar gráficos
             window.updateDashboardCharts = function(data) {
                 // Atualização do gráfico de Ganhos
                 // Se os dados de ganhos forem recebidos, atualize o gráfico com o período atualmente selecionado
@@ -841,7 +847,6 @@
                 }
             };
         });
-
     /*]]>*/
     </script>
   </body>

@@ -14,12 +14,15 @@ import com.drivecare.project.model.ManutencaoRealizada;
 @Repository
 public interface ManutencaoRealizadaRepository extends JpaRepository<ManutencaoRealizada, Long> {
 
+   // Metodo por buscar e ordenar por data de execução
     @Query("SELECT mr FROM ManutencaoRealizada mr ORDER BY mr.dataExecucao DESC")
     List<ManutencaoRealizada> findRecentManutencoesRealizadas(Pageable pageable);
 
+   // Metodo por buscar e ordenar por ano e mês de execução
     @Query("SELECT SUM(mr.custoReal) FROM ManutencaoRealizada mr WHERE YEAR(mr.dataExecucao) = YEAR(CURRENT_DATE) AND MONTH(mr.dataExecucao) = MONTH(CURRENT_DATE)")
     Double sumCurrentMonthRealizedExpenses();
-
+   
+   // Método para buscar e ordenar por custo, quantidade e data de execução
     @Query("SELECT mr.dataExecucao, SUM(mr.custoReal) as totalCusto, COUNT(mr.id) as quantidade " +
            "FROM ManutencaoRealizada mr " +
            "WHERE mr.dataExecucao BETWEEN :startDate AND :endDate " +
@@ -27,7 +30,7 @@ public interface ManutencaoRealizadaRepository extends JpaRepository<ManutencaoR
            "ORDER BY mr.dataExecucao ASC")
     List<Object[]> findGanhoEQuantidadePorDiaAgrupado(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
-    // CORREÇÃO APLICADA AQUI:
+    // Método por buscar e ordenar por custo, quantidade e data de execução agrupado por mês
     @Query("SELECT YEAR(mr.dataExecucao) as ano, MONTH(mr.dataExecucao) as mes, " +
            "SUM(mr.custoReal) as totalCusto, COUNT(mr.id) as quantidade " +
            "FROM ManutencaoRealizada mr " +
