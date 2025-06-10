@@ -24,7 +24,7 @@ public class SecurityConfig {
                 )
                 .formLogin((form) -> form
                         .loginPage("/login") // Define a página de login personalizada
-                        .defaultSuccessUrl("/index", true) // Redireciona para /home após o login
+                        .defaultSuccessUrl("/", true) // Redireciona para /home após o login
                         .permitAll()
                 )
                 .logout((logout) -> logout.permitAll());
