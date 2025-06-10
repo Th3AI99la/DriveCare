@@ -19,9 +19,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        // Permite acesso público a estas páginas e recursos estáticos
                         .requestMatchers("/login", "/register", "/styles/**", "/scripts/**", "/images/**").permitAll()
-                        // Qualquer outra requisição (incluindo a raiz "/") precisa de autenticação
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -32,7 +30,7 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout") // URL para acionar o logout
+                        .logoutUrl("/logout") 
                         .logoutSuccessUrl("/login?logout") 
                         .invalidateHttpSession(true) 
                         .deleteCookies("JSESSIONID") 
