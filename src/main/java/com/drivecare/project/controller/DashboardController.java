@@ -59,7 +59,9 @@ public class DashboardController {
         model.addAttribute("tiposManutencaoLabels", ((Map<String, Object>) outrosDadosGrafico.getOrDefault("tiposManutencao", Collections.emptyMap())).get("rotulos"));
         model.addAttribute("tiposManutencaoData", ((Map<String, Object>) outrosDadosGrafico.getOrDefault("tiposManutencao", Collections.emptyMap())).get("valores"));
         model.addAttribute("saudeVeiculosLabels", ((Map<String, Object>) outrosDadosGrafico.getOrDefault("dadosSaudeVeiculos", Collections.emptyMap())).get("rotulos"));
-        model.addAttribute("saudeVeiculosData", ((Map<String, Object>) outrosDadosGrafico.getOrDefault("dadosSaudeVeiculos", Collections.emptyMap())).get("valores"));
+        Object dadosSaudeVeiculosObj = outrosDadosGrafico.getOrDefault("dadosSaudeVeiculos", Collections.emptyMap());
+        Map<String, Object> dadosSaudeVeiculos = dadosSaudeVeiculosObj instanceof Map ? (Map<String, Object>) dadosSaudeVeiculosObj : Collections.emptyMap();
+        model.addAttribute("saudeVeiculosData", dadosSaudeVeiculos.get("valores"));
 
         // Dados do gráfico de ganhos
         Map<String, Map<String, Object>> dadosGraficoGanhos = dashboardService.getDadosGraficoGanhos();

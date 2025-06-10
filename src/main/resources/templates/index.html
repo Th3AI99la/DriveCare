@@ -4,8 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>DriveCare - Dashboard</title>
-    <!-- Bootstrap CSS e Bootstrap Icons -->
-
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet">
@@ -15,25 +13,20 @@
     <link rel="stylesheet" href="/styles/custom.css"
       th:href="@{/styles/custom.css}">
 
-    <!-- Scripts do Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Scripts de Animação de entrada dos cards -->
     <script src="/scripts/cards.js" th:src="@{/scripts/cards.js}"defer></script>
     
   </head>
 
-  <!-- BODY -->
   <body class="dark-mode">
     <div class="container-fluid">
       <div class="row">
 
-        <!-- NAV LATERAL ESQUERDA -->
         <nav class="col-md-2 d-none d-md-block sidebar vh-100 bg-primary-dark">
           <div class="position-sticky pt-3">
             <ul class="nav flex-column">
 
-              <!-- Painel -->
               <li class="nav-item">
                 <h4 class="drive_name_nav">DriveCare</h4>
                 <a class="nav-link active" aria-current="page" th:href="@{/}">
@@ -42,7 +35,6 @@
                 </a>
               </li>
 
-              <!-- Veículos -->
               <li class="nav-item">
                 <a class="nav-link" th:href="@{/vehicles}">
                   <i class="bi bi-car-front me-2"></i>
@@ -50,7 +42,6 @@
                 </a>
               </li>
 
-              <!-- Manutenções -->
               <li class="nav-item">
                 <a class="nav-link" th:href="@{/maintenances}">
                   <i class="bi bi-tools me-2"></i>
@@ -58,7 +49,6 @@
                 </a>
               </li>
 
-              <!-- Perfil -->
               <li class="nav-item">
                 <a class="nav-link" th:href="@{/profile}">
                   <i class="bi bi-person-circle me-2"></i>
@@ -66,24 +56,22 @@
                 </a>
               </li>
 
-              <!-- Espaço harmônico -->
               <br /><br />
 
-              <!-- Sair -->
               <li class="nav-item">
-                <a class="nav-link text-danger" th:href="@{/logout}">
-                  <i class="bi bi-box-arrow-right me-2"></i>
-                  Sair
-                </a>
+                <form th:action="@{/logout}" method="post">
+                  <button type="submit" class="nav-link text-danger">
+                    <i class="bi bi-box-arrow-right me-2"></i>
+                    Sair
+                  </button>
+                </form>
               </li>
             </ul>
           </div>
         </nav>
 
-        <!-- CONTEÚDO PRINCIPAL -->
         <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4 bg-dark text-light">
 
-          <!-- HEADER com ícone do usuário e nome ao lado -->
           <header
             class="d-flex justify-content-end py-3 border-bottom border-secondary">
 
@@ -101,9 +89,7 @@
             </a>
           </header>
 
-          <!-- CARDS RESUMO -->
           <div class="row my-4 g-3">
-            <!-- Total de Veículos -->
             <div class="col-md-2">
               <div class="card bg-primary text-white text-center animate-card">
                 <div class="card-body">
@@ -113,7 +99,6 @@
               </div>
             </div>
 
-            <!-- Manutenções em Dia -->
             <div class="col-md-2">
               <div class="card bg-success text-white text-center animate-card">
                 <div class="card-body">
@@ -123,7 +108,6 @@
               </div>
             </div>
 
-            <!-- Manutenções Pendentes -->
             <div class="col-md-2">
               <div class="card bg-warning text-dark text-center animate-card">
                 <div class="card-body">
@@ -133,7 +117,6 @@
               </div>
             </div>
 
-            <!-- Alertas Críticos -->
             <div class="col-md-2">
               <div class="card bg-danger text-white text-center animate-card">
                 <div class="card-body">
@@ -144,7 +127,6 @@
               </div>
             </div>
 
-            <!-- Gastos Totais -->
             <div class="col-md-4">
               <div
                 class="card bg-secondary text-white text-center animate-card">
@@ -159,236 +141,225 @@
             </div>
           </div>
         
-        <!-- GRÁFICOS -->
-        <div class="row my-4">
-          <!-- Gráfico de Linhas: Controle de Ganhos -->
+          <div class="row my-4">
             <div class="col-md-8">
-            <div class="card bg-dark-light">
-              <div class="card-header bg-dark border-secondary d-flex justify-content-between align-items-center">
-                <h4 class="card-color mb-0">Controle de Ganhos</h4>
-                <div>
-                  <button id="btnGanhosSemanal" class="btn btn-sm btn-outline-light">Semanal</button>
-                  <button id="btnGanhosMensal" class="btn btn-sm btn-outline-light">Mensal</button> 
-                  <button id="btnGanhosAnual" class="btn btn-sm btn-outline-light active">Anual</button>
+              <div class="card bg-dark-light">
+                <div class="card-header bg-dark border-secondary d-flex justify-content-between align-items-center">
+                  <h4 class="card-color mb-0">Controle de Ganhos</h4>
+                  <div>
+                    <button id="btnGanhosSemanal" class="btn btn-sm btn-outline-light">Semanal</button>
+                    <button id="btnGanhosMensal" class="btn btn-sm btn-outline-light">Mensal</button> 
+                    <button id="btnGanhosAnual" class="btn btn-sm btn-outline-light active">Anual</button>
+                  </div>
                 </div>
-              </div>
-              <div class="card-body card-body-grafico-grande">
-                <canvas id="lineChart"></canvas>
-                </div>
-            </div>
-          </div>
-
-          <!-- Gráfico de Donut: Tipos de Manutenção -->
-          <div class="col-md-4">
-            <div class="card bg-dark-light">
-              <div class="card-header bg-dark border-secondary"> <h4 class="card-color">Tipos de
-                Manutenção</4> </div>
-              <div class="card-body">
-                <canvas id="donutChart"></canvas>
-                <div
-                  th:unless="${tiposManutencaoData != null and not #lists.isEmpty(tiposManutencaoData)}"
-                  class="text-center text-muted">
-                  Nenhum dado disponível
-                </div>
+                <div class="card-body card-body-grafico-grande">
+                  <canvas id="lineChart"></canvas>
+                  </div>
               </div>
             </div>
-          </div>
 
-          <!-- MANUTENÇÕES RECENTES-->
-          <div class="my-4">
-            <h4>Manutenções Realizadas Recentemente</h4>
-            <div class="table-responsive">
-              <table class="table table-dark table-striped table-hover">
-                <thead>
-                  <tr>
-                    <th>Veículo</th>
-                    <th>Serviço Realizado</th>
-                    <th>Tipo</th>
-                    <th>Data da Execução</th>
-                    <th class="text-end">Custo Real</th>
-                  </tr>
-                </thead>
-                
-                <!-- Tabela de Manutenções Recentes-->
-                <tbody>
-                  <tr class="animate-row"
-                    th:each="realizada : ${historicoManutencoesRecentes}">
-                    <td>
-                      <div th:if="${realizada.veiculo != null}"
-                        th:text="${realizada.veiculo.modelo}">Modelo</div>
-                      <div th:if="${realizada.veiculo == null}">-</div>
-                      <small class="text-muted"
-                        th:if="${realizada.veiculo != null}"
-                        th:text="${realizada.veiculo.marca} + (${realizada.veiculo.placa != null ? ' - ' + realizada.veiculo.placa : ''})">
-                        Marca - Placa
-                      </small>
-                      <small class="text-muted"
-                        th:if="${realizada.veiculo == null}">-</small>
-                    </td>
-                    <td
-                      th:text="${realizada.descricaoServicoRealizado ?: '-'}">-</td>
-                    <td th:text="${realizada.tipoManutencao ?: '-'}">-</td>
-                    <td
-                      th:text="${realizada.dataExecucaoFormatada ?: '-'}">-</td>
-                    <td class="text-end"
-                      th:text="${realizada.custoReal != null ? #numbers.formatCurrency(realizada.custoReal) : '-'}">R$
-                      0,00</td>
-                  </tr>
-                  <tr
-                    th:if="${historicoManutencoesRecentes == null or #lists.isEmpty(historicoManutencoesRecentes)}">
-                    <td colspan="5" class="text-center text-muted">Nenhuma
-                      manutenção realizada recentemente.</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="col-md-4">
+              <div class="card bg-dark-light">
+                <div class="card-header bg-dark border-secondary"> <h4 class="card-color">Tipos de
+                  Manutenção</h4> </div>
+                <div class="card-body">
+                  <canvas id="donutChart"></canvas>
+                  <div
+                    th:unless="${tiposManutencaoData != null and not #lists.isEmpty(tiposManutencaoData)}"
+                    class="text-center text-muted">
+                    Nenhum dado disponível
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <!-- PRÓXIMAS MANUTENÇÕES - TABELA DINÂMICA -->
-          <div class="my-4">
-            <div
-              class="d-flex justify-content-between align-items-center mb-3">
-              <h4>Agendamentos Pendentes</h4>
-              <span class="text-muted"
-                th:text="'Mostrando ' + (${contagemAtual ?: 0}) + ' de ' + (${totalContagem ?: 0}) + ' agendamentos'">Mostrando
-                0 de 0 agendamentos</span>
+            <div class="my-4">
+              <h4>Manutenções Realizadas Recentemente</h4>
+              <div class="table-responsive">
+                <table class="table table-dark table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th>Veículo</th>
+                      <th>Serviço Realizado</th>
+                      <th>Tipo</th>
+                      <th>Data da Execução</th>
+                      <th class="text-end">Custo Real</th>
+                    </tr>
+                  </thead>
+                  
+                  <tbody>
+                    <tr class="animate-row"
+                      th:each="realizada : ${historicoManutencoesRecentes}">
+                      <td>
+                        <div th:if="${realizada.veiculo != null}"
+                          th:text="${realizada.veiculo.modelo}">Modelo</div>
+                        <div th:if="${realizada.veiculo == null}">-</div>
+                        <small class="text-muted"
+                          th:if="${realizada.veiculo != null}"
+                          th:text="${realizada.veiculo.marca} + (${realizada.veiculo.placa != null ? ' - ' + realizada.veiculo.placa : ''})">
+                          Marca - Placa
+                        </small>
+                        <small class="text-muted"
+                          th:if="${realizada.veiculo == null}">-</small>
+                      </td>
+                      <td
+                        th:text="${realizada.descricaoServicoRealizado ?: '-'}">-</td>
+                      <td th:text="${realizada.tipoManutencao ?: '-'}">-</td>
+                      <td
+                        th:text="${realizada.dataExecucaoFormatada ?: '-'}">-</td>
+                      <td class="text-end"
+                        th:text="${realizada.custoReal != null ? #numbers.formatCurrency(realizada.custoReal) : '-'}">R$
+                        0,00</td>
+                    </tr>
+                    <tr
+                      th:if="${historicoManutencoesRecentes == null or #lists.isEmpty(historicoManutencoesRecentes)}">
+                      <td colspan="5" class="text-center text-muted">Nenhuma
+                        manutenção realizada recentemente.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <div class="table-responsive">
-              <table class="table table-dark table-hover">
-                <thead>
-                  <tr>
-                    <th>Veículo</th>
-                    <th>Placa</th>
-                    <th>Descrição do Serviço</th>
-                    <th>Progresso</th>
-                    <th class="text-end">Dias / Data</th>
-                  </tr>
-                </thead>
 
-            <!--Tabela de Agendamentos Pendentes --> 
-                <tbody>
-                  <tr class="animate-row"
-                    th:each="agendamento : ${agendamentosPendentes}"> <td>
-                      <div class="d-flex align-items-center">
-                        <i class="bi bi-calendar-event me-2 text-secondary"></i>
-                        <div>
-                          <div th:text="${agendamento.veiculo?.modelo ?: '-'}">-</div>
-                          <small class="text-muted"
-                            th:text="${agendamento.tipo?.displayName ?: '-'}">-</small> </div>
-                      </div>
-                    </td>
-                    <td th:text="${agendamento.veiculo?.placa ?: '-'}">-</td>
-                    <td th:text="${agendamento.descricao ?: 'N/D'}">Revisão completa</td> <td>
-                      <th:block
-                        th:with="statusVisual = ${agendamento.getStatusVisualAgendamento()}">
-                        <div class="progress"
-                          style="height: 6px; width: 100px;">
-                          <div
-                            th:classappend="${statusVisual == 'EM_DIA'} ? 'bg-success' :
+            <div class="my-4">
+              <div
+                class="d-flex justify-content-between align-items-center mb-3">
+                <h4>Agendamentos Pendentes</h4>
+                <span class="text-muted"
+                  th:text="'Mostrando ' + (${contagemAtual ?: 0}) + ' de ' + (${totalContagem ?: 0}) + ' agendamentos'">Mostrando
+                  0 de 0 agendamentos</span>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-dark table-hover">
+                  <thead>
+                    <tr>
+                      <th>Veículo</th>
+                      <th>Placa</th>
+                      <th>Descrição do Serviço</th>
+                      <th>Progresso</th>
+                      <th class="text-end">Dias / Data</th>
+                    </tr>
+                  </thead>
+
+              <tbody>
+                    <tr class="animate-row"
+                      th:each="agendamento : ${agendamentosPendentes}"> <td>
+                        <div class="d-flex align-items-center">
+                          <i class="bi bi-calendar-event me-2 text-secondary"></i>
+                          <div>
+                            <div th:text="${agendamento.veiculo?.modelo ?: '-'}">-</div>
+                            <small class="text-muted"
+                              th:text="${agendamento.tipo?.displayName ?: '-'}">-</small> </div>
+                        </div>
+                      </td>
+                      <td th:text="${agendamento.veiculo?.placa ?: '-'}">-</td>
+                      <td th:text="${agendamento.descricao ?: 'N/D'}">Revisão completa</td> <td>
+                        <th:block
+                          th:with="statusVisual = ${agendamento.getStatusVisualAgendamento()}">
+                          <div class="progress"
+                            style="height: 6px; width: 100px;">
+                            <div
+                              th:classappend="${statusVisual == 'EM_DIA'} ? 'bg-success' :
                                                   (${statusVisual == 'PROXIMO'} ? 'bg-warning' :
                                                   (${statusVisual == 'ATRASADO'} ? 'bg-danger' : 'bg-secondary'))"
-                            th:styleappend="${statusVisual == 'EM_DIA'} ? 'width: 30%' :
-                                                    (${statusVisual == 'PROXIMO'} ? 'width: 70%' :
-                                                    (${statusVisual == 'ATRASADO'} ? 'width: 100%' : 'width: 10%'))"
-                            class="progress-bar"
-                            th:title="${statusVisual}"></div>
-                        </div>
-                      </th:block>
-                    </td>
-                    <td class="text-end">
-                      <div th:if="${agendamento.diasCalculados != null}">
-                        <th:block
-                          th:with="dias = ${agendamento.diasCalculados.longValue()}">
-                          <span th:if="${dias >= 20}"
-                            class="badge bg-success d-block mb-1"
-                            th:text="'Em ' + ${dias} + ' dias'">-</span>
-                          <span th:if="${dias < 20 and dias >= 0}"
-                            class="badge bg-warning text-dark d-block mb-1"
-                            th:text="${dias == 0 ? 'Hoje' : (dias == 1 ? 'Em 1 dia' : ('Em ' + dias + ' dias'))}">-</span>
-                          <span th:if="${dias < 0}"
-                            class="badge bg-danger d-block mb-1"
-                            th:text="'Atrasada há ' + (${dias} * -1) + ' dias'">-</span>
+                              th:styleappend="${statusVisual == 'EM_DIA'} ? 'width: 30%' :
+                                                  (${statusVisual == 'PROXIMO'} ? 'width: 70%' :
+                                                  (${statusVisual == 'ATRASADO'} ? 'width: 100%' : 'width: 10%'))"
+                              class="progress-bar"
+                              th:title="${statusVisual}"></div>
+                          </div>
                         </th:block>
-                        <small class="text-muted date-under-badge"
-                          th:text="${agendamento.getDataAgendamentoFormatada() ?: '-'}">dd/MM/yyyy</small> </div>
-                      <div th:if="${agendamento.diasCalculados == null}">
-                        <span class="badge bg-secondary d-block mb-1"
-                          th:text="${agendamento.statusAgendamento != null ? agendamento.statusAgendamento.displayName : 'N/D'}">N/D</span>
-                        <small class="text-muted date-under-badge"
-                          th:text="${agendamento.getDataAgendamentoFormatada() ?: '-'}">-</small> </div>
-                    </td>
-                  </tr>
-                  <tr
-                    th:if="${agendamentosPendentes == null or #lists.isEmpty(agendamentosPendentes)}"
-                    class="animate-row">
-                    <td colspan="5" class="text-center text-muted">Nenhum
-                      agendamento pendente.</td>
-                  </tr>
-                </tbody>
-              </table>
+                      </td>
+                      <td class="text-end">
+                        <div th:if="${agendamento.diasCalculados != null}">
+                          <th:block
+                            th:with="dias = ${agendamento.diasCalculados.longValue()}">
+                            <span th:if="${dias >= 20}"
+                              class="badge bg-success d-block mb-1"
+                              th:text="'Em ' + ${dias} + ' dias'">-</span>
+                            <span th:if="${dias < 20 and dias >= 0}"
+                              class="badge bg-warning text-dark d-block mb-1"
+                              th:text="${dias == 0 ? 'Hoje' : (dias == 1 ? 'Em 1 dia' : ('Em ' + dias + ' dias'))}">-</span>
+                            <span th:if="${dias < 0}"
+                              class="badge bg-danger d-block mb-1"
+                              th:text="'Atrasada há ' + (${dias} * -1) + ' dias'">-</span>
+                          </th:block>
+                          <small class="text-muted date-under-badge"
+                            th:text="${agendamento.getDataAgendamentoFormatada() ?: '-'}">dd/MM/yyyy</small> </div>
+                        <div th:if="${agendamento.diasCalculados == null}">
+                          <span class="badge bg-secondary d-block mb-1"
+                            th:text="${agendamento.statusAgendamento != null ? agendamento.statusAgendamento.displayName : 'N/D'}">N/D</span>
+                          <small class="text-muted date-under-badge"
+                            th:text="${agendamento.getDataAgendamentoFormatada() ?: '-'}">-</small> </div>
+                      </td>
+                    </tr>
+                    <tr
+                      th:if="${agendamentosPendentes == null or #lists.isEmpty(agendamentosPendentes)}"
+                      class="animate-row">
+                      <td colspan="5" class="text-center text-muted">Nenhum
+                        agendamento pendente.</td>
+                    </tr>
+                  </tbody>
+                </table>
 
-              <!--  PAGINAÇÃO DINÂMICA -->
-              <nav aria-label="Navegação de páginas"
-                th:if="${totalPaginas != null and totalPaginas > 0}">
-                <ul class="pagination justify-content-end mt-3">
-                  <li
-                    th:classappend="${paginaAtual == null or paginaAtual == 1} ? 'disabled'"
-                    class="page-item">
-                    <a class="page-link"
-                      th:href="@{/(pagina=${(paginaAtual ?: 1) -1})}"
-                      tabindex="-1">Anterior</a>
-                  </li>
-                  <li th:each="i : ${#numbers.sequence(1, totalPaginas)}"
-                    th:classappend="${i == (paginaAtual ?: 1)} ? 'active'"
-                    class="page-item">
-                    <a class="page-link" th:href="@{/(pagina=${i})}"
-                      th:text="${i}">1</a>
-                  </li>
-                  <li
-                    th:classappend="${paginaAtual == totalPaginas} ? 'disabled'"
-                    class="page-item">
-                    <a class="page-link"
-                      th:href="@{/(pagina=${(paginaAtual ?: 1) +1})}">Próxima</a>
-                  </li>
-                </ul>
-              </nav>
+                <nav aria-label="Navegação de páginas"
+                  th:if="${totalPaginas != null and totalPaginas > 0}">
+                  <ul class="pagination justify-content-end mt-3">
+                    <li
+                      th:classappend="${paginaAtual == null or paginaAtual == 1} ? 'disabled'"
+                      class="page-item">
+                      <a class="page-link"
+                        th:href="@{/(pagina=${(paginaAtual ?: 1) -1})}"
+                        tabindex="-1">Anterior</a>
+                    </li>
+                    <li th:each="i : ${#numbers.sequence(1, totalPaginas)}"
+                      th:classappend="${i == (paginaAtual ?: 1)} ? 'active'"
+                      class="page-item">
+                      <a class="page-link" th:href="@{/(pagina=${i})}"
+                        th:text="${i}">1</a>
+                    </li>
+                    <li
+                      th:classappend="${paginaAtual == totalPaginas} ? 'disabled'"
+                      class="page-item">
+                      <a class="page-link"
+                        th:href="@{/(pagina=${(paginaAtual ?: 1) +1})}">Próxima</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
             </div>
-          </div>
 
-          <!-- GRÁFICO DE BARCHAR: SAÚDE DOS VEÍCULOS -->
-          <div class="my-4">
-            <div class="card bg-dark-light">
-              <div class="card-header bg-dark border-secondary"> <h4 class="card-color">Saúde dos
-                Veículos (Marcas)</h4></div>
-              <div class="card-body card-body-grafico-polar">
-                <canvas id="barChart"></canvas>
-                <div
-                  th:unless="${saudeVeiculosLabels != null and saudeVeiculosData != null and not #lists.isEmpty(saudeVeiculosLabels) and not #lists.isEmpty(saudeVeiculosData)}"
-                  class="text-center text-muted mt-2">
-                  Nenhum dado de saúde dos veículos disponível.
+            <div class="my-4">
+              <div class="card bg-dark-light">
+                <div class="card-header bg-dark border-secondary"> <h4 class="card-color">Saúde dos
+                  Veículos (Marcas)</h4></div>
+                <div class="card-body card-body-grafico-polar">
+                  <canvas id="barChart"></canvas>
+                  <div
+                    th:unless="${saudeVeiculosLabels != null and saudeVeiculosData != null and not #lists.isEmpty(saudeVeiculosLabels) and not #lists.isEmpty(saudeVeiculosData)}"
+                    class="text-center text-muted mt-2">
+                    Nenhum dado de saúde dos veículos disponível.
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- RODAPÉ -->
-          <footer class="text-center py-4">
-            <hr class="border-secondary">
-            <p class="text-muted">DriveCare © <span
-                th:text="${#dates.year(#dates.createNow())}">2025</span></p>
-          </footer>
+            <footer class="text-center py-4">
+              <hr class="border-secondary">
+              <p class="text-muted">DriveCare © <span
+                  th:text="${#dates.year(#dates.createNow())}">2025</span></p>
+            </footer>
 
-        </main>
+          </main>
+        </div>
       </div>
-    </div>
 
-    <!-- Scripts do Bootstrap -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
-    </script>
+      <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+      </script>
 
-    <script th:inline="javascript">
-    /*<![CDATA[*/
+      <script th:inline="javascript">
+      /*<![CDATA[*/
 
         // Função para opções comuns dos gráficos (usada pelo gráfico de Barras)
         function getChartOptions(titulo) {
@@ -467,176 +438,176 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Dados para os gráficos
-            const tiposLabels = /*[[${tiposManutencaoLabels}]]*/ null;
-            const tiposValores = /*[[${tiposManutencaoData}]]*/ null;
+          // Dados para os gráficos
+          const tiposLabels = /*[[${tiposManutencaoLabels}]]*/ null;
+          const tiposValores = /*[[${tiposManutencaoData}]]*/ null;
 
-            const saudeLabels = /*[[${saudeVeiculosLabels}]]*/ null;
-            const saudeValores = /*[[${saudeVeiculosData}]]*/ null;
+          const saudeLabels = /*[[${saudeVeiculosLabels}]]*/ null;
+          const saudeValores = /*[[${saudeVeiculosData}]]*/ null;
 
-            // Dados para o gráfico de ganhos
-            const dadosGanhos = /*[[${dadosGraficoGanhos}]]*/ null;
-            
-            // Variáveis para guardar as instâncias dos gráficos
-            let lineChartInstance, donutChartInstance, barChartInstance;
+          // Dados para o gráfico de ganhos
+          const dadosGanhos = /*[[${dadosGraficoGanhos}]]*/ null;
+          
+          // Variáveis para guardar as instâncias dos gráficos
+          let lineChartInstance, donutChartInstance, barChartInstance;
 
-            // Gráfico de Linha - Controle de Ganhos (NOVO)
-            const lineChartCanvas = document.getElementById('lineChart');
-            let periodoAtualGanhos = 'mensal'; // Para guardar o período atual para atualizações
+          // Gráfico de Linha - Controle de Ganhos (NOVO)
+          const lineChartCanvas = document.getElementById('lineChart');
+          let periodoAtualGanhos = 'mensal'; // Para guardar o período atual para atualizações
 
-            function criarOuAtualizarGraficoGanhos(periodo) {
-                periodoAtualGanhos = periodo; // Atualiza o período atual
-                if (!lineChartCanvas) {
-                    console.warn('Canvas para o gráfico de Linha (Ganhos) não encontrado.');
-                    return;
-                }
-                if (!dadosGanhos || !dadosGanhos[periodo]) {
-                    console.warn('Dados para o gráfico de Ganhos ausentes ou inconsistentes para o período:', periodo);
-                    if (lineChartInstance) lineChartInstance.destroy(); // Limpa instância anterior
-                    lineChartInstance = null; // Garante que será recriado se os dados chegarem depois
-                    const ctx = lineChartCanvas.getContext('2d');
-                    ctx.clearRect(0, 0, lineChartCanvas.width, lineChartCanvas.height);
-                    ctx.fillStyle = '#e0e0e0';
-                    ctx.textAlign = 'center';
-                    ctx.font = '16px Arial';
-                    ctx.fillText('Nenhum dado disponível para ' + periodo, lineChartCanvas.width / 2, lineChartCanvas.height / 2);
-                    return;
-                }
-
-                const dadosDoPeriodo = dadosGanhos[periodo];
-                const chartTitle = 'Controle de Ganhos - ' + periodo.charAt(0).toUpperCase() + periodo.slice(1);
-
-                if (lineChartInstance) {
-                    lineChartInstance.data.labels = dadosDoPeriodo.labels;
-                    lineChartInstance.data.datasets = dadosDoPeriodo.datasets;
-                    lineChartInstance.options = getGanhosChartOptions(chartTitle); // Reaplicar opções para título e eixos
-                    lineChartInstance.update();
-                } else {
-                    lineChartInstance = new Chart(lineChartCanvas.getContext('2d'), {
-                        type: 'line',
-                        data: {
-                            labels: dadosDoPeriodo.labels,
-                            datasets: dadosDoPeriodo.datasets 
-                        },
-                        options: getGanhosChartOptions(chartTitle)
-                    });
-                }
+          function criarOuAtualizarGraficoGanhos(periodo) {
+            periodoAtualGanhos = periodo; // Atualiza o período atual
+            if (!lineChartCanvas) {
+                console.warn('Canvas para o gráfico de Linha (Ganhos) não encontrado.');
+                return;
+            }
+            if (!dadosGanhos || !dadosGanhos[periodo]) {
+                console.warn('Dados para o gráfico de Ganhos ausentes ou inconsistentes para o período:', periodo);
+                if (lineChartInstance) lineChartInstance.destroy(); // Limpa instância anterior
+                lineChartInstance = null; // Garante que será recriado se os dados chegarem depois
+                const ctx = lineChartCanvas.getContext('2d');
+                ctx.clearRect(0, 0, lineChartCanvas.width, lineChartCanvas.height);
+                ctx.fillStyle = '#e0e0e0';
+                ctx.textAlign = 'center';
+                ctx.font = '16px Arial';
+                ctx.fillText('Nenhum dado disponível para ' + periodo, lineChartCanvas.width / 2, lineChartCanvas.height / 2);
+                return;
             }
 
-            // Inicializar com dados mensais por padrão para o gráfico de ganhos
-            if (dadosGanhos) {
-                criarOuAtualizarGraficoGanhos('anual'); 
+            const dadosDoPeriodo = dadosGanhos[periodo];
+            const chartTitle = 'Controle de Ganhos - ' + periodo.charAt(0).toUpperCase() + periodo.slice(1);
+
+            if (lineChartInstance) {
+                lineChartInstance.data.labels = dadosDoPeriodo.labels;
+                lineChartInstance.data.datasets = dadosDoPeriodo.datasets;
+                lineChartInstance.options = getGanhosChartOptions(chartTitle); // Reaplicar opções para título e eixos
+                lineChartInstance.update();
             } else {
-                console.warn('Objeto principal dadosGraficoGanhos não encontrado na inicialização.');
-                if (lineChartCanvas) {
-                    const ctx = lineChartCanvas.getContext('2d');
-                    ctx.clearRect(0, 0, lineChartCanvas.width, lineChartCanvas.height);
-                    ctx.fillStyle = '#e0e0e0';
-                    ctx.textAlign = 'center';
-                    ctx.font = '16px Arial';
-                    ctx.fillText('Nenhum dado de ganhos disponível', lineChartCanvas.width / 2, lineChartCanvas.height / 2);
+                lineChartInstance = new Chart(lineChartCanvas.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: dadosDoPeriodo.labels,
+                        datasets: dadosDoPeriodo.datasets 
+                    },
+                    options: getGanhosChartOptions(chartTitle)
+                });
+            }
+          }
+
+          // Inicializar com dados mensais por padrão para o gráfico de ganhos
+          if (dadosGanhos) {
+              criarOuAtualizarGraficoGanhos('anual'); 
+          } else {
+              console.warn('Objeto principal dadosGraficoGanhos não encontrado na inicialização.');
+              if (lineChartCanvas) {
+                  const ctx = lineChartCanvas.getContext('2d');
+                  ctx.clearRect(0, 0, lineChartCanvas.width, lineChartCanvas.height);
+                  ctx.fillStyle = '#e0e0e0';
+                  ctx.textAlign = 'center';
+                  ctx.font = '16px Arial';
+                  ctx.fillText('Nenhum dado de ganhos disponível', lineChartCanvas.width / 2, lineChartCanvas.height / 2);
+              }
+          }
+
+          // Botões para o gráfico de ganhos
+          
+            const btnSemanal = document.getElementById('btnGanhosSemanal');
+            const btnMensal = document.getElementById('btnGanhosMensal');
+            const btnAnual = document.getElementById('btnGanhosAnual');
+            
+            // Array para facilitar o gerenciamento da classe 'active'
+            const todosBotoesPeriodo = [];
+            if (btnSemanal) todosBotoesPeriodo.push(btnSemanal);
+            if (btnMensal) todosBotoesPeriodo.push(btnMensal);
+            if (btnAnual) todosBotoesPeriodo.push(btnAnual);
+
+            function atualizarEstadoAtivoBotao(botaoClicado) {
+                todosBotoesPeriodo.forEach(botao => {
+                    if (botao) { // Verifica se o botão existe no array
+                        botao.classList.remove('active');
+                    }
+                });
+                if (botaoClicado) { // Verifica se o botão clicado é válido
+                    botaoClicado.classList.add('active');
                 }
             }
 
-            // Botões para o gráfico de ganhos
+            if (btnSemanal) {
+                btnSemanal.addEventListener('click', () => {
+                    atualizarEstadoAtivoBotao(btnSemanal);
+                    criarOuAtualizarGraficoGanhos('semanal');
+                });
+            }
             
-                const btnSemanal = document.getElementById('btnGanhosSemanal');
-                const btnMensal = document.getElementById('btnGanhosMensal');
-                const btnAnual = document.getElementById('btnGanhosAnual');
-                
-                // Array para facilitar o gerenciamento da classe 'active'
-                const todosBotoesPeriodo = [];
-                if (btnSemanal) todosBotoesPeriodo.push(btnSemanal);
-                if (btnMensal) todosBotoesPeriodo.push(btnMensal);
-                if (btnAnual) todosBotoesPeriodo.push(btnAnual);
-
-                function atualizarEstadoAtivoBotao(botaoClicado) {
-                    todosBotoesPeriodo.forEach(botao => {
-                        if (botao) { // Verifica se o botão existe no array
-                            botao.classList.remove('active');
-                        }
-                    });
-                    if (botaoClicado) { // Verifica se o botão clicado é válido
-                        botaoClicado.classList.add('active');
-                    }
-                }
-
-                if (btnSemanal) {
-                    btnSemanal.addEventListener('click', () => {
-                        atualizarEstadoAtivoBotao(btnSemanal);
-                        criarOuAtualizarGraficoGanhos('semanal');
-                    });
-                }
-                
-                if (btnMensal) {
-                    btnMensal.addEventListener('click', () => {
-                        atualizarEstadoAtivoBotao(btnMensal);
-                        criarOuAtualizarGraficoGanhos('mensal');
-                    });
-                }
-                
-                if (btnAnual) {
-                    btnAnual.addEventListener('click', () => {
-                        atualizarEstadoAtivoBotao(btnAnual);
-                        criarOuAtualizarGraficoGanhos('anual');
-                    });
-                }
+            if (btnMensal) {
+                btnMensal.addEventListener('click', () => {
+                    atualizarEstadoAtivoBotao(btnMensal);
+                    criarOuAtualizarGraficoGanhos('mensal');
+                });
+            }
+            
+            if (btnAnual) {
+                btnAnual.addEventListener('click', () => {
+                    atualizarEstadoAtivoBotao(btnAnual);
+                    criarOuAtualizarGraficoGanhos('anual');
+                });
+            }
 
 
           // Gráfico de Donut - Tipos de Manutenção
-            const donutChartCanvas = document.getElementById('donutChart');
-            if (donutChartCanvas && tiposLabels && tiposValores && tiposLabels.length > 0 && tiposValores.length > 0 && tiposLabels.length === tiposValores.length) {
-                donutChartInstance = new Chart(donutChartCanvas.getContext('2d'), {
+          const donutChartCanvas = document.getElementById('donutChart');
+          if (donutChartCanvas && tiposLabels && tiposValores && tiposLabels.length > 0 && tiposValores.length > 0 && tiposLabels.length === tiposValores.length) {
+            donutChartInstance = new Chart(donutChartCanvas.getContext('2d'), {
 
-                  // Tipo de gráfico Donut
-                    type: 'doughnut',
-                    data: {
-                        labels: tiposLabels,
-                        datasets: [{
-                            data: tiposValores,
-                            backgroundColor: ['#4CAF50', '#FF5722', '#2196F3', '#FFC107', '#9C27B0', '#FF9800', '#00BCD4', '#E91E63'],
-                            borderColor: '#1e1e1e',
-                            borderWidth: 2
-                        }]
-                    },
-                
-                    // Opções específicas do Donut
-                    options: { 
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        cutout: '70%',
-                        plugins: {
-                          legend: {
+              // Tipo de gráfico Donut
+                type: 'doughnut',
+                data: {
+                    labels: tiposLabels,
+                    datasets: [{
+                        data: tiposValores,
+                        backgroundColor: ['#4CAF50', '#FF5722', '#2196F3', '#FFC107', '#9C27B0', '#FF9800', '#00BCD4', '#E91E63'],
+                        borderColor: '#1e1e1e',
+                        borderWidth: 2
+                    }]
+                },
+            
+                // Opções específicas do Donut
+                options: { 
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
                             position: 'bottom',
                             labels: {
-                              color: '#e0e0e0'
+                                color: '#e0e0e0'
                             }
-                          },
-                          // Título do gráfico
-                          title: {
+                        },
+                        // Título do gráfico
+                        title: {
                             display: true,
                             text: 'Tipos de Manutenção',
                             color: '#e0e0e0',
                             font: {
                                 size: 16
-                            },                                                
-                          },
-                        }
+                            },         
+                        },
                     }
-                });
-            } else if (donutChartCanvas) {
-                console.warn('Dados para o gráfico Donut (Tipos de Manutenção) ausentes ou inconsistentes.', 'Labels:', tiposLabels, 'Valores:', tiposValores);
-                const ctx = donutChartCanvas.getContext('2d');
-                ctx.clearRect(0, 0, donutChartCanvas.width, donutChartCanvas.height);
-                ctx.fillStyle = '#e0e0e0';
-                ctx.textAlign = 'center';
-                ctx.font = '16px Arial';
-                ctx.fillText('Dados indisponíveis', donutChartCanvas.width / 2, donutChartCanvas.height / 2);
-            }
-            
+                }
+            });
+          } else if (donutChartCanvas) {
+            console.warn('Dados para o gráfico Donut (Tipos de Manutenção) ausentes ou inconsistentes.', 'Labels:', tiposLabels, 'Valores:', tiposValores);
+            const ctx = donutChartCanvas.getContext('2d');
+            ctx.clearRect(0, 0, donutChartCanvas.width, donutChartCanvas.height);
+            ctx.fillStyle = '#e0e0e0';
+            ctx.textAlign = 'center';
+            ctx.font = '16px Arial';
+            ctx.fillText('Dados indisponíveis', donutChartCanvas.width / 2, donutChartCanvas.height / 2);
+          }
+          
         // Gráfico de Área Polar - Veículos por Marca (antigo Saúde dos Veículos/Barras)
         const polarAreaChartCanvas = document.getElementById('barChart'); 
-                                                                      
+                                                    
         
         let polarAreaChartInstance; // Variável para a instância do gráfico polar
 
@@ -654,59 +625,59 @@
                     'rgba(54, 162, 235, 0.7)',   // Azul
                     'rgba(255, 206, 86, 0.7)',   // Amarelo
                     'rgba(75, 192, 192, 0.7)',   // Verde Água
-                    'rgba(153, 102, 255, 0.7)',  // Roxo
+                    'rgba(153, 102, 255, 0.7)',   // Roxo
                     'rgba(255, 159, 64, 0.7)',   // Laranja
-                    'rgba(199, 199, 199, 0.7)',  // Cinza
+                    'rgba(199, 199, 199, 0.7)',   // Cinza
                     'rgba(83, 102, 252, 0.7)',   // Azul Índigo
-                    'rgba(255, 105, 180, 0.7)',  // Rosa
-                    'rgba(0, 206, 209, 0.7)',    // Turquesa Escuro
-                    'rgba(160, 82, 45, 0.7)',    // Marrom
-                    'rgba(0, 128, 0, 0.7)',      // Verde
-                    'rgba(128, 0, 128, 0.7)',    // Púrpura
-                    'rgba(255, 140, 0, 0.7)',    // Laranja Escuro
-                    'rgba(100, 149, 237, 0.7)',  // Azul Claro
-                    'rgba(220, 20, 60, 0.7)',    // Carmesim
+                    'rgba(255, 105, 180, 0.7)',   // Rosa
+                    'rgba(0, 206, 209, 0.7)',     // Turquesa Escuro
+                    'rgba(160, 82, 45, 0.7)',     // Marrom
+                    'rgba(0, 128, 0, 0.7)',       // Verde
+                    'rgba(128, 0, 128, 0.7)',     // Púrpura
+                    'rgba(255, 140, 0, 0.7)',     // Laranja Escuro
+                    'rgba(100, 149, 237, 0.7)',   // Azul Claro
+                    'rgba(220, 20, 60, 0.7)',     // Carmesim
                     'rgba(64, 224, 208, 0.7)',   // Turquesa Claro
-                    'rgba(0, 191, 255, 0.7)',    // Azul Céu
-                    'rgba(240, 230, 140, 0.7)',  // Caqui
+                    'rgba(0, 191, 255, 0.7)',     // Azul Céu
+                    'rgba(240, 230, 140, 0.7)',   // Caqui
                     'rgba(47, 79, 79, 0.7)',     // Cinza Escuro
-                    'rgba(189, 183, 107, 0.7)',  // Verde Oliva Claro
-                    'rgba(72, 61, 139, 0.7)',    // Azul Meia-noite
-                    'rgba(0, 250, 154, 0.7)',    // Verde Primavera
-                    'rgba(233, 150, 122, 0.7)',  // Salmão Escuro
+                    'rgba(189, 183, 107, 0.7)',   // Verde Oliva Claro
+                    'rgba(72, 61, 139, 0.7)',     // Azul Meia-noite
+                    'rgba(0, 250, 154, 0.7)',     // Verde Primavera
+                    'rgba(233, 150, 122, 0.7)',   // Salmão Escuro
                     'rgba(70, 130, 180, 0.7)',   // Azul Aço
                     'rgba(255, 127, 80, 0.7)',   // Coral
                     'rgba(154, 205, 50, 0.7)',   // Verde Amarelado
                     'rgba(255, 69, 0, 0.7)',     // Vermelho Alaranjado
                     'rgba(186, 85, 211, 0.7)',   // Orquídea Média
                     'rgba(210, 105, 30, 0.7)',   // Chocolate
-                    'rgba(176, 224, 230, 0.7)',  // Azul Pó
-                    'rgba(250, 128, 114, 0.7)',  // Salmão Claro
-                    'rgba(127, 255, 212, 0.7)',  // Água-marinha
+                    'rgba(176, 224, 230, 0.7)',   // Azul Pó
+                    'rgba(250, 128, 114, 0.7)',   // Salmão Claro
+                    'rgba(127, 255, 212, 0.7)',   // Água-marinha
                     'rgba(173, 255, 47, 0.7)',   // Verde Lima
                     'rgba(255, 20, 147, 0.7)',   // Rosa Profundo
                     'rgba(95, 158, 160, 0.7)',   // Azul Cadete
-                    'rgba(152, 251, 152, 0.7)',  // Verde Pálido
-                    'rgba(0, 0, 128, 0.7)',      // Azul Marinho
-                    'rgba(255, 250, 205, 0.7)',  // Amarelo Claro
+                    'rgba(152, 251, 152, 0.7)',   // Verde Pálido
+                    'rgba(0, 0, 128, 0.7)',       // Azul Marinho
+                    'rgba(255, 250, 205, 0.7)',   // Amarelo Claro
                     'rgba(205, 133, 63, 0.7)',   // Siena Média
-                    'rgba(124, 252, 0, 0.7)',    // Verde Gramado
-                    'rgba(255, 182, 193, 0.7)',  // Rosa Claro
+                    'rgba(124, 252, 0, 0.7)',     // Verde Gramado
+                    'rgba(255, 182, 193, 0.7)',   // Rosa Claro
                     'rgba(32, 178, 170, 0.7)',   // Azul Verde
-                    'rgba(245, 222, 179, 0.7)',  // Trigo
+                    'rgba(245, 222, 179, 0.7)',   // Trigo
                     'rgba(106, 90, 205, 0.7)',   // Azul Ardósia Médio
-                    'rgba(255, 239, 213, 0.7)',  // Pêssego Claro
-                    'rgba(0, 100, 0, 0.7)',      // Verde Escuro
+                    'rgba(255, 239, 213, 0.7)',   // Pêssego Claro
+                    'rgba(0, 100, 0, 0.7)',       // Verde Escuro
                     'rgba(219, 112, 147, 0.7)',   // Rosa Pálido
-                    'rgba(255, 215, 0, 0.7)',    // Ouro
-                    'rgba(255, 99, 71, 0.7)',    // Tomate
-                    'rgba(255, 140, 0, 0.7)',    // Laranja Escuro
-                    'rgba(0, 0, 205, 0.7)',      // Azul Escuro
-                    'rgba(255, 228, 225, 0.7)',  // Rosa Antigo
-                    'rgba(255, 160, 122, 0.7)',  // Salmão Claro
-                    'rgba(0, 255, 127, 0.7)',    // Verde Primavera
-                    'rgba(255, 105, 180, 0.7)',  // Rosa Hot
-                    'rgba(255, 228, 181, 0.7)',  // Amêndoa Clara
+                    'rgba(255, 215, 0, 0.7)',     // Ouro
+                    'rgba(255, 99, 71, 0.7)',     // Tomate
+                    'rgba(255, 140, 0, 0.7)',     // Laranja Escuro
+                    'rgba(0, 0, 205, 0.7)',       // Azul Escuro
+                    'rgba(255, 228, 225, 0.7)',   // Rosa Antigo
+                    'rgba(255, 160, 122, 0.7)',   // Salmão Claro
+                    'rgba(0, 255, 127, 0.7)',     // Verde Primavera
+                    'rgba(255, 105, 180, 0.7)',   // Rosa Hot
+                    'rgba(255, 228, 181, 0.7)',   // Amêndoa Clara
                 ];
 
             // Gerar as cores de fundo e borda para o número exato de marcas
@@ -727,39 +698,39 @@
                         label: 'Quantidade de Veículos', 
                         data: saudeValores, // Contagem por marca
                         backgroundColor: backgroundColorsArray, // ARRAY DINÂMICO DE CORES
-                        borderColor: borderColorsArray,       // ARRAY DINÂMICO DE CORES DE BORDA
+                        borderColor: borderColorsArray,     // ARRAY DINÂMICO DE CORES DE BORDA
                         borderWidth: 1, // Largura da borda
                         hoverOffset: 1, // Distância do hover 
                         hoverBorderWidth: 1, // Largura da borda ao passar o mouse 
-                                        
+                                            
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,                          
+                    maintainAspectRatio: false,       
                     plugins: {
                         // Título do gráfico
                             legend: {
                                 position: 'left', // Ou 'bottom', 'left', 'right'
-                                labels: {color: '#e0e0e0'},                               
+                                labels: {color: '#e0e0e0'},         
                         // Título da legenda
-                            title: {
-                                display: true,
-                                text: 'Marcas',
-                                color: '#e0e0e0',
-                                font: {
-                                    size: 18,
-                                    weight: 'bold', // Peso do título     
+                                title: {
+                                    display: true,
+                                    text: 'Marcas',
+                                    color: '#e0e0e0',
+                                    font: {
+                                        size: 18,
+                                        weight: 'bold', // Peso do título     
+                                    },
                                 },
-                            },
-                            
+                                
                         // Interação com a legenda
-                            onClick: (e, legendItem, legend) => {
-                                // Evita que o clique na legenda desative o gráfico
-                                e.stopPropagation();
-                            }               
+                                onClick: (e, legendItem, legend) => {
+                                    // Evita que o clique na legenda desative o gráfico
+                                    e.stopPropagation();
+                                }       
+                            },
                         },
-                    },
                     scales: { 
                         r: { 
                             grid: {
@@ -798,49 +769,49 @@
             ctx.fillStyle = '#e0e0e0';
             ctx.textAlign = 'center';
             ctx.font = '16px Segoe UI';
-            ctx.fillText('Nenhum dado de veículos por marca disponível', polarAreaChartCanvas.width / 2, polarAreaChartCanvas.height / 2);
+            ctx.fillText('Nenhum dado de veículos por marca disponível', polarAreaChartCanvas.width / 2, polarAreaChartInstance.height / 2);
         }
 
-            // Função para atualizar gráficos
-            window.updateDashboardCharts = function(data) {
-                // Atualização do gráfico de Ganhos
-                // Se os dados de ganhos forem recebidos, atualize o gráfico com o período atualmente selecionado
-                if (data.dadosGraficoGanhos && typeof data.dadosGraficoGanhos === 'object') {
-                    // Atualiza o objeto de dados principal
-                    for (const periodoKey in data.dadosGraficoGanhos) {
-                        if (Object.hasOwnProperty.call(data.dadosGraficoGanhos, periodoKey) && dadosGanhos) {
-                            dadosGanhos[periodoKey] = data.dadosGraficoGanhos[periodoKey];
-                        }
-                    }
-                    // Se a instância do gráfico de linha existir e houver dados para o período atual, atualize-o
-                    if (lineChartInstance && dadosGanhos && dadosGanhos[periodoAtualGanhos]) {
-                        criarOuAtualizarGraficoGanhos(periodoAtualGanhos);
-                    } else if (!lineChartInstance && dadosGanhos && dadosGanhos[periodoAtualGanhos]) {
-                        // Se a instância não existia (ex: dados iniciais ausentes), tente criar agora
-                        criarOuAtualizarGraficoGanhos(periodoAtualGanhos);
+          // Função para atualizar gráficos
+          window.updateDashboardCharts = function(data) {
+            // Atualização do gráfico de Ganhos
+            // Se os dados de ganhos forem recebidos, atualize o gráfico com o período atualmente selecionado
+            if (data.dadosGraficoGanhos && typeof data.dadosGraficoGanhos === 'object') {
+                // Atualiza o objeto de dados principal
+                for (const periodoKey in data.dadosGraficoGanhos) {
+                    if (Object.hasOwnProperty.call(data.dadosGraficoGanhos, periodoKey) && dadosGanhos) {
+                        dadosGanhos[periodoKey] = data.dadosGraficoGanhos[periodoKey];
                     }
                 }
-                
-                // Atualização do gráfico Donut (Tipos de Manutenção)
-                if (donutChartInstance && data.tiposManutencao?.rotulos && data.tiposManutencao?.valores && data.tiposManutencao.valores.length === data.tiposManutencao.rotulos.length) {
-                    donutChartInstance.data.labels = data.tiposManutencao.rotulos;
-                    donutChartInstance.data.datasets[0].data = data.tiposManutencao.valores;
-                    donutChartInstance.update();
-                } else if (donutChartInstance && data.tiposManutencao) {
-                    console.warn('Atualização para Donut: dados inconsistentes ou ausentes.');
+                // Se a instância do gráfico de linha existir e houver dados para o período atual, atualize-o
+                if (lineChartInstance && dadosGanhos && dadosGanhos[periodoAtualGanhos]) {
+                    criarOuAtualizarGraficoGanhos(periodoAtualGanhos);
+                } else if (!lineChartInstance && dadosGanhos && dadosGanhos[periodoAtualGanhos]) {
+                    // Se a instância não existia (ex: dados iniciais ausentes), tente criar agora
+                    criarOuAtualizarGraficoGanhos(periodoAtualGanhos);
                 }
+            }
+            
+            // Atualização do gráfico Donut (Tipos de Manutenção)
+            if (donutChartInstance && data.tiposManutencao?.rotulos && data.tiposManutencao?.valores && data.tiposManutencao.valores.length === data.tiposManutencao.rotulos.length) {
+                donutChartInstance.data.labels = data.tiposManutencao.rotulos;
+                donutChartInstance.data.datasets[0].data = data.tiposManutencao.valores;
+                donutChartInstance.update();
+            } else if (donutChartInstance && data.tiposManutencao) {
+                console.warn('Atualização para Donut: dados inconsistentes ou ausentes.');
+            }
 
-                // Atualização do gráfico de Barras (Saúde dos Veículos)
-                if (barChartInstance && data.dadosSaudeVeiculos?.rotulos && data.dadosSaudeVeiculos?.valores && data.dadosSaudeVeiculos.valores.length === data.dadosSaudeVeiculos.rotulos.length) {
-                    barChartInstance.data.labels = data.dadosSaudeVeiculos.rotulos;
-                    barChartInstance.data.datasets[0].data = data.dadosSaudeVeiculos.valores;
-                    barChartInstance.update();
-                } else if (barChartInstance && data.dadosSaudeVeiculos) {
-                    console.warn('Atualização para Barras: dados inconsistentes ou ausentes.');
-                }
-            };
+            // Atualização do gráfico de Barras (Saúde dos Veículos)
+            if (barChartInstance && data.dadosSaudeVeiculos?.rotulos && data.dadosSaudeVeiculos?.valores && data.dadosSaudeVeiculos.valores.length === data.dadosSaudeVeiculos.rotulos.length) {
+                barChartInstance.data.labels = data.dadosSaudeVeiculos.rotulos;
+                barChartInstance.data.datasets[0].data = data.dadosSaudeVeiculos.valores;
+                barChartInstance.update();
+            } else if (barChartInstance && data.dadosSaudeVeiculos) {
+                console.warn('Atualização para Barras: dados inconsistentes ou ausentes.');
+            }
+          };
         });
-    /*]]>*/
-    </script>
-  </body>
+      /*]]>*/
+      </script>
+    </body>
 </html>
