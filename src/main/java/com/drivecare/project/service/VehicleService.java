@@ -18,11 +18,15 @@ public class VehicleService {
         this.vehicleRepository = vehicleRepository;
     }
 
-    /**
-     * Busca todos os veículos cadastrados no banco de dados.
-     * @return Uma lista de todos os veículos.
-     */
     public List<Vehicle> findAllVehicles() {
         return vehicleRepository.findAll();
     }
+
+    public List<Vehicle> search(String keyword) {
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            return vehicleRepository.search(keyword);
+        }
+        return vehicleRepository.findAll(); 
+    }
+
 }

@@ -61,3 +61,24 @@
 .cor-do-title {
   color: white;
 }
+
+/* -- ESTILO DO FORMULÁRIO DE BUSCA -- */
+.search-form .form-control {
+    background-color: var(--dark-card); 
+    color: var(--text-light); 
+    border: 1px solid var(--dark-border); 
+    transition: all 0.3s ease-in-out;
+}
+
+/* Efeito de foco: muda a cor da borda e adiciona uma sombra sutil */
+.search-form .form-control:focus {
+    background-color: var(--dark-card);
+    color: var(--text-light);
+    border-color: #0d6efd; /* Azul primário para destaque */
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Customiza a cor do texto do placeholder */
+.search-form .form-control::placeholder {
+    color: rgba(224, 224, 224, 0.5);
+}
