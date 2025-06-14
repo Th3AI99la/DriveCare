@@ -1,15 +1,15 @@
 package com.drivecare.project.controller;
 
-import com.drivecare.project.model.ManutencaoRealizada;
-import com.drivecare.project.model.Vehicle;
-import com.drivecare.project.service.MaintenanceService;
-import com.drivecare.project.service.VehicleService;
-import org.springframework.data.domain.Page; // Correção da importação
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.GetMapping; // Correção da importação
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.drivecare.project.model.ManutencaoRealizada;
+import com.drivecare.project.service.MaintenanceService;
+import com.drivecare.project.service.VehicleService;
 
 @Controller
 public class MaintenanceController {
