@@ -44,7 +44,7 @@ public class MaintenanceController {
     @GetMapping("/maintenances/cadastrar")
     public String mostrarFormularioCadastroManutencao(Model model) {
         // Carregar veículos para o formulário de cadastro
-        model.addAttribute("veiculos", vehicleService.getAllVehicles()); // Correção do método getAllVehicles
+        //model.addAttribute("veiculos", vehicleService.getAllVehicles()); // Correção do método getAllVehicles
         model.addAttribute("manutencao", new ManutencaoRealizada()); // Novo objeto de manutenção
         return "maintenances/cadastrar"; // Página de formulário de cadastro
     }

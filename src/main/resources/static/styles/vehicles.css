@@ -1,0 +1,55 @@
+/* -- ESTILO DO CABEÇALHO DA PÁGINA -- */
+.page-header h1 {
+    font-weight: 600; 
+}
+
+/* -- ESTILO DOS CARDS DE VEÍCULOS -- */
+
+/* Adiciona uma borda superior colorida sutil no hover para destacar o card */
+.card.animate-card:hover {
+    border-top: 3px solid #0d6efd;
+    transform: translateY(-6px); 
+}
+
+/* Alinha o conteúdo da lista de informações dentro do card */
+.card .list-group-item {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    padding-left: 0;
+    padding-right: 0;
+    border-color: rgba(255, 255, 255, 0.1); 
+}
+
+/* Garante que o texto em negrito (label) não quebre linha facilmente */
+.card .list-group-item strong {
+    flex-shrink: 0;
+    margin-right: 15px; 
+}
+
+/* -- ESTILO DO BOTÃO "VER DETALHES" -- */
+.card .btn-outline-light {
+    transition: all 0.3s ease;
+    border-radius: 6px;
+}
+
+/* Efeito de preenchimento no hover para o botão de detalhes */
+.card .btn-outline-light:hover {
+    background-color: #0d6efd;
+    color: white;
+    transform: scale(1.05); /* Efeito de zoom sutil */
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.2);
+}
+
+/* -- ESTILO DA MENSAGEM DE "NENHUM VEÍCULO" -- */
+.empty-state {
+    background-color: var(--dark-card); 
+    padding: 4rem;
+    border-radius: 0.5rem;
+    border: 1px dashed var(--dark-border);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: #415a77; 
+}
