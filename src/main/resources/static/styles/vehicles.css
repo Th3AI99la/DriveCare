@@ -61,6 +61,10 @@
 .cor-do-title {
   color: white;
 }
+.form-label{
+  color: white;
+  font-size: 18px;
+} 
 
 /* -- ESTILO DO FORMULÁRIO DE BUSCA -- */
 .search-form .form-control {
@@ -80,5 +84,32 @@
 
 /* Customiza a cor do texto do placeholder */
 .search-form .form-control::placeholder {
+    color: rgba(224, 224, 224, 0.5);
+}
+
+
+
+/* -- ESTILO GERAL PARA CAMPOS DE FORMULÁRIO NA PÁGINA -- */
+/* Este seletor agora afeta tanto a barra de busca quanto os inputs dentro do card de formulário */
+.search-form .form-control,
+.card.bg-dark-light .form-control {
+    background-color: var(--dark-card); /* Cor de fundo igual a dos cards */
+    color: var(--text-light);          /* Cor do texto digitado */
+    border: 1px solid var(--dark-border); /* Cor da borda padrão */
+    transition: all 0.3s ease-in-out;
+}
+
+/* Efeito de foco para ambos os formulários */
+.search-form .form-control:focus,
+.card.bg-dark-light .form-control:focus {
+    background-color: var(--dark-card);
+    color: var(--text-light);
+    border-color: #0d6efd; /* Azul primário para destaque */
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Customiza a cor do placeholder para ambos */
+.search-form .form-control::placeholder,
+.card.bg-dark-light .form-control::placeholder {
     color: rgba(224, 224, 224, 0.5);
 }
