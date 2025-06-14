@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title th:text="${'DriveCare - ' + pageTitle}">DriveCare - Cadastro de Veículo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/custom.css" th:href="@{/styles/custom.css}">
+    <link rel="stylesheet" href="/styles/vehicles.css" th:href="@{/styles/vehicles.css}">
+</head>
+
+<body class="dark-mode">
+<div class="container-fluid">
+    <div class="row">
+
+        <nav class="col-md-2 d-none d-md-block sidebar vh-100 bg-primary-dark" th:replace="~{vehicles :: nav}"></nav>
+        <div th:insert="~{vehicles :: nav}"></div>
+        <nav class="col-md-2 d-none d-md-block sidebar vh-100 bg-primary-dark">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <h4 class="drive_name_nav">DriveCare</h4>
+                        <a class="nav-link" th:href="@{/}"><i class="bi bi-speedometer2 me-2"></i>Painel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" th:href="@{/vehicles}"><i class="bi bi-car-front me-2"></i>Veículos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/maintenances}"><i class="bi bi-tools me-2"></i>Manutenções</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/profile}"><i class="bi bi-person-circle me-2"></i>Perfil</a>
+                    </li>
+                    <br /><br />
+                    <li class="nav-item">
+                        <form th:action="@{/logout}" method="post">
+                            <button type="submit" class="nav-link text-danger"><i class="bi bi-box-arrow-right me-2"></i>Sair</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4 bg-dark text-light">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom border-secondary">
+                <h1 class="h2" th:text="${pageTitle}">Cadastrar Novo Veículo</h1>
+            </div>
+
+            <div class="card bg-dark-light p-4">
+                <form th:action="@{/vehicles/save}" th:object="${vehicle}" method="post">
+                    <div class="mb-3">
+                        <label for="marca" class="form-label">Marca</label>
+                        <input type="text" th:field="*{marca}" class="form-control" id="marca" placeholder="Ex: Ford" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="modelo" class="form-label">Modelo</label>
+                        <input type="text" th:field="*{modelo}" class="form-control" id="modelo" placeholder="Ex: Ka" required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="ano" class="form-label">Ano</label>
+                            <input type="number" th:field="*{ano}" class="form-control" id="ano" placeholder="Ex: 2021" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="placa" class="form-label">Placa</label>
+                            <input type="text" th:field="*{placa}" class="form-control" id="placa" placeholder="Ex: ABC-1234" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="cor" class="form-label">Cor</label>
+                            <input type="text" th:field="*{cor}" class="form-control" id="cor" placeholder="Ex: Prata" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="quilometragem" class="form-label">Quilometragem</label>
+                            <input type="number" step="0.01" th:field="*{quilometragem}" class="form-control" id="quilometragem" placeholder="Ex: 54321.0" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 text-end">
+                        <a th:href="@{/vehicles}" class="btn btn-secondary me-2">Cancelar</a>
+                        <button type="submit" class="btn btn-primary-custom">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            Salvar Veículo
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <footer class="text-center py-4 mt-5">
+                <hr class="border-secondary">
+                <p class="text-muted">DriveCare © <span th:text="${#dates.year(#dates.createNow())}">2025</span></p>
+            </footer>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

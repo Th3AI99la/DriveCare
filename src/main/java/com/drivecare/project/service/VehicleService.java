@@ -18,15 +18,21 @@ public class VehicleService {
         this.vehicleRepository = vehicleRepository;
     }
 
+    //Lista os veiculos
     public List<Vehicle> findAllVehicles() {
         return vehicleRepository.findAll();
     }
 
+    // Busca um veiculo
     public List<Vehicle> search(String keyword) {
         if (keyword != null && !keyword.trim().isEmpty()) {
             return vehicleRepository.search(keyword);
         }
         return vehicleRepository.findAll(); 
+    }
+    // Salva um novo veículo ou atualiza um existente no banco de dados
+        public void saveVehicle(Vehicle vehicle) {
+        vehicleRepository.save(vehicle);
     }
 
 }
