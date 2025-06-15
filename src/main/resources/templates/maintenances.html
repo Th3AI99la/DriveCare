@@ -82,24 +82,19 @@
                     <li class="page-item" th:classappend="${paginaAtual == 1} ? 'disabled'">
                         <a class="page-link" th:href="@{/maintenances(keyword=${keyword}, pagina=${paginaAtual - 1})}">Anterior</a>
                     </li>
-
                     <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPaginas)}" th:classappend="${i == paginaAtual} ? 'active'">
                         <a class="page-link" th:href="@{/maintenances(keyword=${keyword}, pagina=${i})}" th:text="${i}"></a>
                     </li>
-
                     <li class="page-item" th:classappend="${paginaAtual == totalPaginas} ? 'disabled'">
                         <a class="page-link" th:href="@{/maintenances(keyword=${keyword}, pagina=${paginaAtual + 1})}">Próxima</a>
                     </li>
                 </ul>
             </nav>
 
-            <nav aria-label="Navegação de páginas" th:if="${totalPaginas > 1}" class="mt-4">
-                <ul class="pagination justify-content-end">
-                    <li class="page-item" th:classappend="${paginaAtual == 1} ? 'disabled'"><a class="page-link" th:href="@{/maintenances(keyword=${keyword}, pagina=${paginaAtual - 1})}">Anterior</a></li>
-                    <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPaginas)}" th:classappend="${i == paginaAtual} ? 'active'"><a class="page-link" th:href="@{/maintenances(keyword=${keyword}, pagina=${i})}" th:text="${i}"></a></li>
-                    <li class="page-item" th:classappend="${paginaAtual == totalPaginas} ? 'disabled'"><a class="page-link" th:href="@{/maintenances(keyword=${keyword}, pagina=${paginaAtual + 1})}">Próxima</a></li>
-                </ul>
-            </nav>
+            <footer class="text-center py-4 mt-5">
+                <hr class="border-secondary">
+                <p class="text-muted">DriveCare © <span th:text="${#dates.year(#dates.createNow())}">2025</span></p>
+            </footer>
         </main>
     </div>
 </div>

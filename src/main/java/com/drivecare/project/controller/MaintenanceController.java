@@ -29,7 +29,7 @@ public class MaintenanceController {
     private static final Logger logger = LoggerFactory.getLogger(MaintenanceController.class);
     private final MaintenanceService maintenanceService;
     private final VehicleService vehicleService;
-    private static final int ITENS_POR_PAGINA = 30;
+    private static final int ITENS_POR_PAGINA = 15;
 
     @Autowired
     public MaintenanceController(MaintenanceService maintenanceService, VehicleService vehicleService) {
