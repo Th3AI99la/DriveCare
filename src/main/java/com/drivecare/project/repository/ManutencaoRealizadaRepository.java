@@ -47,11 +47,11 @@ public interface ManutencaoRealizadaRepository extends JpaRepository<ManutencaoR
     List<ManutencaoRealizada> findRecentManutencoesRealizadas(Pageable pageable);
 
      // Método para a busca por palavra-chave
-       @Query("SELECT mr FROM ManutencaoRealizada mr WHERE " +
+    @Query("SELECT mr FROM ManutencaoRealizada mr WHERE " +
            "LOWER(mr.tipoManutencao) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
            "LOWER(mr.descricaoServicoRealizado) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
            "LOWER(mr.veiculo.marca) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
            "LOWER(mr.veiculo.modelo) LIKE LOWER(CONCAT('%', :keyword, '%'))")
-       Page<ManutencaoRealizada> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
+    Page<ManutencaoRealizada> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
        
 }

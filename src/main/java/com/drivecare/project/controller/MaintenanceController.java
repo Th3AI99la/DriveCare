@@ -44,8 +44,10 @@ public class MaintenanceController {
                                 @RequestParam(name = "pagina", defaultValue = "1") int paginaAtual,
                                 Model model) {
 
+        // Garanta que ele está chamando o método 'search'
         Page<ManutencaoRealizada> maintenancePage = maintenanceService.search(keyword, paginaAtual - 1, ITENS_POR_PAGINA);
 
+        // O mapeamento para DTO agora é seguro
         List<MaintenanceDTO> maintenanceDtos = maintenancePage.map(MaintenanceDTO::new).getContent();
 
         model.addAttribute("maintenanceDtos", maintenanceDtos);
