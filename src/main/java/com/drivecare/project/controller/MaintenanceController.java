@@ -38,15 +38,14 @@ public class MaintenanceController {
     }
 
     // Método GET para listar manutenções com paginação e pesquisa
+
     @GetMapping
     public String listMaintenances(@RequestParam(value = "keyword", required = false) String keyword,
-                                   @RequestParam(name = "pagina", defaultValue = "1") int paginaAtual,
-                                   Model model) {
+                                @RequestParam(name = "pagina", defaultValue = "1") int paginaAtual,
+                                Model model) {
 
-        // Paginação, levando em conta a paginação de 0 baseada na pesquisa
         Page<ManutencaoRealizada> maintenancePage = maintenanceService.search(keyword, paginaAtual - 1, ITENS_POR_PAGINA);
 
-        // Convertendo as manutenções para DTO
         List<MaintenanceDTO> maintenanceDtos = maintenancePage.map(MaintenanceDTO::new).getContent();
 
         model.addAttribute("maintenanceDtos", maintenanceDtos);
@@ -55,7 +54,7 @@ public class MaintenanceController {
         model.addAttribute("totalManutencao", maintenancePage.getTotalElements());
         model.addAttribute("keyword", keyword);
 
-        return "maintenances"; // Página de listagem de manutenções
+        return "maintenances";
     }
 
     // Método GET para mostrar o formulário de cadastro de agendamento de manutenção

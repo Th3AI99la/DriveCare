@@ -1,15 +1,16 @@
 package com.drivecare.project.service;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import com.drivecare.project.model.AgendamentoManutencao;
 import com.drivecare.project.model.ManutencaoRealizada;
 import com.drivecare.project.repository.AgendamentoManutencaoRepository;
 import com.drivecare.project.repository.ManutencaoRealizadaRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 @Service
 public class MaintenanceService {
@@ -27,7 +28,6 @@ public class MaintenanceService {
     public Page<ManutencaoRealizada> search(String keyword, int pagina, int itensPorPagina) {
         Pageable pageable = PageRequest.of(pagina, itensPorPagina);
         if (keyword != null && !keyword.trim().isEmpty()) {
-            // Precisaremos criar este método no repositório
             return manutencaoRealizadaRepository.searchByKeyword(keyword, pageable);
         }
         return manutencaoRealizadaRepository.findAll(pageable);
