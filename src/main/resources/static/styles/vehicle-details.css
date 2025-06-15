@@ -27,5 +27,9 @@
 
 /* Efeito de hover na tabela de histórico */
 .history-table tbody tr:hover {
-    background-color: #2a2a2a; /* Um pouco mais claro que o padrão para destaque */
+    background-color: #6e6d86; /* Um pouco mais claro que o padrão para destaque */
+}
+
+main .card.bg-dark-light {
+    border-radius: 10px; 
 }

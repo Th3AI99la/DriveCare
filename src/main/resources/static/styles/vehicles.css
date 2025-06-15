@@ -60,10 +60,16 @@
 
 .cor-do-title {
   color: white;
+  font-size: 18px;
+}
+.cor-sub-title{
+    color: #ffffff;
+    font-weight: 300;  /* -- peso da fonte-- */
+    font-size: 18px;
 }
 .form-label{
   color: white;
-  font-size: 18px;
+  font-size: 15px;
 } 
 
 /* -- ESTILO DO FORMULÁRIO DE BUSCA -- */
