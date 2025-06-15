@@ -61,20 +61,7 @@
 
             <!-- Conteúdo principal da página -->
             <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4">
-                
-                <!-- Cabeçalho com nome do usuário -->
-                <header class="d-flex justify-content-end align-items-center py-3 border-bottom border-secondary">
-                    <a th:href="@{/profile}" class="text-decoration-none text-light d-flex align-items-center user-profile">
-                        <div class="user-icon-wrapper me-2">
-                            <i class="bi bi-person-circle user-icon"></i>
-                        </div>
-                        <div class="user-name-wrapper">
-                            <span class="user-name" th:text="${user.fullName != null and !#strings.isEmpty(user.fullName) ? user.fullName : user.email}">
-                                Usuário
-                            </span>
-                        </div>
-                    </a>
-                </header>
+                <br>
 
                 <!-- Conteúdo da tela de perfil -->
                 <br>

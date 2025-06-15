@@ -72,22 +72,27 @@
 
         <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4 bg-dark text-light">
 
-          <header
-            class="d-flex justify-content-end py-3 border-bottom border-secondary">
-
-            <a href="#" th:href="@{/profile}"
-              class="text-decoration-none text-light">
-              <div class="d-flex align-items-center user-profile">
-                <div class="user-icon-wrapper me-2">
-                  <i
-                    class="bi bi-person-circle user-icon animate-hover-icon"></i>
+        <header th:fragment="pageHeader" class="d-flex justify-content-end py-3 border-bottom border-secondary">
+            <a th:href="@{/profile}" class="text-decoration-none text-light">
+                <div class="d-flex align-items-center user-profile">
+                    <div class="user-icon-wrapper me-2">
+                        <img th:if="${currentUser != null && currentUser.profilePhotoUrl != null}"
+                            th:src="${currentUser.profilePhotoUrl}" 
+                            alt="Foto de perfil"
+                            style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"/>
+                        
+                        <i th:if="${currentUser == null || currentUser.profilePhotoUrl == null}"
+                          class="bi bi-person-circle user-icon animate-hover-icon"></i>
+                    </div>
+                    <div class="user-name-wrapper">
+                        <span class="user-name" 
+                              th:text="${currentUser != null and currentUser.fullName != null and !#strings.isEmpty(currentUser.fullName) ? currentUser.fullName : (currentUser != null ? currentUser.email : 'Visitante')}">
+                              Nome do Usuário
+                        </span>
+                    </div>
                 </div>
-                <div class="user-name-wrapper">
-                  <span class="user-name">José Albino</span>
-                </div>
-              </div>
             </a>
-          </header>
+        </header>
 
           <div class="row my-4 g-3">
             <div class="col-md-2">

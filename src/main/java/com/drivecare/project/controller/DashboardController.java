@@ -4,26 +4,43 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.data.domain.Page; 
+import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails; 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.drivecare.project.model.AgendamentoManutencao; 
 import com.drivecare.project.model.ManutencaoRealizada;
+import com.drivecare.project.model.User;
+import com.drivecare.project.repository.UserRepository;
 import com.drivecare.project.service.DashboardService;
 
 @Controller
 public class DashboardController {
 
     private final DashboardService dashboardService;
-    private static final int ITENS_POR_PAGINA_AGENDAMENTOS = 5; // Constante pode permanecer aqui
+    private final UserRepository userRepository;
 
-    public DashboardController(DashboardService dashboardService) {
+    private static final int ITENS_POR_PAGINA_AGENDAMENTOS = 5; 
+
+    public DashboardController(DashboardService dashboardService, UserRepository userRepository) {
         this.dashboardService = dashboardService;
+        this.userRepository = userRepository;
     }
 
+
+    @ModelAttribute("currentUser")
+    public User addCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails != null) {
+            return userRepository.findByEmail(userDetails.getUsername()).orElse(null);
+        }
+        return null;
+    }
+    
     @GetMapping("/")
     public String dashboard(@RequestParam(name = "pagina", defaultValue = "1") int paginaAtualParam, Model model) {
 
