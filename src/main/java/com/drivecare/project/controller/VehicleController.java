@@ -1,8 +1,7 @@
 package com.drivecare.project.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +19,8 @@ import com.drivecare.project.service.VehicleService;
 public class VehicleController {
 
     private final VehicleService vehicleService;
+    private static final int ITENS_POR_PAGINA = 30;
+    
 
     @Autowired
     public VehicleController(VehicleService vehicleService) {
@@ -27,10 +28,18 @@ public class VehicleController {
     }
     
     @GetMapping
-    public String listVehicles(@RequestParam(value = "keyword", required = false) String keyword, Model model) {
-        List<Vehicle> vehicles = vehicleService.search(keyword);
-        model.addAttribute("vehicles", vehicles);
-        model.addAttribute("keyword", keyword);
+    public String listVehicles(@RequestParam(value = "keyword", required = false) String keyword,
+                               @RequestParam(name = "pagina", defaultValue = "1") int paginaAtual,
+                               Model model) {
+
+        Page<Vehicle> vehiclePage = vehicleService.search(keyword, paginaAtual, ITENS_POR_PAGINA);
+
+        model.addAttribute("vehicles", vehiclePage.getContent());
+        model.addAttribute("paginaAtual", paginaAtual);
+        model.addAttribute("totalPaginas", vehiclePage.getTotalPages());
+        model.addAttribute("totalVeiculos", vehiclePage.getTotalElements());
+        model.addAttribute("keyword", keyword); // Mantém o keyword para os links de paginação
+
         return "vehicles";
     }
 

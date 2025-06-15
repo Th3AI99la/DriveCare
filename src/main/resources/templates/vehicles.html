@@ -84,6 +84,10 @@
                         <i class="bi bi-search"></i>
                     </button>
                 </form>
+            </div>  
+            
+            <div class="d-flex justify-content-end text-muted mb-2">
+                <span th:text="'Mostrando ' + ${vehicles.size()} + ' de ' + ${totalVeiculos} + ' veículos'"></span>
             </div>
 
             <div class="row g-4 my-4">
@@ -130,6 +134,23 @@
                     </div>
                 </div>
             </div>
+
+            <nav aria-label="Navegação de páginas" th:if="${totalPaginas > 1}">
+                <ul class="pagination justify-content-end">
+                    <li class="page-item" th:classappend="${paginaAtual == 1} ? 'disabled'">
+                        <a class="page-link" th:href="@{/vehicles(keyword=${keyword}, pagina=${paginaAtual - 1})}">Anterior</a>
+                    </li>
+
+                    <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPaginas)}" th:classappend="${i == paginaAtual} ? 'active'">
+                        <a class="page-link" th:href="@{/vehicles(keyword=${keyword}, pagina=${i})}" th:text="${i}">1</a>
+                    </li>
+
+                    <li class="page-item" th:classappend="${paginaAtual == totalPaginas} ? 'disabled'">
+                        <a class="page-link" th:href="@{/vehicles(keyword=${keyword}, pagina=${paginaAtual + 1})}">Próxima</a>
+                    </li>
+                </ul>
+            </nav>
+
             </div>
             
             <footer class="text-center py-4">
