@@ -1,50 +1,77 @@
-/* styles/profile.css - CSS para o layout clássico Bootstrap */
 
-/* Estilo do Card Principal */
-.profile-card {
-    background-color: var(--dark-card);
-    border: 1px solid var(--dark-border);
-    border-radius: .75rem;
-    margin-top: 2rem;
+/* Container principal que centraliza e limita a largura */
+.profile-content {
+  max-width: 800px;
+  margin: 2rem auto;
 }
 
-.profile-card .card-header {
-    background-color: rgba(255, 255, 255, 0.03);
-    border-bottom: 1px solid var(--dark-border);
-    font-size: 1.25rem;
-    font-weight: 600;
+/* Título da página */
+.profile-title {
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
-.profile-card .card-footer {
-    background-color: transparent;
-    border-top: 1px solid var(--dark-border);
+.profile-form-container {
+  background-color: var(--dark-card); /* Cor de fundo do card */
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+  padding: 2.5rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  
+  /* Aplica a nossa animação */
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0; /* Começa invisível para a animação funcionar */
 }
 
-/* Área da Foto de Perfil */
-.photo-preview {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background-color: #343a40;
-  background-size: cover;
-  background-position: center;
+/* [NOVO] Definição da animação 'fadeInUp' */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.photo-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
+/* Estilo para os campos de texto (mantido) */
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
 }
 
-/* Adaptação dos campos de formulário para o tema escuro */
 .form-control {
     background-color: var(--dark-bg) !important;
-    border: 1px solid var(--dark-border) !important;
+    border: 1px solid #495057 !important;
     color: var(--text-light) !important;
 }
 
 .form-control:focus {
     border-color: #0d6efd !important;
     box-shadow: none !important;
+}
+
+/* Área da foto */
+.photo-uploader {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.photo-preview {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    /* ... outros estilos de foto ... */
+}
+
+/* Rodapé do formulário */
+.form-footer {
+  text-align: right;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--dark-border);
 }

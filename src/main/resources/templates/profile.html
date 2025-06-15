@@ -5,8 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Perfil do Usuário - DriveCare</title>
 
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Ícones do Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+    <!-- Estilos personalizados -->
     <link rel="stylesheet" href="/styles/custom.css" th:href="@{/styles/custom.css}" />
     <link rel="stylesheet" href="/styles/profile.css" th:href="@{/styles/profile.css}" />
 </head>
@@ -15,6 +20,7 @@
     <div class="container-fluid">
         <div class="row">
 
+            <!-- Navegação lateral (sidebar) -->
             <nav class="col-md-2 d-none d-md-block sidebar vh-100 bg-primary-dark">
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
@@ -39,6 +45,8 @@
                                 <i class="bi bi-person-circle me-2"></i> Perfil
                             </a>
                         </li>
+
+                        <!-- Espaço visual + botão de logout -->
                         <br /><br />
                         <li class="nav-item">
                             <form th:action="@{/logout}" method="post">
@@ -51,78 +59,77 @@
                 </div>
             </nav>
 
+            <!-- Conteúdo principal da página -->
             <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4">
                 
+                <!-- Cabeçalho com nome do usuário -->
                 <header class="d-flex justify-content-end align-items-center py-3 border-bottom border-secondary">
                     <a th:href="@{/profile}" class="text-decoration-none text-light d-flex align-items-center user-profile">
                         <div class="user-icon-wrapper me-2">
                             <i class="bi bi-person-circle user-icon"></i>
                         </div>
                         <div class="user-name-wrapper">
-                            <span class="user-name" th:text="${user.fullName != null and !#strings.isEmpty(user.fullName) ? user.fullName : user.email}">Usuário</span>
+                            <span class="user-name" th:text="${user.fullName != null and !#strings.isEmpty(user.fullName) ? user.fullName : user.email}">
+                                Usuário
+                            </span>
                         </div>
                     </a>
                 </header>
 
-                <div class="pt-3 pb-2 mb-3">
-                    <h1 class="h2">Meu Perfil</h1>
-                </div>
-
+                <!-- Conteúdo da tela de perfil -->
+                <br>
                 <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
                 <div th:if="${uploadError}" class="alert alert-danger" th:text="${uploadError}"></div>
 
-<form th:action="@{/profile/update}" th:object="${user}" method="post" enctype="multipart/form-data">
-    <input type="hidden" th:field="*{id}" />
+                <div class="profile-form-container">
+                    <form th:action="@{/profile/update}" th:object="${user}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" th:field="*{id}" />
 
-    <div class="card bg-dark-light profile-card">
-        <div class="card-header">
-            Editar Perfil
-        </div>
-        <div class="card-body p-4">
+                        <!-- Seção de foto de perfil -->
+                        <div class="photo-uploader">
+                            <div class="photo-preview" id="photoPreview">
+                                <img th:if="*{profilePhotoUrl}" th:src="*{profilePhotoUrl}" alt="Foto do perfil" />
+                                <i th:if="*{profilePhotoUrl == null}" class="bi bi-person-circle" style="font-size: 100px; color: #6c757d;"></i>
+                            </div>
+                            <label for="profilePhoto" class="btn btn-sm btn-outline-primary mt-2">
+                                <i class="bi bi-upload"></i> Alterar Foto
+                            </label>
+                            <input type="file" id="profilePhoto" name="profilePhoto" class="d-none" accept="image/*" />
+                        </div>
 
-            <div class="text-center mb-4">
-                <label for="profilePhoto" class="form-label fw-bold">Foto de Perfil</label>
-                <div class="photo-preview mx-auto mb-3" id="photoPreview" style="width: 150px; height: 150px; border-radius: 50%; background-color: #343a40; background-size: cover; background-position: center;">
-                    <img th:if="*{profilePhotoUrl}" th:src="*{profilePhotoUrl}" alt="Foto do perfil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
-                    <i th:if="*{profilePhotoUrl == null}" class="bi bi-person-circle" style="font-size: 120px; color: #6c757d;"></i>
-                </div>
-                <label for="profilePhoto" class="btn btn-sm btn-outline-primary">
-                    <i class="bi bi-upload"></i> Selecionar Arquivo
-                </label>
-                <input type="file" id="profilePhoto" name="profilePhoto" class="d-none" accept="image/*" />
-            </div>
+                        <hr style="border-color: var(--dark-border);">
 
-            <hr style="border-color: var(--dark-border);">
+                        <!-- Seção de dados do usuário -->
+                        <div class="row mt-4">
+                            <div class="col-md-6 mb-3 form-group">
+                                <label for="fullName">Nome Completo</label>
+                                <input type="text" th:field="*{fullName}" id="fullName" class="form-control" required />
+                            </div>
+                            <div class="col-md-6 mb-3 form-group">
+                                <label for="phoneNumber">Telefone</label>
+                                <input type="tel" th:field="*{phoneNumber}" id="phoneNumber" class="form-control" />
+                            </div>
+                        </div>
 
-            <div class="mt-4">
-                <div class="mb-3">
-                    <label for="fullName" class="form-label">Nome Completo</label>
-                    <input type="text" th:field="*{fullName}" id="fullName" class="form-control" required />
+                        <div class="mb-3 form-group">
+                            <label for="email">Email</label>
+                            <input type="email" th:field="*{email}" id="email" class="form-control" required />
+                        </div>
+
+                        <!-- Botão de submissão -->
+                        <div class="form-footer">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-save me-2"></i> Salvar Alterações
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" th:field="*{email}" id="email" class="form-control" required />
-                </div>
-                <div class="mb-3">
-                    <label for="phoneNumber" class="form-label">Telefone</label>
-                    <input type="tel" th:field="*{phoneNumber}" id="phoneNumber" class="form-control" />
-                </div>
-            </div>
-        </div>
-        <div class="card-footer text-end">
-            <button type="submit" class="btn btn-primary">
-                <i class="bi bi-save me-2"></i> Salvar Alterações
-            </button>
-        </div>
-    </div>
-</form>
             </main>
-
         </div>
     </div>
 
+    <!-- Scripts JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/scripts/profile.js" th:src="@{/scripts/profile.js}"></script>
-
 </body>
 </html>
