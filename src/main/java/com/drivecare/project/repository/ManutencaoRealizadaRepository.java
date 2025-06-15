@@ -38,4 +38,7 @@ public interface ManutencaoRealizadaRepository extends JpaRepository<ManutencaoR
            "GROUP BY YEAR(mr.dataExecucao), MONTH(mr.dataExecucao) " +
            "ORDER BY ano ASC, mes ASC")
     List<Object[]> findGanhoEQuantidadePorMesAgrupado(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    // Método que encontra todas as manutenções realizadas de um veículo (ID)
+    List<ManutencaoRealizada> findByVeiculoIdOrderByDataExecucaoDesc(Long veiculoId);
 }

@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.drivecare.project.model.Vehicle;
 import com.drivecare.project.service.VehicleService;
 
+import java.util.List;
+import com.drivecare.project.model.ManutencaoRealizada;
+
 @Controller
 @RequestMapping("/vehicles")
 public class VehicleController {
@@ -69,5 +72,25 @@ public class VehicleController {
         model.addAttribute("vehicle", vehicle);
         model.addAttribute("pageTitle", "Editar Veículo"); // Muda o título da página
         return "vehicle-form"; // Reutiliza o mesmo formulário
+    }
+
+    @GetMapping("/{id}")
+    public String showVehicleDetails(@PathVariable("id") Long id, Model model) {
+        Vehicle vehicle = vehicleService.findVehicleById(id)
+                .orElseThrow(() -> new IllegalArgumentException("ID do Veículo inválido:" + id));
+        List<ManutencaoRealizada> history = vehicleService.findMaintenanceHistoryByVehicleId(id);
+
+        model.addAttribute("vehicle", vehicle);
+        model.addAttribute("maintenanceHistory", history);
+
+        return "vehicle-details"; // Nome do novo arquivo HTML
+    }
+
+
+     @PostMapping("/delete/{id}")
+    public String deleteVehicle(@PathVariable("id") Long id) {
+        // lógica para verificar se o veículo existe antes de deletar
+        vehicleService.deleteVehicleById(id); 
+        return "redirect:/vehicles";
     }
 }
