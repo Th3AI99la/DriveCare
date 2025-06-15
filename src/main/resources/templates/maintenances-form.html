@@ -52,6 +52,8 @@
                     <input type="hidden" th:field="*{id}" />
                     
                     <div class="mb-3">
+                        <label for="veiculoSearchInput" class="form-label">Buscar Veículo</label>
+                        <input type="text" id="veiculoSearchInput" class="form-control mb-2" placeholder="Digite a marca, modelo ou placa para filtrar...">
                         <label for="veiculo" class="form-label">Veículo *</label>
                         <select id="veiculo" name="veiculoId" class="form-select" required>
                             <option value="">Selecione um veículo</option>
