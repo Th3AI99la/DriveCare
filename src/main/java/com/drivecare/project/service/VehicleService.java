@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.drivecare.project.dto.VehicleCardDTO;
 import com.drivecare.project.model.AgendamentoManutencao;
 import com.drivecare.project.model.ManutencaoRealizada;
 import com.drivecare.project.model.Vehicle;
@@ -43,14 +44,10 @@ public class VehicleService {
 
     // Busca um veiculo
 
-    public Page<Vehicle> search(String keyword, int pageNumber, int pageSize) {
-        // Cria um objeto de paginação. A página no Spring Data começa em 0.
+    public Page<VehicleCardDTO> search(String keyword, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            return vehicleRepository.search(keyword, pageable);
-        }
-        return vehicleRepository.findAll(pageable);
+        // Chama o método do repositório
+        return vehicleRepository.searchWithCounts(keyword, pageable);
     }
 
     // Salva um novo veículo ou atualiza um existente no banco de dados

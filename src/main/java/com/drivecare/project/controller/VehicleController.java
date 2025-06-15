@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.drivecare.project.dto.VehicleCardDTO;
 import com.drivecare.project.model.AgendamentoManutencao;
 import com.drivecare.project.model.ManutencaoRealizada;
 import com.drivecare.project.model.Vehicle;
-import com.drivecare.project.service.VehicleService;
+import com.drivecare.project.service.VehicleService; 
 
 @Controller
 @RequestMapping("/vehicles")
@@ -36,13 +37,14 @@ public class VehicleController {
                                @RequestParam(name = "pagina", defaultValue = "1") int paginaAtual,
                                Model model) {
 
-        Page<Vehicle> vehiclePage = vehicleService.search(keyword, paginaAtual, ITENS_POR_PAGINA);
+        
+        Page<VehicleCardDTO> vehiclePage = vehicleService.search(keyword, paginaAtual, ITENS_POR_PAGINA);
 
-        model.addAttribute("vehicles", vehiclePage.getContent());
+        model.addAttribute("vehicleDtos", vehiclePage.getContent());
         model.addAttribute("paginaAtual", paginaAtual);
         model.addAttribute("totalPaginas", vehiclePage.getTotalPages());
         model.addAttribute("totalVeiculos", vehiclePage.getTotalElements());
-        model.addAttribute("keyword", keyword); // Mantém o keyword para os links de paginação
+        model.addAttribute("keyword", keyword);
 
         return "vehicles";
     }
