@@ -47,7 +47,7 @@
 
             <div class="mb-4">
                 <form th:action="@{/maintenances}" method="get" class="d-flex search-form">
-                    <input type="text" name="keyword" th:value="${keyword}" class="form-control me-2" placeholder="Buscar por descrição ou veículo...">
+                    <input type="text" name="keyword" th:value="${keyword}" class="form-control me-2" placeholder="Buscar por placa, marca ou modelo...">
                     <button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i></button>
                 </form>
             </div>
@@ -61,7 +61,7 @@
                     <thead>
                         <tr>
                             <th>Veículo</th>
-                            <th>Descrição</th>
+                            <th>Placa</th> <th>Descrição</th>
                             <th>Tipo</th>
                             <th>Data Agendada</th>
                             <th class="text-end">Orçamento</th>
@@ -71,12 +71,12 @@
                     <tbody>
                         <tr th:each="agendamento : ${agendamentos}">
                             <td th:text="${agendamento.veiculo.marca + ' ' + agendamento.veiculo.modelo}">Ford Ka</td>
-                            <td th:text="${agendamento.descricao}">Troca de óleo</td>
+                            <td th:text="${agendamento.veiculo.placa}">ABC-1234</td> <td th:text="${agendamento.descricao}">Troca de óleo</td>
                             <td>
                                 <span class="badge" th:text="${agendamento.tipo?.displayName}"
-                                      th:classappend="${agendamento.tipo?.name() == 'PREVENTIVA'} ? 'bg-success' : 
-                                                     (${agendamento.tipo?.name() == 'CORRETIVA'} ? 'bg-primary' : 
-                                                     (${agendamento.tipo?.name() == 'REVISAO'} ? 'bg-warning text-dark' : 'bg-secondary'))">
+                                    th:classappend="${agendamento.tipo?.name() == 'PREVENTIVA'} ? 'bg-success' : 
+                                                    (${agendamento.tipo?.name() == 'CORRETIVA'} ? 'bg-primary' : 
+                                                    (${agendamento.tipo?.name() == 'REVISAO'} ? 'bg-warning text-dark' : 'bg-secondary'))">
                                 </span>
                             </td>
                             <td th:text="${agendamento.getDataAgendamentoFormatada()}">15/06/2025</td>
@@ -88,7 +88,7 @@
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(agendamentos)}">
-                            <td colspan="6" class="text-center text-muted py-3">Nenhum agendamento encontrado.</td>
+                            <td colspan="7" class="text-center text-muted py-3">Nenhum agendamento encontrado.</td>
                         </tr>
                     </tbody>
                 </table>
