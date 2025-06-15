@@ -19,6 +19,7 @@ import com.drivecare.project.dto.MaintenanceDTO;
 import com.drivecare.project.model.AgendamentoManutencao;
 import com.drivecare.project.model.ManutencaoRealizada;
 import com.drivecare.project.model.Vehicle;
+import com.drivecare.project.model.enums.StatusAgendamentoManutencao;
 import com.drivecare.project.service.MaintenanceService;
 import com.drivecare.project.service.VehicleService;
 
@@ -60,8 +61,11 @@ public class MaintenanceController {
     @GetMapping("/new")
     public String showNewMaintenanceForm(Model model) {
         AgendamentoManutencao agendamento = new AgendamentoManutencao();
-        // Busca todos os veículos para popular o menu dropdown
-        List<Vehicle> vehicles = vehicleService.findAllVehicles(); 
+        
+        // Define o status padrão aqui
+        agendamento.setStatusAgendamento(StatusAgendamentoManutencao.AGENDADA);
+
+        List<Vehicle> vehicles = vehicleService.findAllVehicles();
         
         model.addAttribute("agendamento", agendamento);
         model.addAttribute("vehicles", vehicles);
@@ -72,16 +76,16 @@ public class MaintenanceController {
     // Método POST para salvar um novo agendamento de manutenção
     @PostMapping("/save")
     public String saveMaintenance(@ModelAttribute("agendamento") AgendamentoManutencao agendamento,
-                                  @RequestParam("veiculoId") Long veiculoId) { // Pega o ID do veículo do formulário
+                                  @RequestParam("veiculoId") Long veiculoId) {
         
-        // Busca a entidade completa do veículo no banco de dados
         Vehicle veiculo = vehicleService.findVehicleById(veiculoId)
                 .orElseThrow(() -> new RuntimeException("Veículo não encontrado com ID: " + veiculoId));
         
-        // Associa o veículo completo ao agendamento
         agendamento.setVeiculo(veiculo);
+
+        //  Garante que o status seja 'AGENDADA' antes de salvar
+        agendamento.setStatusAgendamento(StatusAgendamentoManutencao.AGENDADA);
         
-        // Salva o agendamento no banco
         maintenanceService.salvarAgendamento(agendamento);
         return "redirect:/maintenances";
     }
