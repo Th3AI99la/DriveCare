@@ -71,6 +71,7 @@ public class User implements UserDetails { // <-- 3. Implementa UserDetails
         this.email = email;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }

@@ -24,32 +24,22 @@ import jakarta.validation.Valid;
 public class ProfileController {
 
     private final UserRepository userRepository;
-    private final ProfileService profileService; 
-    
-    @Autowired
+    private final ProfileService profileService;
 
+    @Autowired
     public ProfileController(UserRepository userRepository, ProfileService profileService) {
         this.userRepository = userRepository;
         this.profileService = profileService;
     }
 
-    // Exibe o formulário de perfil (sem alterações)
     @GetMapping("/profile")
     public String showProfile(@AuthenticationPrincipal UserDetails currentUserDetails, Model model) {
-        if (currentUserDetails == null) {
-            return "redirect:/login";
-        }
-        String email = currentUserDetails.getUsername();
-        User user = userRepository.findByEmail(email).orElse(null);
-
-        if (user == null) {
-            return "redirect:/login";
-        }
+        User user = userRepository.findByEmail(currentUserDetails.getUsername())
+                .orElseThrow(() -> new IllegalStateException("Usuário logado não encontrado."));
         model.addAttribute("user", user);
         return "profile";
     }
 
-    // Processa a atualização do perfil (sem alterações na lógica interna)
     @PostMapping("/profile/update")
     public String updateProfile(
         @AuthenticationPrincipal UserDetails currentUserDetails,
@@ -58,28 +48,26 @@ public class ProfileController {
         @RequestParam("profilePhoto") MultipartFile profilePhoto,
         Model model) {
 
-        if (currentUserDetails == null) {
-            return "redirect:/login";
-        }
-        User existingUser = userRepository.findByEmail(currentUserDetails.getUsername()).orElse(null);
-        if (existingUser == null) {
-            return "redirect:/login";
-        }
-
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", formUser);
             return "profile";
         }
 
+        User updatedUser;
         try {
-            profileService.updateUserProfile(formUser, existingUser, profilePhoto);
+            // Controller agora só chama o serviço e passa os dados
+            updatedUser = profileService.updateUserProfile(currentUserDetails, formUser, profilePhoto);
             model.addAttribute("successMessage", "Perfil atualizado com sucesso.");
 
         } catch (IOException e) {
+            // Em caso de erro de upload, buscamos o usuário novamente para não perder os dados na tela
+            updatedUser = userRepository.findByEmail(currentUserDetails.getUsername()).orElse(formUser);
             model.addAttribute("uploadError", "Erro ao enviar a foto do perfil. Tente novamente.");
+        } catch (IllegalStateException e) {
+            // Se o usuário não for encontrado no serviço
+            return "redirect:/login?error";
         }
         
-        User updatedUser = userRepository.findById(existingUser.getId()).orElse(existingUser);
         model.addAttribute("user", updatedUser);
         return "profile";
     }
