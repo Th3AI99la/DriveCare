@@ -1,58 +1,33 @@
-/* styles/profile.css - Versão 4.0 (Design Focado e Limpo) */
+/* styles/profile.css - CSS para o layout clássico Bootstrap */
 
-/* Container principal para o conteúdo do perfil */
-.profile-content {
-  max-width: 800px;
-  margin: 2rem auto; /* Centraliza o conteúdo na página */
+/* Estilo do Card Principal */
+.profile-card {
+    background-color: var(--dark-card);
+    border: 1px solid var(--dark-border);
+    border-radius: .75rem;
+    margin-top: 2rem;
 }
 
-/* Título da página */
-.profile-title {
-  font-size: 2rem;
-  font-weight: 600;
-  color: var(--text-light);
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--dark-border);
+.profile-card .card-header {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid var(--dark-border);
+    font-size: 1.25rem;
+    font-weight: 600;
 }
 
-/* Estilo para o formulário */
-.profile-form {
-  background-color: var(--dark-card);
-  border: 1px solid var(--dark-border);
-  border-radius: 12px;
-  padding: 2.5rem;
+.profile-card .card-footer {
+    background-color: transparent;
+    border-top: 1px solid var(--dark-border);
 }
 
-/* Estilo para cada seção do formulário */
-.form-section {
-  margin-bottom: 2rem;
-}
-
-.form-section-title {
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: #e0e0e0;
-  padding-bottom: 0.75rem;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--dark-border);
-}
-
-/* Área da foto */
-.photo-uploader {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
+/* Área da Foto de Perfil */
 .photo-preview {
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   background-color: #343a40;
   background-size: cover;
   background-position: center;
-  flex-shrink: 0; /* Impede que a imagem encolha */
 }
 
 .photo-preview img {
@@ -62,48 +37,14 @@
   border-radius: 50%;
 }
 
-.photo-upload-actions .btn {
-  background-color: #343a40;
-  border-color: #495057;
-  color: var(--text-light);
+/* Adaptação dos campos de formulário para o tema escuro */
+.form-control {
+    background-color: var(--dark-bg) !important;
+    border: 1px solid var(--dark-border) !important;
+    color: var(--text-light) !important;
 }
 
-.photo-upload-actions .btn:hover {
-  background-color: #495057;
-}
-
-/* Campos de texto */
-.form-group label {
-  display: block;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-}
-
-.form-group .form-control {
-  background-color: var(--dark-bg);
-  border: 1px solid #495057;
-  color: var(--text-light);
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-}
-
-.form-group .form-control:focus {
-  background-color: var(--dark-bg);
-  color: var(--text-light);
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
-}
-
-/* Rodapé do formulário com o botão */
-.form-footer {
-  text-align: right; /* Alinha o botão à direita */
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--dark-border);
-}
-
-.btn-submit-profile {
-  font-size: 1rem;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
+.form-control:focus {
+    border-color: #0d6efd !important;
+    box-shadow: none !important;
 }
