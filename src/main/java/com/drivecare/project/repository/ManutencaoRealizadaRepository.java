@@ -15,8 +15,8 @@ import com.drivecare.project.model.ManutencaoRealizada;
 public interface ManutencaoRealizadaRepository extends JpaRepository<ManutencaoRealizada, Long> {
 
    // Metodo por buscar e ordenar por data de execução
-    @Query("SELECT mr FROM ManutencaoRealizada mr ORDER BY mr.dataExecucao DESC")
-    List<ManutencaoRealizada> findRecentManutencoesRealizadas(Pageable pageable);
+    @Query("SELECT mr FROM ManutencaoRealizada mr WHERE mr.manutencaoAgendada.id = :id ORDER BY mr.dataExecucao DESC")
+    List<ManutencaoRealizada> findByManutencaoAgendadaId(@Param("id") Long id);
 
    // Metodo por buscar e ordenar por ano e mês de execução
     @Query("SELECT SUM(mr.custoReal) FROM ManutencaoRealizada mr WHERE YEAR(mr.dataExecucao) = YEAR(CURRENT_DATE) AND MONTH(mr.dataExecucao) = MONTH(CURRENT_DATE)")
@@ -41,4 +41,7 @@ public interface ManutencaoRealizadaRepository extends JpaRepository<ManutencaoR
 
     // Método que encontra todas as manutenções realizadas de um veículo (ID)
     List<ManutencaoRealizada> findByVeiculoIdOrderByDataExecucaoDesc(Long veiculoId);
+
+    @Query("SELECT mr FROM ManutencaoRealizada mr ORDER BY mr.dataExecucao DESC")
+    List<ManutencaoRealizada> findRecentManutencoesRealizadas(Pageable pageable);
 }
