@@ -102,7 +102,7 @@
                                 </li>
                                 <li class="list-group-item bg-transparent text-light">
                                     <strong>KM:</strong> 
-                                    <span class="float-end" th:text="${#numbers.formatDecimal(vehicle.quilometragem, 0, 'POINT', 0, 'COMMA') + ' km'}">100.000 km</span>
+                                    <span class="float-end" th:text="${#numbers.formatInteger(vehicle.quilometragem, 1, 'POINT') + ' km'}">100.000 km</span>
                                 </li>
                                 <li class="list-group-item bg-transparent text-light">
                                     <strong>Manutenções:</strong> 

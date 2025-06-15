@@ -1,6 +1,7 @@
 package com.drivecare.project.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,5 +35,10 @@ public class VehicleService {
         public void saveVehicle(Vehicle vehicle) {
         vehicleRepository.save(vehicle);
     }
+        //Busca um único veículo pelo seu ID.
+        public Optional<Vehicle> findVehicleById(Long id) {
+        return vehicleRepository.findById(id);
+    }
+    
 
 }

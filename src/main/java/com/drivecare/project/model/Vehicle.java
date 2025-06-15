@@ -1,5 +1,6 @@
 package com.drivecare.project.model;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -9,20 +10,24 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 
 
 @Entity
 public class Vehicle {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vehicle_generator")
+    @SequenceGenerator(name = "vehicle_generator", sequenceName = "vehicle_id_seq", allocationSize = 1)
     private Long id;
 
     private String marca;
     private String modelo;
     private Integer ano;
     private String placa;
-    private Double quilometragem;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal quilometragem;
 
     @Column(name = "vehicle_color")
     private String cor;
@@ -82,11 +87,11 @@ public class Vehicle {
         this.placa = placa;
     }
 
-    public Double getQuilometragem() {
+    public BigDecimal getQuilometragem() {
         return quilometragem;
     }
 
-    public void setQuilometragem(Double quilometragem) {
+    public void setQuilometragem(BigDecimal quilometragem) {
         this.quilometragem = quilometragem;
     }
 

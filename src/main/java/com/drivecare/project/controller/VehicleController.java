@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,5 +48,17 @@ public class VehicleController {
     public String saveVehicle(@ModelAttribute("vehicle") Vehicle vehicle) {
         vehicleService.saveVehicle(vehicle);
         return "redirect:/vehicles"; // Redireciona para a lista de veículos após salvar
+    }
+
+
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable("id") Long id, Model model) {
+        // Busca o veículo no banco de dados
+        Vehicle vehicle = vehicleService.findVehicleById(id)
+                .orElseThrow(() -> new IllegalArgumentException("ID do Veículo inválido:" + id));
+        
+        model.addAttribute("vehicle", vehicle);
+        model.addAttribute("pageTitle", "Editar Veículo"); // Muda o título da página
+        return "vehicle-form"; // Reutiliza o mesmo formulário
     }
 }
