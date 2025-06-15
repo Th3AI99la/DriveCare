@@ -3,6 +3,7 @@ package com.drivecare.project.repository;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -44,4 +45,13 @@ public interface ManutencaoRealizadaRepository extends JpaRepository<ManutencaoR
 
     @Query("SELECT mr FROM ManutencaoRealizada mr ORDER BY mr.dataExecucao DESC")
     List<ManutencaoRealizada> findRecentManutencoesRealizadas(Pageable pageable);
+
+     //MÉTODO para a busca
+     
+       @Query("SELECT mr FROM ManutencaoRealizada mr " +
+           "WHERE LOWER(mr.tipoManutencao) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+           "LOWER(mr.descricaoServicoRealizado) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+           "LOWER(mr.veiculo.marca) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+           "LOWER(mr.veiculo.modelo) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+       Page<ManutencaoRealizada> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
 }

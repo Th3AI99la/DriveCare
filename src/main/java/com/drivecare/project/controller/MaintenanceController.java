@@ -1,20 +1,26 @@
 package com.drivecare.project.controller;
 
-import com.drivecare.project.dto.MaintenanceDTO;
-import com.drivecare.project.model.AgendamentoManutencao;
-import com.drivecare.project.model.ManutencaoRealizada;
-import com.drivecare.project.model.Vehicle;
-import com.drivecare.project.service.MaintenanceService;
-import com.drivecare.project.service.VehicleService;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+import com.drivecare.project.dto.MaintenanceDTO;
+import com.drivecare.project.model.AgendamentoManutencao;
+import com.drivecare.project.model.ManutencaoRealizada;
+import com.drivecare.project.model.Vehicle;
+import com.drivecare.project.service.MaintenanceService;
+import com.drivecare.project.service.VehicleService;
 
 @Controller
 @RequestMapping("/maintenances")
@@ -38,7 +44,7 @@ public class MaintenanceController {
                                    Model model) {
 
         // Paginação, levando em conta a paginação de 0 baseada na pesquisa
-        Page<ManutencaoRealizada> maintenancePage = maintenanceService.getManutencaoPaginada(paginaAtual - 1, ITENS_POR_PAGINA);
+        Page<ManutencaoRealizada> maintenancePage = maintenanceService.search(keyword, paginaAtual - 1, ITENS_POR_PAGINA);
 
         // Convertendo as manutenções para DTO
         List<MaintenanceDTO> maintenanceDtos = maintenancePage.map(MaintenanceDTO::new).getContent();
@@ -68,9 +74,19 @@ public class MaintenanceController {
 
     // Método POST para salvar um novo agendamento de manutenção
     @PostMapping("/save")
-    public String saveMaintenance(@ModelAttribute("agendamento") AgendamentoManutencao agendamento) {
+    public String saveMaintenance(@ModelAttribute("agendamento") AgendamentoManutencao agendamento,
+                                @RequestParam("veiculo.id") Long veiculoId) { // Pega o ID do veículo separadamente
+        
+        // Busca o veículo completo no banco de dados
+        Vehicle veiculo = vehicleService.findVehicleById(veiculoId)
+                .orElseThrow(() -> new RuntimeException("Veículo não encontrado"));
+        
+        // Associa o veículo completo ao agendamento
+        agendamento.setVeiculo(veiculo);
+        
+        // Salva o agendamento
         maintenanceService.salvarAgendamento(agendamento);
-        return "redirect:/maintenances"; // Redireciona para a lista de manutenções após salvar
+        return "redirect:/maintenances";
     }
 
     // Método GET para exibir o formulário de edição de agendamento de manutenção

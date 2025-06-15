@@ -7,6 +7,7 @@ import com.drivecare.project.repository.ManutencaoRealizadaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -23,8 +24,13 @@ public class MaintenanceService {
     }
 
     // Método para obter as manutenções realizadas com paginação
-    public Page<ManutencaoRealizada> getManutencaoPaginada(int pagina, int itensPorPagina) {
-        return manutencaoRealizadaRepository.findAll(PageRequest.of(pagina, itensPorPagina));
+    public Page<ManutencaoRealizada> search(String keyword, int pagina, int itensPorPagina) {
+        Pageable pageable = PageRequest.of(pagina, itensPorPagina);
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            // Precisaremos criar este método no repositório
+            return manutencaoRealizadaRepository.searchByKeyword(keyword, pageable);
+        }
+        return manutencaoRealizadaRepository.findAll(pageable);
     }
 
     // Método para salvar uma manutenção realizada
