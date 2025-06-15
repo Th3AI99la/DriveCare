@@ -18,8 +18,6 @@ import com.drivecare.project.model.User;
 import com.drivecare.project.repository.UserRepository;
 import com.drivecare.project.service.ProfileService;
 
-import jakarta.validation.Valid;
-
 @Controller
 public class ProfileController {
 
@@ -40,34 +38,34 @@ public class ProfileController {
         return "profile";
     }
 
+    // Em ProfileController.java
+
     @PostMapping("/profile/update")
     public String updateProfile(
-        @AuthenticationPrincipal UserDetails currentUserDetails,
-        @Valid @ModelAttribute("user") User formUser,
-        BindingResult bindingResult,
-        @RequestParam("profilePhoto") MultipartFile profilePhoto,
-        Model model) {
+            @AuthenticationPrincipal UserDetails currentUserDetails,
+            @ModelAttribute("user") User formUser,
+            BindingResult bindingResult,
+            @RequestParam("profilePhoto") MultipartFile profilePhoto,
+            Model model) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("user", formUser);
+            User originalUser = userRepository.findByEmail(currentUserDetails.getUsername()).orElse(formUser);
+            model.addAttribute("user", originalUser);
             return "profile";
         }
 
         User updatedUser;
         try {
-            // Controller agora só chama o serviço e passa os dados
             updatedUser = profileService.updateUserProfile(currentUserDetails, formUser, profilePhoto);
             model.addAttribute("successMessage", "Perfil atualizado com sucesso.");
 
         } catch (IOException e) {
-            // Em caso de erro de upload, buscamos o usuário novamente para não perder os dados na tela
             updatedUser = userRepository.findByEmail(currentUserDetails.getUsername()).orElse(formUser);
             model.addAttribute("uploadError", "Erro ao enviar a foto do perfil. Tente novamente.");
         } catch (IllegalStateException e) {
-            // Se o usuário não for encontrado no serviço
             return "redirect:/login?error";
         }
-        
+
         model.addAttribute("user", updatedUser);
         return "profile";
     }
