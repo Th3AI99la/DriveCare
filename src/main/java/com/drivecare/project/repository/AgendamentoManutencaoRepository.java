@@ -45,4 +45,14 @@ public interface AgendamentoManutencaoRepository extends JpaRepository<Agendamen
 
     // Método que busca agendamentos por ID
     List<AgendamentoManutencao> findByVeiculoIdAndStatusAgendamentoIn(Long veiculoId, Collection<StatusAgendamentoManutencao> statuses);
+
+    // Busca agendamentos por status e palavra-chave
+    @Query("SELECT a FROM AgendamentoManutencao a WHERE a.statusAgendamento = :status AND " +
+           "(LOWER(a.descricao) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+           "LOWER(a.veiculo.marca) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+           "LOWER(a.veiculo.modelo) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+    Page<AgendamentoManutencao> findByStatusWithKeyword(@Param("status") StatusAgendamentoManutencao status, @Param("keyword") String keyword, Pageable pageable);
+    
+    // Busca agendamentos apenas por status (quando não há busca por palavra-chave)
+    Page<AgendamentoManutencao> findByStatusAgendamento(StatusAgendamentoManutencao status, Pageable pageable);
 }

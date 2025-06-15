@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.drivecare.project.model.AgendamentoManutencao;
 import com.drivecare.project.model.ManutencaoRealizada;
+import com.drivecare.project.model.enums.StatusAgendamentoManutencao;
 import com.drivecare.project.repository.AgendamentoManutencaoRepository;
 import com.drivecare.project.repository.ManutencaoRealizadaRepository;
 
@@ -25,12 +26,14 @@ public class MaintenanceService {
     }
 
     // Método para obter as manutenções realizadas com paginação
-    public Page<ManutencaoRealizada> search(String keyword, int pagina, int itensPorPagina) {
+    public Page<AgendamentoManutencao> searchScheduled(String keyword, int pagina, int itensPorPagina) {
         Pageable pageable = PageRequest.of(pagina, itensPorPagina);
+        StatusAgendamentoManutencao status = StatusAgendamentoManutencao.AGENDADA;
+
         if (keyword != null && !keyword.trim().isEmpty()) {
-            return manutencaoRealizadaRepository.searchByKeyword(keyword, pageable);
+            return agendamentoManutencaoRepository.findByStatusWithKeyword(status, keyword, pageable);
         }
-        return manutencaoRealizadaRepository.findAll(pageable);
+        return agendamentoManutencaoRepository.findByStatusAgendamento(status, pageable);
     }
 
     // Método para salvar uma manutenção realizada

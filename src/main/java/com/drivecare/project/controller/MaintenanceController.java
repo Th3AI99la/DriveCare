@@ -37,23 +37,20 @@ public class MaintenanceController {
         this.vehicleService = vehicleService;
     }
 
-    // Método GET para listar manutenções com paginação e pesquisa
-
+    // Método GET para listar manutenções com paginação e pesquisa AGENDADA
     @GetMapping
     public String listMaintenances(@RequestParam(value = "keyword", required = false) String keyword,
                                 @RequestParam(name = "pagina", defaultValue = "1") int paginaAtual,
                                 Model model) {
 
-        // Garanta que ele está chamando o método 'search'
-        Page<ManutencaoRealizada> maintenancePage = maintenanceService.search(keyword, paginaAtual - 1, ITENS_POR_PAGINA);
+        // Chama o novo método do serviço que busca AGENDAMENTOS
+        Page<AgendamentoManutencao> agendamentosPage = maintenanceService.searchScheduled(keyword, paginaAtual - 1, ITENS_POR_PAGINA);
 
-        // O mapeamento para DTO agora é seguro
-        List<MaintenanceDTO> maintenanceDtos = maintenancePage.map(MaintenanceDTO::new).getContent();
-
-        model.addAttribute("maintenanceDtos", maintenanceDtos);
+        // Envia a lista de agendamentos diretamente para a página
+        model.addAttribute("agendamentos", agendamentosPage.getContent());
         model.addAttribute("paginaAtual", paginaAtual);
-        model.addAttribute("totalPaginas", maintenancePage.getTotalPages());
-        model.addAttribute("totalManutencao", maintenancePage.getTotalElements());
+        model.addAttribute("totalPaginas", agendamentosPage.getTotalPages());
+        model.addAttribute("totalAgendamentos", agendamentosPage.getTotalElements());
         model.addAttribute("keyword", keyword);
 
         return "maintenances";
