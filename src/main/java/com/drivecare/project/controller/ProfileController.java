@@ -1,7 +1,6 @@
 package com.drivecare.project.controller;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.drivecare.project.model.User;
 import com.drivecare.project.repository.UserRepository;
 
-import jakarta.servlet.ServletContext;
 import jakarta.validation.Valid;
 
 @Controller
@@ -29,19 +27,14 @@ public class ProfileController {
 
     private final UserRepository userRepository;
 
-    // Diretório para salvar fotos de perfil enviadas
     private static final String UPLOAD_DIR = "uploads/profile_photos/";
-
-    @Autowired
-    private ServletContext servletContext;
 
     @Autowired
     public ProfileController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    /* exibição do formulário de dados do perfil do usuário */
-    
+    // Exibe o formulário de perfil
     @GetMapping("/profile")
     public String showProfile(@AuthenticationPrincipal UserDetails currentUserDetails, Model model) {
         if (currentUserDetails == null) {
@@ -52,7 +45,6 @@ public class ProfileController {
         User user = userRepository.findByEmail(email).orElse(null);
 
         if (user == null) {
-            // Usuário não encontrado, redireciona para o login
             return "redirect:/login";
         }
 
@@ -60,6 +52,7 @@ public class ProfileController {
         return "profile";
     }
 
+    // Processa a atualização do perfil
     @PostMapping("/profile/update")
     public String updateProfile(
         @AuthenticationPrincipal UserDetails currentUserDetails,
@@ -80,42 +73,41 @@ public class ProfileController {
         }
 
         if (bindingResult.hasErrors()) {
-            
             model.addAttribute("user", formUser);
             return "profile";
         }
 
-        // Update fields (only those allowed to be changed)
-        existingUser.setEmail(formUser.getEmail());
-        
-        // Assuming User entity has setFullName and setPhoneNumber methods
-        try {
-            // Using reflection or casting might be needed if User entity didn't have new fields, assume it has them
-            existingUser.getClass().getMethod("setFullName", String.class).invoke(existingUser, formUser.getClass().getMethod("getFullName").invoke(formUser));
-            existingUser.getClass().getMethod("setPhoneNumber", String.class).invoke(existingUser, formUser.getClass().getMethod("getPhoneNumber").invoke(formUser));
-        } catch (IllegalAccessException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
-                // If methods don't exist, ignore or handle accordingly
-                // (Would be best to add these fields properly in model)
-        }
+        // Atualiza diretamente os campos permitidos
+        existingUser.setFullName(formUser.getFullName());
+        existingUser.setPhoneNumber(formUser.getPhoneNumber());
+        existingUser.setEmail(formUser.getEmail()); // cuidado se e-mail for sensível
 
-        // Process profile photo if present and not empty
+        // Processa a imagem de perfil se enviada
         if (profilePhoto != null && !profilePhoto.isEmpty()) {
 
-            String originalFilename = profilePhoto.getOriginalFilename();
-            // Simple file name sanitization
-            String fileExtension = "";
-            if (originalFilename != null && originalFilename.contains(".")) {
-                fileExtension = originalFilename.substring(originalFilename.lastIndexOf('.'));
+            // Valida se é imagem
+            if (!profilePhoto.getContentType().startsWith("image/")) {
+                model.addAttribute("uploadError", "Formato de imagem inválido. Envie uma imagem.");
+                model.addAttribute("user", existingUser);
+                return "profile";
             }
 
-            // Generate unique filename using email and current time
-            String filename = "profile_" + existingUser.getId() + "_" + System.currentTimeMillis() + fileExtension;
-
             try {
-                // Resolve absolute path on server filesystem to store file
-                String realPathtoUploads = servletContext.getRealPath("/") + UPLOAD_DIR;
-                Path uploadPath = Paths.get(realPathtoUploads);
+                // Sanitiza o nome do arquivo
+                String originalFilename = Paths.get(profilePhoto.getOriginalFilename())
+                                               .getFileName().toString()
+                                               .replaceAll("[^a-zA-Z0-9\\.\\-_]", "_");
 
+                String fileExtension = "";
+                if (originalFilename.contains(".")) {
+                    fileExtension = originalFilename.substring(originalFilename.lastIndexOf('.'));
+                }
+
+                // Gera nome único
+                String filename = "profile_" + existingUser.getId() + "_" + System.currentTimeMillis() + fileExtension;
+
+                // Caminho de upload relativo (certifique-se de servir arquivos estáticos)
+                Path uploadPath = Paths.get(UPLOAD_DIR);
                 if (!Files.exists(uploadPath)) {
                     Files.createDirectories(uploadPath);
                 }
@@ -123,15 +115,8 @@ public class ProfileController {
                 Path filePath = uploadPath.resolve(filename);
                 profilePhoto.transferTo(filePath.toFile());
 
-                // Save relative photo path or URL in user entity
-                String photoUrl = "/" + UPLOAD_DIR + filename;
-                
-                // Assuming User entity has setProfilePhotoUrl method
-                try {
-                    existingUser.getClass().getMethod("setProfilePhotoUrl", String.class).invoke(existingUser, photoUrl);
-                } catch (IllegalAccessException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
-                    // No method, ignore or handle
-                }
+                // Salva o caminho relativo no banco
+                existingUser.setProfilePhotoUrl("/" + UPLOAD_DIR + filename);
 
             } catch (IOException e) {
                 model.addAttribute("uploadError", "Erro ao enviar a foto do perfil. Tente novamente.");
@@ -144,7 +129,6 @@ public class ProfileController {
 
         model.addAttribute("user", existingUser);
         model.addAttribute("successMessage", "Perfil atualizado com sucesso.");
-
         return "profile";
     }
 }
