@@ -70,6 +70,41 @@
                 </div>
             </div>
 
+            <div class="mb-5">
+                <h2 class="h3 mt-5 history-title">Agendamentos Pendentes e Cancelados</h2>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th>Data Agendada</th>
+                                <th>Descrição do Serviço</th>
+                                <th>Tipo</th>
+                                <th>Status</th>
+                                <th class="text-end">Orçamento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="agendamento : ${schedules}">
+                                <td th:text="${agendamento.getDataAgendamentoFormatada()}">15/07/2025</td>
+                                <td th:text="${agendamento.descricao}">Revisão dos 30.000 km</td>
+                                <td th:text="${agendamento.tipo?.displayName}">Revisão</td>
+                                <td>
+                                    <span class="badge"
+                                          th:text="${agendamento.statusAgendamento.displayName}"
+                                          th:classappend="${agendamento.statusAgendamento.name() == 'AGENDADA'} ? 'bg-warning text-dark' : 'bg-secondary'">
+                                        Agendada
+                                    </span>
+                                </td>
+                                <td class="text-end" th:text="${agendamento.orcamento != null ? #numbers.formatCurrency(agendamento.orcamento) : '-'}">R$ 500,00</td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(schedules)}">
+                                <td colspan="5" class="text-center text-muted">Nenhum agendamento pendente ou cancelado para este veículo.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <h2 class="h3 mt-5">Histórico de Manutenções</h2>
             <div class="table-responsive">
                 <table class="table table-dark table-striped table-hover ">

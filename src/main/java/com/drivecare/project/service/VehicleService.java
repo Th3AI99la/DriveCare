@@ -1,5 +1,6 @@
 package com.drivecare.project.service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,8 +10,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.drivecare.project.model.AgendamentoManutencao;
 import com.drivecare.project.model.ManutencaoRealizada;
 import com.drivecare.project.model.Vehicle;
+import com.drivecare.project.model.enums.StatusAgendamentoManutencao;
+import com.drivecare.project.repository.AgendamentoManutencaoRepository;
 import com.drivecare.project.repository.ManutencaoRealizadaRepository;
 import com.drivecare.project.repository.VehicleRepository;
 
@@ -19,12 +23,17 @@ public class VehicleService {
 
     private final VehicleRepository vehicleRepository;
     private final ManutencaoRealizadaRepository manutencaoRealizadaRepository;
+    private final AgendamentoManutencaoRepository agendamentoManutencaoRepository; 
+
+    
 
     @Autowired
-    public VehicleService(VehicleRepository vehicleRepository,
-            ManutencaoRealizadaRepository manutencaoRealizadaRepository) {
+    public VehicleService(VehicleRepository vehicleRepository, 
+                          ManutencaoRealizadaRepository manutencaoRealizadaRepository,
+                          AgendamentoManutencaoRepository agendamentoManutencaoRepository) { 
         this.vehicleRepository = vehicleRepository;
         this.manutencaoRealizadaRepository = manutencaoRealizadaRepository;
+        this.agendamentoManutencaoRepository = agendamentoManutencaoRepository;
     }
 
     // Lista os veiculos
@@ -65,4 +74,12 @@ public class VehicleService {
     vehicleRepository.deleteById(id);
     }
 
+    // Busca os agendamentos pendentes e cancelados de um veículo.
+    public List<AgendamentoManutencao> findSchedulesByVehicleId(Long vehicleId) {
+        List<StatusAgendamentoManutencao> statuses = Arrays.asList(
+            StatusAgendamentoManutencao.AGENDADA, 
+            StatusAgendamentoManutencao.CANCELADA
+        );
+        return agendamentoManutencaoRepository.findByVeiculoIdAndStatusAgendamentoIn(vehicleId, statuses);
+    }
 }

@@ -1,5 +1,7 @@
 package com.drivecare.project.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -11,11 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.drivecare.project.model.AgendamentoManutencao;
+import com.drivecare.project.model.ManutencaoRealizada;
 import com.drivecare.project.model.Vehicle;
 import com.drivecare.project.service.VehicleService;
-
-import java.util.List;
-import com.drivecare.project.model.ManutencaoRealizada;
 
 @Controller
 @RequestMapping("/vehicles")
@@ -75,16 +76,20 @@ public class VehicleController {
     }
 
     @GetMapping("/{id}")
-    public String showVehicleDetails(@PathVariable("id") Long id, Model model) {
-        Vehicle vehicle = vehicleService.findVehicleById(id)
-                .orElseThrow(() -> new IllegalArgumentException("ID do Veículo inválido:" + id));
-        List<ManutencaoRealizada> history = vehicleService.findMaintenanceHistoryByVehicleId(id);
+        public String showVehicleDetails(@PathVariable("id") Long id, Model model) {
+            Vehicle vehicle = vehicleService.findVehicleById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("ID do Veículo inválido:" + id));
+            List<ManutencaoRealizada> history = vehicleService.findMaintenanceHistoryByVehicleId(id);
+            
+            // Busca os agendamentos pendentes/cancelados
+            List<AgendamentoManutencao> schedules = vehicleService.findSchedulesByVehicleId(id);
 
-        model.addAttribute("vehicle", vehicle);
-        model.addAttribute("maintenanceHistory", history);
+            model.addAttribute("vehicle", vehicle);
+            model.addAttribute("maintenanceHistory", history);
+            model.addAttribute("schedules", schedules); 
 
-        return "vehicle-details"; // Nome do novo arquivo HTML
-    }
+            return "vehicle-details";
+        }
 
 
      @PostMapping("/delete/{id}")

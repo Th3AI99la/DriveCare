@@ -43,4 +43,6 @@ public interface AgendamentoManutencaoRepository extends JpaRepository<Agendamen
     @Query("SELECT am.tipo, COUNT(am) FROM AgendamentoManutencao am GROUP BY am.tipo")
     List<Object[]> countByMaintenanceType(); 
 
+    // M    étodo que busca agendamentos por ID
+    List<AgendamentoManutencao> findByVeiculoIdAndStatusAgendamentoIn(Long veiculoId, Collection<StatusAgendamentoManutencao> statuses);
 }
