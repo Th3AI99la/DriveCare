@@ -53,6 +53,7 @@ public class ProfileController {
     }
 
     // Processa a atualização do perfil
+    @SuppressWarnings("null")
     @PostMapping("/profile/update")
     public String updateProfile(
         @AuthenticationPrincipal UserDetails currentUserDetails,
