@@ -53,8 +53,17 @@
                             <input type="text" th:field="*{cor}" class="form-control" id="cor" placeholder="Ex: Prata" required>
                         </div>
                     <div class="col-md-6 mb-3">
-                        <label for="quilometragem" class="form-label">Quilometragem</label>
-                        <input type="text" inputmode="numeric" th:field="*{quilometragem}" class="form-control" id="quilometragem" placeholder="Ex: 54.321" required>
+                        <label for="quilometragem_display" class="form-label">Quilometragem</label>
+                        
+                        <input type="text" 
+                            inputmode="numeric" 
+                            class="form-control" 
+                            id="quilometragem_display" 
+                            placeholder="Ex: 54.321"
+                            th:value="${vehicle.quilometragem != null ? #numbers.formatInteger(vehicle.quilometragem, 1, 'POINT') : ''}"
+                            required>
+
+                        <input type="hidden" th:field="*{quilometragem}" id="quilometragem">
                     </div>
                     
                     </div>

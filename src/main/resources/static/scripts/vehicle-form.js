@@ -22,13 +22,43 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- FORMATAÇÃO DO CAMPO QUILOMETRAGEM ---
-    const kmInput = document.getElementById('quilometragem');
-    if (kmInput) {
-        kmInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não for dígito
-            if (value) {
-                value = new Intl.NumberFormat('pt-BR').format(value);
+    const kmDisplayInput = document.getElementById('quilometragem_display'); // Campo visível
+    const kmHiddenInput = document.getElementById('quilometragem');         // Campo oculto
+
+    if (kmDisplayInput && kmHiddenInput) {
+        
+        kmDisplayInput.addEventListener('input', function(e) {
+            // Pega o valor digitado e remove tudo que não for número
+            const valorPuro = e.target.value.replace(/\D/g, '');
+
+            // Atualiza o valor do campo OCULTO com o número puro
+            kmHiddenInput.value = valorPuro;
+
+            // Formata o número para exibição no campo VISÍVEL
+            if (valorPuro) {
+                const valorFormatado = new Intl.NumberFormat('pt-BR').format(valorPuro);
+                e.target.value = valorFormatado;
+            } else {
+                e.target.value = ''; // Limpa se o usuário apagar tudo
             }
+        });
+    }
+
+    // --- FORMATAÇÃO DO CAMPO COR ---
+     const corInput = document.getElementById('cor');
+    if (corInput) {
+        corInput.addEventListener('input', function(e) {
+            let value = e.target.value;
+            
+            // 1. Remove todos os caracteres que não são letras ou espaços
+            value = value.replace(/[^a-zA-Z\s]/g, '');
+
+            // 2. Capitaliza a primeira letra e força o resto para minúsculas
+            if (value.length > 0) {
+                value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+            }
+
+            // 3. Atualiza o valor no campo
             e.target.value = value;
         });
     }
