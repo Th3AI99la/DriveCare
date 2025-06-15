@@ -1,0 +1,103 @@
+/* styles/maintenances-details.css - Layout de Linha do Tempo */
+
+.details-header {
+    border-bottom: 1px solid var(--dark-border);
+}
+
+/* Container do card de informações do veículo */
+.vehicle-info-card {
+    background-color: var(--dark-card);
+    border: 1px solid var(--dark-border);
+}
+
+.vehicle-info-card .card-body {
+    font-size: 1.1rem;
+}
+
+/* --- Estilos da Linha do Tempo --- */
+
+.timeline-container {
+    margin-top: 2.5rem;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 2.5rem;
+    list-style: none;
+}
+
+/* A linha vertical da timeline */
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 5px;
+    bottom: 5px;
+    width: 3px;
+    background-color: var(--dark-border);
+}
+
+/* Cada item/evento na timeline */
+.timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+/* O círculo em cada item da timeline */
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -38px;
+    top: 5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: var(--dark-bg);
+    border: 3px solid var(--dark-border); 
+}
+
+/* Conteúdo de cada item */
+.timeline-item-content {
+    background-color: var(--dark-card);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--dark-border);
+}
+
+.timeline-item-title {
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+}
+
+.timeline-item-date {
+    font-size: 0.9rem;
+    color: #adb5bd;
+    margin-bottom: 0.75rem;
+}
+
+/* Cores dinâmicas para o círculo de status */
+.timeline-item.status-ok::before {
+    border-color: #198754; /* Verde */
+    background-color: #105a36;
+}
+
+.timeline-item.status-prox::before {
+    border-color: #ffc107; /* Amarelo */
+    background-color: #a17b03;
+}
+
+.timeline-item.status-atrasado::before {
+    border-color: #dc3545; /* Vermelho */
+    background-color: #8c1c28;
+}
+
+.timeline-item.status-concluida::before {
+    border-color: #0d6efd; /* Azul */
+    background-color: #0d6efd;
+}
+
+.timeline-item.status-cancelada::before {
+    border-color: #6c757d; /* Cinza */
+    background-color: #6c757d;
+}
