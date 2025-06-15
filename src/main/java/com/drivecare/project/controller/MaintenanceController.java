@@ -62,30 +62,29 @@ public class MaintenanceController {
     // Método GET para mostrar o formulário de cadastro de agendamento de manutenção
     @GetMapping("/new")
     public String showNewMaintenanceForm(Model model) {
-        logger.debug("Acessando formulário de nova manutenção");
         AgendamentoManutencao agendamento = new AgendamentoManutencao();
-        List<Vehicle> vehicles = vehicleService.findAllVehicles();
+        // Busca todos os veículos para popular o menu dropdown
+        List<Vehicle> vehicles = vehicleService.findAllVehicles(); 
         
         model.addAttribute("agendamento", agendamento);
         model.addAttribute("vehicles", vehicles);
-        model.addAttribute("pageTitle", "Cadastrar Novo Agendamento de Manutenção");
-        logger.debug("Retornando template maintenances-form");
+        model.addAttribute("pageTitle", "Agendar Nova Manutenção");
         return "maintenances-form";
     }
 
     // Método POST para salvar um novo agendamento de manutenção
     @PostMapping("/save")
     public String saveMaintenance(@ModelAttribute("agendamento") AgendamentoManutencao agendamento,
-                                @RequestParam("veiculo.id") Long veiculoId) { // Pega o ID do veículo separadamente
+                                  @RequestParam("veiculoId") Long veiculoId) { // Pega o ID do veículo do formulário
         
-        // Busca o veículo completo no banco de dados
+        // Busca a entidade completa do veículo no banco de dados
         Vehicle veiculo = vehicleService.findVehicleById(veiculoId)
-                .orElseThrow(() -> new RuntimeException("Veículo não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Veículo não encontrado com ID: " + veiculoId));
         
         // Associa o veículo completo ao agendamento
         agendamento.setVeiculo(veiculo);
         
-        // Salva o agendamento
+        // Salva o agendamento no banco
         maintenanceService.salvarAgendamento(agendamento);
         return "redirect:/maintenances";
     }
