@@ -334,7 +334,7 @@ img {
 }
 
 .user-icon-wrapper {
-  width: 40px; /* largura fixa para isolar o ícone */
+  width: 60px; /* largura fixa para isolar o ícone */
   display: flex;
   align-items: center;
   justify-content: center;
