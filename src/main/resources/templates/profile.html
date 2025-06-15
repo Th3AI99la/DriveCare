@@ -100,20 +100,27 @@
                         <hr style="border-color: var(--dark-border);">
 
                         <!-- Seção de dados do usuário -->
-                        <div class="row mt-4">
-                            <div class="col-md-6 mb-3 form-group">
-                                <label for="fullName">Nome Completo</label>
-                                <input type="text" th:field="*{fullName}" id="fullName" class="form-control" required />
+                        <div class="mt-4">
+                            <div class="mb-3">
+                                <label for="fullName" class="form-label">Nome Completo</label>
+                                <input type="text" th:field="*{fullName}" id="fullName" class="form-control"
+                                    th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid' : ''" required />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
                             </div>
-                            <div class="col-md-6 mb-3 form-group">
-                                <label for="phoneNumber">Telefone</label>
-                                <input type="tel" th:field="*{phoneNumber}" id="phoneNumber" class="form-control" />
-                            </div>
-                        </div>
 
-                        <div class="mb-3 form-group">
-                            <label for="email">Email</label>
-                            <input type="email" th:field="*{email}" id="email" class="form-control" required />
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" th:field="*{email}" id="email" class="form-control" 
+                                    th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''" required />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="phoneNumber" class="form-label">Telefone</label>
+                                <input type="tel" th:field="*{phoneNumber}" id="phoneNumber" class="form-control"
+                                    th:classappend="${#fields.hasErrors('phoneNumber')} ? 'is-invalid' : ''" />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></div>
+                            </div>
                         </div>
 
                         <!-- Botão de submissão -->

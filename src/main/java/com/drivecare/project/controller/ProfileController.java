@@ -79,7 +79,8 @@ public class ProfileController {
             model.addAttribute("uploadError", "Erro ao enviar a foto do perfil. Tente novamente.");
         }
         
-        model.addAttribute("user", existingUser);
+        User updatedUser = userRepository.findById(existingUser.getId()).orElse(existingUser);
+        model.addAttribute("user", updatedUser);
         return "profile";
     }
 }

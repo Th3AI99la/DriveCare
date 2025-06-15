@@ -26,6 +26,27 @@ public class ProfileService {
 
     @Transactional // Garante que toda a operação seja atômica (ou tudo funciona, ou nada é salvo)
     public void updateUserProfile(User formUser, User existingUser, MultipartFile profilePhoto) throws IOException {
+
+
+
+
+        // --- LOGS PARA DEPURAR ---
+    System.out.println("==============================================");
+    System.out.println("INICIANDO ATUALIZAÇÃO DE PERFIL...");
+    System.out.println("Nome recebido do formulário: " + formUser.getFullName());
+    System.out.println("Telefone recebido do formulário: " + formUser.getPhoneNumber());
+    System.out.println("Nome atual no banco (antes): " + existingUser.getFullName());
+    // -------------------------
+
+    // Atualiza os campos de texto
+    existingUser.setFullName(formUser.getFullName());
+    existingUser.setPhoneNumber(formUser.getPhoneNumber());
+    existingUser.setEmail(formUser.getEmail());
+
+    // --- LOGS PARA DEPURAR ---
+    System.out.println("Nome a ser salvo no banco (depois): " + existingUser.getFullName());
+    // -------------------------
+
         
         // Atualiza os campos de texto
         existingUser.setFullName(formUser.getFullName());
@@ -34,6 +55,7 @@ public class ProfileService {
 
         // Processa e salva a foto do perfil, se uma nova foi enviada
         if (profilePhoto != null && !profilePhoto.isEmpty()) {
+            System.out.println("Processando nova foto de perfil...");
             
             // Sanitiza o nome do arquivo para segurança
             String originalFilename = Paths.get(profilePhoto.getOriginalFilename())
@@ -60,9 +82,17 @@ public class ProfileService {
 
             // Salva o caminho relativo no objeto do usuário
             existingUser.setProfilePhotoUrl("/" + UPLOAD_DIR + filename);
+            System.out.println("Caminho da nova foto: " + existingUser.getProfilePhotoUrl());
         }
 
         // Salva o usuário com todas as alterações no banco de dados
         userRepository.save(existingUser);
+
+          // --- LOGS PARA DEPURAR ---
+    System.out.println("CHAMOU userRepository.save(). A TRANSAÇÃO DEVE FAZER COMMIT AO FINALIZAR.");
+    System.out.println("==============================================");
     }
+
+
+    
 }
