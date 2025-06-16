@@ -68,14 +68,14 @@ public class MaintenanceService {
 
     // Finalizar  um agendamento
     @Transactional // Garante que as duas operações (salvar e atualizar) aconteçam juntas
-    public void finalizarManutencao(Long agendamentoId, String descricaoFinal, Double custoFinal) {
+    public void finalizarManutencao(Long agendamentoId, String descricaoFinal, Double custoFinal, LocalDate dataExecucao) {
         // 1. Busca o agendamento original
         AgendamentoManutencao agendamento = findAgendamentoById(agendamentoId);
 
         // 2. Cria um novo registro de Manutenção Realizada
         ManutencaoRealizada realizada = new ManutencaoRealizada();
         realizada.setVeiculo(agendamento.getVeiculo());
-        realizada.setDataExecucao(LocalDate.now()); // Usa a data atual como data de execução
+        realizada.setDataExecucao(dataExecucao); 
         realizada.setDescricaoServicoRealizado(descricaoFinal);
         realizada.setTipoManutencao(agendamento.getTipo().getDisplayName());
         realizada.setCustoReal(custoFinal);

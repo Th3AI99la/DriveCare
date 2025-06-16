@@ -1,5 +1,6 @@
 package com.drivecare.project.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -131,9 +132,10 @@ public class MaintenanceController {
     @PostMapping("/finalize/{id}")
     public String finalizeMaintenance(@PathVariable("id") Long id,
                                       @RequestParam("descricaoFinal") String descricaoFinal,
-                                      @RequestParam("custoFinal") Double custoFinal) {
+                                      @RequestParam("custoFinal") Double custoFinal,
+                                      @RequestParam("dataExecucao") LocalDate dataExecucao) {
         
-        maintenanceService.finalizarManutencao(id, descricaoFinal, custoFinal);
+         maintenanceService.finalizarManutencao(id, descricaoFinal, custoFinal, dataExecucao);
         
         // Redireciona de volta para a mesma página de detalhes, que agora mostrará o status atualizado
         return "redirect:/maintenances/" + id;

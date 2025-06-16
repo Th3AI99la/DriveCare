@@ -53,6 +53,12 @@
                             <p>Preencha os detalhes finais do serviço realizado.</p>
 
                             <div class="mb-3">
+                                <label for="dataExecucao" class="form-label">Data do Serviço *</label>
+                                <input type="date" id="dataExecucao" name="dataExecucao" class="form-control" 
+                                    th:value="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" required>
+                            </div>
+
+                            <div class="mb-3">
                                 <label for="descricaoFinal" class="form-label">Descrição Final do Serviço *</label>
                                 <textarea id="descricaoFinal" name="descricaoFinal" class="form-control" rows="3" th:text="${agendamento.descricao}" required></textarea>
                             </div>
