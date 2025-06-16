@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/styles/custom.css" th:href="@{/styles/custom.css}">
+    <link rel="stylesheet" href="/styles/vehicles.css" th:href="@{/styles/vehicles.css}"> 
     <link rel="stylesheet" href="/styles/maintenances-details.css" th:href="@{/styles/maintenances-details.css}">
    
 
@@ -15,7 +16,7 @@
 <div class="container-fluid">
 
     <div class="row">
-                <nav class="col-md-2 d-none d-md-block sidebar vh-100 bg-primary-dark">
+        <nav class="col-md-2 d-none d-md-block sidebar vh-100 bg-primary-dark">
             <div class="position-sticky pt-3">
                 <ul class="nav flex-column">
                     <li class="nav-item">
@@ -42,6 +43,7 @@
         </nav>
 
         <div class="modal fade" id="finalizeModal" tabindex="-1" aria-labelledby="finalizeModalLabel" aria-hidden="true">
+
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content bg-dark-light text-light">
                     <form th:action="@{/maintenances/finalize/{id}(id=${agendamento.id})}" method="post">
@@ -81,8 +83,8 @@
         </div>
 
         <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4">
-            <header th:replace="~{index :: pageHeader}"></header>
-
+            <br>
+            <hr>
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 details-header">
                 <h1 class="h2">Detalhes do Agendamento</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
@@ -95,11 +97,21 @@
 
             <div class="card vehicle-info-card mb-4 animate-on-load">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4"><strong>Veículo:</strong> <span th:text="${agendamento.veiculo.marca + ' ' + agendamento.veiculo.modelo}" class="text-muted"></span></div>
-                        <div class="col-md-4"><strong>Placa:</strong> <span th:text="${agendamento.veiculo.placa}" class="text-muted"></span></div>
-                        <div class="col-md-4"><strong>Tipo:</strong> <span class="badge bg-primary" th:text="${agendamento.tipo.displayName}"></span></div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong class="cor-do-title">Veículo:</strong> 
+                        <span th:text="${agendamento.veiculo.marca + ' ' + agendamento.veiculo.modelo}" class="text-muted"></span>
                     </div>
+                    <div class="col-md-4">
+                        <strong class="cor-do-title">Placa:</strong> 
+                        <span th:text="${agendamento.veiculo.placa}" class="text-muted"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <strong class="cor-do-title">Tipo:</strong> 
+                        <span class="badge bg-primary" th:text="${agendamento.tipo.displayName}"></span>
+                    </div>
+                </div>
+
                 </div>
             </div>
 
