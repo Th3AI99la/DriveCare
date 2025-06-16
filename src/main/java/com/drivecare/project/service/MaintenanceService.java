@@ -1,17 +1,20 @@
 package com.drivecare.project.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.drivecare.project.model.AgendamentoManutencao;
 import com.drivecare.project.model.ManutencaoRealizada;
 import com.drivecare.project.model.enums.StatusAgendamentoManutencao;
 import com.drivecare.project.repository.AgendamentoManutencaoRepository;
 import com.drivecare.project.repository.ManutencaoRealizadaRepository;
+
 
 @Service
 public class MaintenanceService {
@@ -61,5 +64,28 @@ public class MaintenanceService {
     // Método para deletar um agendamento por ID
     public void deleteAgendamentoById(Long id) {
         agendamentoManutencaoRepository.deleteById(id);
+    }
+
+    // Finalizar  um agendamento
+    @Transactional // Garante que as duas operações (salvar e atualizar) aconteçam juntas
+    public void finalizarManutencao(Long agendamentoId, String descricaoFinal, Double custoFinal) {
+        // 1. Busca o agendamento original
+        AgendamentoManutencao agendamento = findAgendamentoById(agendamentoId);
+
+        // 2. Cria um novo registro de Manutenção Realizada
+        ManutencaoRealizada realizada = new ManutencaoRealizada();
+        realizada.setVeiculo(agendamento.getVeiculo());
+        realizada.setDataExecucao(LocalDate.now()); // Usa a data atual como data de execução
+        realizada.setDescricaoServicoRealizado(descricaoFinal);
+        realizada.setTipoManutencao(agendamento.getTipo().getDisplayName());
+        realizada.setCustoReal(custoFinal);
+        realizada.setManutencaoAgendada(agendamento); // Link para o agendamento original
+
+        // 3. Atualiza o status do agendamento original para CONCLUÍDA
+        agendamento.setStatusAgendamento(StatusAgendamentoManutencao.CONCLUIDA);
+
+        // 4. Salva as duas entidades no banco de dados
+        manutencaoRealizadaRepository.save(realizada);
+        agendamentoManutencaoRepository.save(agendamento);
     }
 }

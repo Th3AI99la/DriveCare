@@ -120,10 +120,22 @@ public class MaintenanceController {
         return "maintenances-details";
     }
 
-    // Método POST para excluir um agendamento de manutenção
+    // Método POST - para excluir um agendamento de manutenção
     @PostMapping("/delete/{id}")
     public String deleteMaintenance(@PathVariable("id") Long id) {
         maintenanceService.deleteAgendamentoById(id);
         return "redirect:/maintenances"; // Redireciona de volta para a lista de agendamentos de manutenção
+    }
+
+    //Método POST - Processa a finalização da manutenção
+    @PostMapping("/finalize/{id}")
+    public String finalizeMaintenance(@PathVariable("id") Long id,
+                                      @RequestParam("descricaoFinal") String descricaoFinal,
+                                      @RequestParam("custoFinal") Double custoFinal) {
+        
+        maintenanceService.finalizarManutencao(id, descricaoFinal, custoFinal);
+        
+        // Redireciona de volta para a mesma página de detalhes, que agora mostrará o status atualizado
+        return "redirect:/maintenances/" + id;
     }
 }
