@@ -1,0 +1,37 @@
+# Nome do arquivo de configuração do Spring Boot
+spring.application.name=drivecare
+
+# Configurações do PostgreSQL
+spring.datasource.url=jdbc:postgresql://localhost:5433/postgres
+spring.datasource.username=postgres
+spring.datasource.password=mysecretpassword
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# Uploads de Imagens
+spring.web.resources.static-locations=classpath:/static/,file:uploads/
+
+# JPA
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+
+# Recursos estáticos (mantém isso)
+spring.resources.static-locations=classpath:/static/
+
+# Configurações do Thymeleaf
+spring.thymeleaf.prefix=classpath:/templates/
+spring.thymeleaf.suffix=.html
+spring.thymeleaf.mode=HTML
+spring.thymeleaf.cache=false
+
+# Configurações de log - mais detalhes do que o Spring está fazendo na conexão.
+logging.level.org.springframework.jdbc=DEBUG
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
+debug=true
+
+# Força a codificação UTF-8 em toda a aplicação
+server.servlet.encoding.charset=UTF-8
+server.servlet.encoding.enabled=true
+server.servlet.encoding.force=true
+spring.thymeleaf.encoding=UTF-8
