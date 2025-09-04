@@ -26,41 +26,41 @@ O DriveCare é um sistema web para controle de manutenção veicular, desenvolvi
 
 Você pode ver uma demonstração completa do sistema em funcionamento:
 
-![Demonstração Completa](assets/COMPLETO.gif)
+![Demonstração Completa](assets/6.gif)
 
 ### Autenticação
 
 | Tela de Login | Tela de Criação de Conta |
 | :---: | :---: |
-| ![Tela de Login](assets/1_LOGIN.png) | ![Tela de Criação de Conta](assets/1.1_CRIAR%20CONTA.png) |
+| ![Tela de Login](assets/1.png) | ![Tela de Criação de Conta](assets/1.1.png) |
 
 ### Dashboard
 
 Acompanhe as informações principais do seu perfil e veículos.
 
-![Dashboard Principal](assets/2_DASHBOARD%20COM%20INFORMACOES%20PRINCIPAIS.png)
+![Dashboard Principal](assets/2.png)
 
 *Uma breve demonstração do dashboard:*
 
-![Dashboard Principais GIF](assets/2.1_DASHBOARD%20COM%20INFORMACOES%20PRINCIPAIS.gif)
+![Dashboard Principais GIF](assets/2.1.gif)
 
 ### Gestão de Veículos
 
 | Lista de Veículos | Detalhes do Veículo | Cadastro de Novo Veículo |
 | :---: | :---: | :---: |
-| ![Tela de Veículos](assets/3._VEICULOS.png) | ![Detalhes do Veículo](assets/3.1_DETALHES%20DE%20VEICULOS.png) | ![Cadastrar Novo Veículo](assets/3.2_CADASTRAR%20NOVO%20VEICULO.png) |
+| ![Tela de Veículos](assets/3.png) | ![Detalhes do Veículo](assets/3.1.png) | ![Cadastrar Novo Veículo](assets/3.2.png) |
 
 ### Manutenções
 
 Visualize e gerencie todas as manutenções dos seus veículos.
 
-![Tela de Manutenções](assets/4_MANUTENCOES.png)
+![Tela de Manutenções](assets/4.png)
 
 ### Perfil do Usuário
 
 Gerencie suas informações de perfil.
 
-![Tela de Perfil](assets/5_PERFIL.png)
+![Tela de Perfil](assets/5.png)
 
 ## 🛠️ Tecnologias Utilizadas
 
